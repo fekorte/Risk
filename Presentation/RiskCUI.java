@@ -112,51 +112,24 @@ public class RiskCUI {
         System.out.println("New round! It's your turn " + currentPlayerName);
 
 
-
         //receiveUnits
         int receivedUnits = roundManager.receiveUnits();
         System.out.println("You receive " + receivedUnits + " units");
 
 
-
         //distribute units
-        while(!doneWithStep){
-            System.out.println("Please select what you want to do: ");
-            gameOverviewMenu(false, false);
-
-            String selectedAction = readInput();
-            processGameInput(selectedAction, false, false);
-        }
-        doneWithStep = false;
+        playerChoice(false, false);
         distributeUnits(receivedUnits);
-
 
 
         //attack and defend
         System.out.println("All your units have been distributed. Now it is time to attack.");
-        while(!doneWithStep){
-            System.out.println("Please select what you want to do: ");
-            gameOverviewMenu(true, false);
-
-            String selectedAction = readInput();
-            processGameInput(selectedAction, true, false);
-        }
-        doneWithStep = false;
-
+        playerChoice(true, false);
 
 
         //moveUnits
         System.out.println("Now move your units to neighbouring countries which belong to you.");
-        while(!doneWithStep){
-            System.out.println("Please select what you want to do: ");
-            gameOverviewMenu(false, true);
-
-            String selectedAction = readInput();
-            processGameInput(selectedAction, false, true);
-        }
-        doneWithStep = false;
-
-
+        playerChoice(false, true);
 
 
         System.out.println("Do you want to save the game? \n Y/N > ");
@@ -173,6 +146,18 @@ public class RiskCUI {
             gameStarted = false;
             gameSetUp = false;
         }
+    }
+
+    private void playerChoice(boolean attack, boolean moveUnits) throws IOException {
+        
+        while(!doneWithStep){
+            System.out.println("Please select what you want to do: ");
+            gameOverviewMenu(attack, moveUnits);
+
+            String selectedAction = readInput();
+            processGameInput(selectedAction, attack, moveUnits);
+        }
+        doneWithStep = false;
     }
 
     private void gameOverviewMenu(boolean attack, boolean moveUnits){

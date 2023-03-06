@@ -202,7 +202,7 @@ public class RiskCUI {
             case "c" -> { //get info about neighbouring countries
                 System.out.println("Country > ");
                 String selectedCountry = readInput();
-                System.out.println(roundManager.getCountryOwner(selectedCountry));
+                System.out.println(roundManager.getCountryNeighbours(selectedCountry));
             }
 
             case "d" -> //done, continue with next step

@@ -17,10 +17,9 @@ public class Round implements RoundManager{
     }
 
     @Override
-    public String getAllCountryAndOwner() {
+    public String getAllCountriesAndOwners() {
         return null;
     }
-
 
     @Override
     public String getCountryOwner(String country) {

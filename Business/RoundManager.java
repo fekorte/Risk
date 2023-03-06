@@ -8,7 +8,8 @@ public interface RoundManager {
 
     void startFirstRound();
 
-    String getAllCountryAndOwner();
+
+    String getAllCountriesAndOwners();
     String getCountryOwner(String country);
     String getAllCountriesFromPlayer(String name);
 

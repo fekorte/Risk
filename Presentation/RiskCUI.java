@@ -169,7 +169,7 @@ public class RiskCUI {
             riskRound();
         } else {
             System.out.println("Congratulations!! You've won " + currentPlayerName);
-            System.out.println(roundManager.getInfoAll());
+            System.out.println(roundManager.getAllCountriesAndOwners());
             gameStarted = false;
             gameSetUp = false;
         }
@@ -194,15 +194,15 @@ public class RiskCUI {
 
         switch(line) {
             case "a" -> //show players' country infos
-                    System.out.println(roundManager.getInfoPlayer(currentPlayerName));
+                    System.out.println(roundManager.getAllCountriesFromPlayer(currentPlayerName));
 
             case "b" -> //show all country infos
-                    System.out.println(roundManager.getInfoAll());
+                    System.out.println(roundManager.getAllCountriesAndOwners());
 
             case "c" -> { //get info about neighbouring countries
                 System.out.println("Country > ");
                 String selectedCountry = readInput();
-                System.out.println(roundManager.getNeighbourInfo(selectedCountry));
+                System.out.println(roundManager.getCountryOwner(selectedCountry));
             }
 
             case "d" -> //done, continue with next step
@@ -222,7 +222,7 @@ public class RiskCUI {
         System.out.println("Now you have to distribute your units. Where do you want to place them? ");
 
         while(receivedUnits != 0){
-            System.out.println("This is the current unit contribution: " + roundManager.getInfoPlayer(currentPlayerName));
+            System.out.println("This is the current unit contribution: " + roundManager.getAllCountriesFromPlayer(currentPlayerName));
 
             System.out.println("Country > ");
             String selectedCountry = readInput();

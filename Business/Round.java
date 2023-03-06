@@ -17,21 +17,23 @@ public class Round implements RoundManager{
     }
 
     @Override
-    public String getInfoAll() {
+    public String getAllCountryAndOwner() {
         return null;
     }
 
-    public String getInfoPlayer(String name){
-        return null;
-    }
-
-    @Override
-    public String getNeighbourInfo(String country) {
-        return null;
-    }
 
     @Override
     public String getCountryOwner(String country) {
+        return null;
+    }
+
+    @Override
+    public String getAllCountriesFromPlayer(String name) {
+        return null;
+    }
+
+    @Override
+    public String getCountryNeighbours(String country) {
         return null;
     }
 

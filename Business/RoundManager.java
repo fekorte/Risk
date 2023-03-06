@@ -8,12 +8,13 @@ public interface RoundManager {
 
     void startFirstRound();
 
-    String getInfoAll();
-    String getInfoPlayer(String name);
-
-    String getNeighbourInfo(String country);
-
+    String getAllCountryAndOwner();
     String getCountryOwner(String country);
+    String getAllCountriesFromPlayer(String name);
+
+    String getCountryNeighbours(String country);
+
+
 
     int receiveUnits();
     boolean distributeUnits(String selectedCountry, int units);

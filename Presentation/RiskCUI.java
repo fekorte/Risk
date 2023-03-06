@@ -1,9 +1,6 @@
 package Presentation;
 
-import Business.IPlayerManager;
-import Business.PlayerManager;
-import Business.Round;
-import Business.RoundManager;
+import Business.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,12 +8,13 @@ import java.io.InputStreamReader;
 
 public class RiskCUI {
 
+    private final BufferedReader in;
     private final IPlayerManager playerManager;
-    private final RoundManager roundManager;
+
+    private final GameManager gameManager;
+    private final GameTurnManager gameTurnManager;
 
     String currentPlayerName;
-
-    private final BufferedReader in;
 
     boolean gameStarted;
     boolean gameSetUp;
@@ -26,12 +24,14 @@ public class RiskCUI {
 
     public RiskCUI() throws IOException {
 
+        in = new BufferedReader(new InputStreamReader(System.in));
         playerManager = new PlayerManager();
-        roundManager = new Round();
+        gameManager = new Game();
+        gameTurnManager = new GameTurn();
         gameStarted = false;
         gameSetUp = false;
         doneWithStep = false;
-        in = new BufferedReader(new InputStreamReader(System.in));
+
     }
 
     private void showMenu() {
@@ -62,9 +62,10 @@ public class RiskCUI {
     private void processInput(String line) throws IOException {
 
         if("q".equals(line)){
+            System.out.println("Here");
             gameStarted = false;
             gameSetUp = false;
-            roundManager.endGame();
+            gameManager.quitGame();
             return;
         }
 
@@ -101,23 +102,23 @@ public class RiskCUI {
             case "s" -> { //start game after players were selected
 
                 gameSetUp = true;
-                roundManager.startFirstRound();
-                riskRound();
+                currentPlayerName = gameManager.startFirstRound();
+                riskTurn();
             }
         }
     }
 
-    private void riskRound() throws IOException {
+    private void riskTurn() throws IOException {
 
         System.out.println("New round! It's your turn " + currentPlayerName);
 
-
         //receiveUnits
-        int receivedUnits = roundManager.receiveUnits();
+        int receivedUnits = gameTurnManager.receiveUnits();
         System.out.println("You receive " + receivedUnits + " units");
 
 
         //distribute units
+        System.out.println("You can distribute your received units to your countries. You can inform yourself in this menu to plan better.");
         playerChoice(false, false);
         distributeUnits(receivedUnits);
 
@@ -128,32 +129,32 @@ public class RiskCUI {
 
 
         //moveUnits
-        System.out.println("Now move your units to neighbouring countries which belong to you.");
+        System.out.println("Move your units to neighbouring countries which belong to you.");
         playerChoice(false, true);
 
 
         System.out.println("Do you want to save the game? \n Y/N > ");
         if (readInput().equals("Y")) {
-            roundManager.saveGame();
+            gameManager.saveGame();
         }
 
-        if(!roundManager.isMissionSolved()){
-            currentPlayerName = roundManager.nextPlayersTurn();
-            riskRound();
+        if(!gameTurnManager.isMissionSolved()){
+            currentPlayerName = playerManager.nextPlayersTurn();
+            riskTurn();
         } else {
             System.out.println("Congratulations!! You've won " + currentPlayerName);
-            System.out.println(roundManager.getAllCountriesAndOwners());
+            System.out.println(gameManager.getAllCountryInfos());
+            gameManager.quitGame();
             gameStarted = false;
             gameSetUp = false;
         }
     }
 
     private void playerChoice(boolean attack, boolean moveUnits) throws IOException {
-        
+
         while(!doneWithStep){
             System.out.println("Please select what you want to do: ");
             gameOverviewMenu(attack, moveUnits);
-
             String selectedAction = readInput();
             processGameInput(selectedAction, attack, moveUnits);
         }
@@ -165,29 +166,29 @@ public class RiskCUI {
         System.out.print("Commands: \n  Show your country infos:  'a'");
         System.out.print("         \n  Show all country infos:  'b'");
         System.out.print("         \n  Get info about neighbouring countries:  'c'");
-        System.out.print("         \n  Done, continue with next step:  'd'");
+        System.out.println("         \n  Done, continue with next step:  'd'");
         if(attack){
-            System.out.print("         \n  Attack:  'e'");
+            System.out.println("         \n  Attack:  'e'");
         } else if(moveUnits){
-            System.out.print("         \n  Move units:  'e'");
-        } else {
-            System.out.print("         \n  Distribute units:  'e'");
+            System.out.println("         \n  Move units:  'e'");
         }
+        System.out.print("> ");
+        System.out.flush();
     }
 
     private void processGameInput(String line, boolean attack, boolean moveUnits) throws IOException {
 
         switch(line) {
             case "a" -> //show players' country infos
-                    System.out.println(roundManager.getAllCountriesFromPlayer(currentPlayerName));
+                    System.out.println(gameManager.getAllCountriesFromPlayer(currentPlayerName));
 
             case "b" -> //show all country infos
-                    System.out.println(roundManager.getAllCountriesAndOwners());
+                    System.out.println(gameManager.getAllCountryInfos());
 
             case "c" -> { //get info about neighbouring countries
                 System.out.println("Country > ");
                 String selectedCountry = readInput();
-                System.out.println(roundManager.getCountryNeighbours(selectedCountry));
+                System.out.println(gameManager.getCountryNeighbours(selectedCountry));
             }
 
             case "d" -> //done, continue with next step
@@ -196,64 +197,65 @@ public class RiskCUI {
 
         if("e".equals(line) && attack){
             attack();
-        } else if("e".equals(line) && moveUnits){
+        } else if("e".equals(line) && moveUnits) {
             moveUnits();
-        } else {
-            doneWithStep = true;
         }
     }
 
     private void distributeUnits(int receivedUnits) throws IOException {
+
         System.out.println("Now you have to distribute your units. Where do you want to place them? ");
 
         while(receivedUnits != 0){
-            System.out.println("This is the current unit contribution: " + roundManager.getAllCountriesFromPlayer(currentPlayerName));
+            System.out.println("This is the current unit contribution: " + gameManager.getAllCountriesFromPlayer(currentPlayerName));
 
             System.out.println("Country > ");
             String selectedCountry = readInput();
             System.out.println("Units > ");
             int units = Integer.parseInt(readInput());
 
-            if(roundManager.distributeUnits(selectedCountry, units)){
+            if(gameTurnManager.distributeUnits(selectedCountry, units)){
                 receivedUnits =- units;
                 System.out.println(units + " have been moved to " + selectedCountry + ". You have " + receivedUnits + " left.");
             }
         }
     }
     private void attack() throws IOException {
+
         System.out.println("Country to attack from > ");
         String attackingCountry = readInput();
         System.out.println("Country to attack > ");
         String attackedCountry = readInput();
         System.out.println("Units (select max. 3, keep in mind that one unit has to remain in your country)  > ");
         int units = Integer.parseInt(readInput());
-        String diceResult = roundManager.attack(attackingCountry, attackedCountry, units);
-        System.out.println(diceResult);
+        System.out.println(gameTurnManager.attack(attackingCountry, attackedCountry, units));
 
         defend(attackingCountry, attackedCountry, units);
     }
 
     private void defend(String attackingCountry, String attackedCountry, int unitsFromAttacker) throws IOException {
-        System.out.println("Your country has been attacked " + roundManager.getCountryOwner(attackedCountry) + "! You have to defend it!");
+
+        System.out.println("Your country has been attacked " + gameManager.getCountryOwner(attackedCountry) + "! You have to defend it!");
         System.out.println("Units (select max. 2)  > ");
         int units = Integer.parseInt(readInput());
 
-        System.out.println(roundManager.defend(attackedCountry, attackingCountry, units));
+        System.out.println(gameTurnManager.defend(attackedCountry, attackingCountry, units));
 
-        if(roundManager.getCountryOwner(attackedCountry).equals(currentPlayerName)){
+        if(gameManager.getCountryOwner(attackedCountry).equals(currentPlayerName)){
             System.out.println(currentPlayerName + " do you want to move additional units to the conquered country? Y/N > ");
             if (readInput().equals("Y")) {
                 System.out.println("Please note that at least one unit has to remain in " + attackingCountry);
                 System.out.println("Units > ");
                 int unitsToMove = Integer.parseInt(readInput());
-                roundManager.moveUnits(attackingCountry, attackedCountry, unitsToMove + unitsFromAttacker);
+                gameTurnManager.moveUnits(attackingCountry, attackedCountry, unitsToMove + unitsFromAttacker);
             } else {
-                roundManager.moveUnits(attackingCountry, attackedCountry, unitsFromAttacker);
+                gameTurnManager.moveUnits(attackingCountry, attackedCountry, unitsFromAttacker);
             }
         }
     }
 
     private void moveUnits() throws IOException {
+
         System.out.println("Keep in mind that you cannot move units from a country which has been involved in this round.");
         System.out.println("Country to take units from > ");
         String sourceCountry = readInput();
@@ -262,7 +264,7 @@ public class RiskCUI {
         System.out.println("Amount of units > ");
         int units = Integer.parseInt(readInput());
 
-        roundManager.moveUnits(sourceCountry, destinationCountry, units);
+        gameTurnManager.moveUnits(sourceCountry, destinationCountry, units);
     }
 
     private String readInput() throws IOException {

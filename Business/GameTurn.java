@@ -1,41 +1,8 @@
 package Business;
 
-public class Round implements RoundManager{
-    @Override
-    public void saveGame() {
+public class GameTurn implements GameTurnManager {
 
-    }
-
-    @Override
-    public void endGame() {
-
-    }
-
-    @Override
-    public void startFirstRound() {
-
-    }
-
-    @Override
-    public String getAllCountriesAndOwners() {
-        return null;
-    }
-
-    @Override
-    public String getCountryOwner(String country) {
-        return null;
-    }
-
-    @Override
-    public String getAllCountriesFromPlayer(String name) {
-        return null;
-    }
-
-    @Override
-    public String getCountryNeighbours(String country) {
-        return null;
-    }
-
+    public GameTurn(){}
 
     @Override
     public int receiveUnits() {
@@ -59,11 +26,6 @@ public class Round implements RoundManager{
 
     @Override
     public String moveUnits(String sourceCountry, String destinationCountry, int units) {
-        return null;
-    }
-
-    @Override
-    public String nextPlayersTurn() {
         return null;
     }
 

@@ -1,6 +1,9 @@
 package Business;
 
 public class PlayerManager implements IPlayerManager{
+
+    public PlayerManager(){}
+
     @Override
     public boolean addPlayer(String name, String color) {
         return false;
@@ -15,4 +18,10 @@ public class PlayerManager implements IPlayerManager{
     public String getPlayersInfo() {
         return null;
     }
+
+    @Override
+    public String nextPlayersTurn() {
+        return null;
+    }
+
 }

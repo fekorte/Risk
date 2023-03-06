@@ -2,8 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ba0bd527-4a37-41d4-8db4-fa483f48cc77" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Business/Round.java" beforeDir="false" afterPath="$PROJECT_DIR$/Business/Round.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Business/RoundManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/Business/RoundManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Business/Game.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Business/GameManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Business/IPlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/Business/IPlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Business/PlayerManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/Business/PlayerManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Business/Round.java" beforeDir="false" afterPath="$PROJECT_DIR$/Business/GameTurn.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Business/RoundManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/Business/GameTurnManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Business/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/Business/World.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Presentation/RiskCUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/Presentation/RiskCUI.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -14,6 +20,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -61,6 +68,7 @@
       <workItem from="1677969949413" duration="864000" />
       <workItem from="1677970854011" duration="11352000" />
       <workItem from="1678120755114" duration="11419000" />
+      <workItem from="1678139606287" duration="2827000" />
     </task>
     <servers />
   </component>

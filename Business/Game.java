@@ -1,6 +1,6 @@
 package Business;
 
-public class Game implements GameManager{
+public class Game implements GameManager {
 
     public Game(){}
 
@@ -20,22 +20,32 @@ public class Game implements GameManager{
     }
 
     @Override
-    public String getAllCountryInfos() {
+    public int receiveUnits() {
+        return 0;
+    }
+
+    @Override
+    public boolean distributeUnits(String selectedCountry, int units) {
+        return false;
+    }
+
+    @Override
+    public String attack(String attackingCountry, String attackedCountry, int units) {
         return null;
     }
 
     @Override
-    public String getCountryOwner(String country) {
+    public String defend(String countryToDefend, String attackingCountry, int units) {
         return null;
     }
 
     @Override
-    public String getAllCountriesFromPlayer(String name) {
+    public String moveUnits(String sourceCountry, String destinationCountry, int units) {
         return null;
     }
 
     @Override
-    public String getCountryNeighbours(String country) {
-        return null;
+    public boolean isMissionSolved() {
+        return false;
     }
 }

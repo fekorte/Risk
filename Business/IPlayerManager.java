@@ -6,6 +6,7 @@ public interface IPlayerManager {
     String nextPlayersTurn(String currentPlayer);
     String getAllowedColors();
     String getPlayersInfo();
-
     void clearPlayers();
+
+    boolean readyToStartGame();
 }

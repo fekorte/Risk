@@ -77,6 +77,7 @@ public class PlayerManager implements IPlayerManager{
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow"));
     }
 
+    @Override
     public boolean readyToStartGame() {
 
         return (playerMap.size() > 1);

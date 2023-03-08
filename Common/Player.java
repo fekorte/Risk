@@ -5,6 +5,7 @@ public class Player {
     private String playerColor;
 
     public Player(String name, String color){
+
         this.playerName = name;
         this.playerColor = color;
     }

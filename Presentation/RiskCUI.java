@@ -31,7 +31,6 @@ public class RiskCUI {
         gameStarted = false;
         gameSetUp = false;
         doneWithStep = false;
-
     }
 
     private void showMenu() {
@@ -44,6 +43,7 @@ public class RiskCUI {
             System.out.print("Commands: \n  Add player:  'p'");
             System.out.print("         \n  Remove player:  'r'");
             System.out.print("         \n  Show all players:  'a'");
+            System.out.print("         \n  Show available colors: 'c'");
             System.out.print("         \n  Start game:  's'");
         }
 
@@ -54,6 +54,9 @@ public class RiskCUI {
         }
 
         System.out.print("         \n  ---------------------");
+        if(gameStarted){
+            System.out.print("         \n  New game:        'n'");
+        }
         System.out.println("         \n  Quit:        'q'");
         System.out.print("> ");
         System.out.flush();
@@ -61,10 +64,10 @@ public class RiskCUI {
 
     private void processInput(String line) throws IOException {
 
-        if("q".equals(line)){
-            System.out.println("Here");
+        if("n".equals(line) && gameStarted){
             gameStarted = false;
             gameSetUp = false;
+            playerManager.clearPlayers();
             gameManager.quitGame();
             return;
         }
@@ -84,11 +87,12 @@ public class RiskCUI {
     private void processGameSetUpInput(String line) throws IOException{
 
         switch (line) {
-            case "a" -> playerManager.getPlayersInfo();
+            case "a" -> System.out.println(playerManager.getPlayersInfo());
             case "p" -> { //add player
 
                 System.out.println("Name > ");
                 String playerName = readInput();
+                System.out.println("Possible colors are: " + playerManager.getAllowedColors());
                 System.out.println("Color > ");
                 String playerColor = readInput();
                 playerManager.addPlayer(playerName, playerColor);
@@ -104,6 +108,9 @@ public class RiskCUI {
                 gameSetUp = true;
                 currentPlayerName = gameManager.startFirstRound();
                 riskTurn();
+            }
+            case "c" -> { //show available colors
+                System.out.println(playerManager.getAllowedColors());
             }
         }
     }
@@ -139,7 +146,7 @@ public class RiskCUI {
         }
 
         if(!gameTurnManager.isMissionSolved()){
-            currentPlayerName = playerManager.nextPlayersTurn();
+            currentPlayerName = playerManager.nextPlayersTurn(currentPlayerName);
             riskTurn();
         } else {
             System.out.println("Congratulations!! You've won " + currentPlayerName);

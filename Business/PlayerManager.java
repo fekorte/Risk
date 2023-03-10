@@ -23,7 +23,7 @@ public class PlayerManager implements IPlayerManager{
     public String addPlayer(String name, String color) {
 
         if(!playerMap.containsKey(name) && playerMap.size() != 6 &&  allowedColors.contains(color)){
-            Player newPlayer = new Player(name, color, new MissionConquerWorld());
+            Player newPlayer = new Player(name, color, new MissionConquerWorld(new ArrayList<>()));
             playerMap.put(newPlayer.getPlayerName(), newPlayer);
             playerOrder.add(newPlayer);
             allowedColors.remove(color);

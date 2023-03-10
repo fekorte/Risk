@@ -5,14 +5,14 @@ import java.util.List;
 public class MissionConquerWorld extends Mission{
     List<Continent> continentList;
 
-    public MissionConquerWorld(){
+    public MissionConquerWorld(List<Continent> continentList){
 
         super();
         missionText = "Conquer the world.";
+        this.continentList = continentList;
     }
 
-    public void updateMission(List<Continent> continentList){ this.continentList = continentList; }
-
+    @Override
     public String getMissionText(){ return missionText; }
 
     @Override

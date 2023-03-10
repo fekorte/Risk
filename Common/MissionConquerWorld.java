@@ -1,5 +1,6 @@
 package Common;
 
+import java.util.HashSet;
 import java.util.List;
 
 public class MissionConquerWorld extends Mission{
@@ -19,17 +20,6 @@ public class MissionConquerWorld extends Mission{
     @Override
     public boolean isMissionCompleted(String playerName) {
 
-       if(countries.isEmpty()){
-           return false;
-       }
-        for(Country country : world){
-            for(Country owned : countries){
-                if(!country.getCountryName().equals(owned.getCountryName())){
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return ((new HashSet<>(countries).containsAll(world)));
     }
 }

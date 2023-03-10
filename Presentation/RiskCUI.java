@@ -122,7 +122,7 @@ public class RiskCUI {
         System.out.println("New round! It's your turn " + currentPlayer);
 
         //receiveUnits
-        int receivedUnits = gameManager.receiveUnits();
+        int receivedUnits = gameManager.receiveUnits(currentPlayer.getPlayerName());
         System.out.println("You receive " + receivedUnits + " units");
 
 
@@ -245,13 +245,13 @@ public class RiskCUI {
 
     private void defend(String attackingCountry, String attackedCountry, int unitsFromAttacker) throws IOException {
 
-        System.out.println("Your country has been attacked " + worldManager.getCountryOwner(attackedCountry) + "! You have to defend it!");
+        System.out.println("Your country has been attacked " + gameManager.getCountryOwner(attackedCountry) + "! You have to defend it!");
         System.out.println("Units (select max. 2)  > ");
         int units = Integer.parseInt(readInput());
 
         System.out.println(gameManager.defend(attackedCountry, attackingCountry, units));
 
-        if(worldManager.getCountryOwner(attackedCountry).equals(currentPlayer.getPlayerName())){
+        if(gameManager.getCountryOwner(attackedCountry).equals(currentPlayer.getPlayerName())){
             System.out.println(currentPlayer + " do you want to move additional units to the conquered country? Y/N > ");
             if (readInput().equals("Y")) {
                 System.out.println("Please note that at least one unit has to remain in " + attackingCountry);

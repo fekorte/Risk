@@ -3,15 +3,15 @@ package Business;
 import Common.Continent;
 import Common.Country;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class World implements IWorldManager {
 
     private Map<String, Country> countryMap; //Key is the country name
-
+    private Map<Continent, List<String>> continentListMap;
     public World(){
 
+        continentListMap = new HashMap<>();
         countryMap = new HashMap<>();
     }
 
@@ -26,12 +26,6 @@ public class World implements IWorldManager {
     }
 
     @Override
-    public String getCountryOwner(String country){
-
-        return countryMap.get(country).getArmy().getPlayer().getPlayerName();
-    }
-
-    @Override
     public String getCountryNeighbours(String country){
 
         String neighbourInfo = "";
@@ -42,4 +36,6 @@ public class World implements IWorldManager {
     }
 
     public Map<String, Country> getCountryMap(){ return countryMap; }
+
+    public Map<Continent, List<String>> getConqueredContinents(){ return continentListMap; }
 }

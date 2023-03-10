@@ -23,7 +23,7 @@ public class MissionConquerWorld extends Mission{
            return false;
        }
         for(Country country : world){
-            for(Country owned : countries.values()){
+            for(Country owned : countries){
                 if(!country.getCountryName().equals(owned.getCountryName())){
                     return false;
                 }

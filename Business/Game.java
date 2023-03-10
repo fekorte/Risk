@@ -91,7 +91,8 @@ public class Game implements GameManager {
     @Override
     public String moveUnits(String sourceCountry, String destinationCountry, int units) {
 
-        countryMap.get(sourceCountry).getArmy().getPlayer().getPlayerMission().setCountries(worldManager.getCountryMap());
+        Player currentPlayer = countryMap.get(sourceCountry).getArmy().getPlayer();
+        currentPlayer.getPlayerMission().setCountries(countryPlayerMap.get(currentPlayer));
         return null;
     }
 

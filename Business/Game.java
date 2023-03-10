@@ -1,10 +1,22 @@
 package Business;
 
+import Common.Country;
 import Common.Player;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Game implements GameManager {
 
-    public Game(){}
+    Map<Player, List<Country>> countryPlayerMap;
+    IPlayerManager playerManager;
+
+    public Game(IPlayerManager playerManager){
+
+        this.playerManager = playerManager;
+        countryPlayerMap = new HashMap<>();
+    }
 
     @Override
     public void saveGame() {
@@ -15,6 +27,16 @@ public class Game implements GameManager {
     public void quitGame() {
 
     }
+
+    public String getAllCountriesFromPlayer(String playerName){
+
+        StringBuilder playerCountries = new StringBuilder();
+        for(Country country : countryPlayerMap.get(playerManager.getPlayerMap().get(playerName))){
+            playerCountries.append(country.getCountryName()).append(" ");
+        }
+        return playerCountries.toString();
+    }
+
 
     @Override
     public Player startFirstRound() {

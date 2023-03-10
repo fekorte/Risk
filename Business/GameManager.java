@@ -8,7 +8,7 @@ public interface GameManager {
     void saveGame();
     void quitGame();
     Player startFirstRound();
-
+    String getAllCountriesFromPlayer(String playerName);
 
 
     int receiveUnits();

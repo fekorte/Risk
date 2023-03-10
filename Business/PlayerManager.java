@@ -55,10 +55,7 @@ public class PlayerManager implements IPlayerManager{
         return null;
     }
 
-    public String getAllowedColors(){
-
-        return allowedColors.toString();
-    }
+    public String getAllowedColors(){ return allowedColors.toString(); }
 
     @Override
     public String getPlayersInfo(){
@@ -70,6 +67,8 @@ public class PlayerManager implements IPlayerManager{
         return playerInfo.toString();
     }
 
+    public Map<String, Player> getPlayerMap(){ return playerMap; }
+
     @Override
     public void clearPlayers(){
 
@@ -79,8 +78,5 @@ public class PlayerManager implements IPlayerManager{
     }
 
     @Override
-    public boolean readyToStartGame() {
-
-        return (playerMap.size() > 1);
-    }
+    public boolean readyToStartGame() { return (playerMap.size() > 1); }
 }

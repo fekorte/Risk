@@ -36,18 +36,6 @@ public class World implements WorldManager{
     }
 
     @Override
-    public String getAllCountriesFromPlayer(String playerName){
-
-        StringBuilder countriesFromPlayer = new StringBuilder();
-        for(Country country : countryMap.values()){
-            if(country.getArmy().getPlayer().getPlayerName().equals(playerName)){
-                countriesFromPlayer.append(country.getCountryName());
-            }
-        }
-        return countriesFromPlayer.toString();
-    }
-
-    @Override
     public String getCountryNeighbours(String country){
 
         String neighbourInfo = "";

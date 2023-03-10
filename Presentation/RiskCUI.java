@@ -28,7 +28,7 @@ public class RiskCUI {
         in = new BufferedReader(new InputStreamReader(System.in));
         playerManager = new PlayerManager();
         worldManager = new World();
-        gameManager = new Game();
+        gameManager = new Game(playerManager);
         gameStarted = false;
         gameSetUp = false;
         doneWithStep = false;
@@ -190,7 +190,7 @@ public class RiskCUI {
 
         switch(line) {
             case "a" -> //show players' country infos
-                    System.out.println(worldManager.getAllCountriesFromPlayer(currentPlayer.getPlayerName()));
+                    System.out.println(gameManager.getAllCountriesFromPlayer(currentPlayer.getPlayerName()));
 
             case "b" -> //show all country infos
                     System.out.println(worldManager.getAllCountryInfos());
@@ -217,7 +217,7 @@ public class RiskCUI {
         System.out.println("Now you have to distribute your units. Where do you want to place them? ");
 
         while(receivedUnits != 0){
-            System.out.println("This is the current unit contribution: " + worldManager.getAllCountriesFromPlayer(currentPlayer.getPlayerName()));
+            System.out.println("This is the current unit contribution: " + gameManager.getAllCountriesFromPlayer(currentPlayer.getPlayerName()));
 
             System.out.println("Country > ");
             String selectedCountry = readInput();

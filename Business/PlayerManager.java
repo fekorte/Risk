@@ -1,5 +1,6 @@
 package Business;
 
+import Common.MissionConquerWorld;
 import Common.Player;
 
 import java.util.*;
@@ -7,7 +8,7 @@ import java.util.*;
 public class PlayerManager implements IPlayerManager{
 
     Map<String, Player> playerMap;
-    List<String> playerOrder;
+    List<Player> playerOrder;
     ArrayList<String> allowedColors;
 
 
@@ -19,15 +20,15 @@ public class PlayerManager implements IPlayerManager{
     }
 
     @Override
-    public boolean addPlayer(String name, String color) {
+    public String addPlayer(String name, String color) {
 
         if(!playerMap.containsKey(name) && playerMap.size() != 6 &&  allowedColors.contains(color)){
-            playerMap.put(name, new Player(name, color));
-            playerOrder.add(name);
+            Player newPlayer = new Player(name, color, new MissionConquerWorld());
+            playerMap.put(newPlayer.getPlayerName(), newPlayer);
+            playerOrder.add(newPlayer);
             allowedColors.remove(color);
-            return true;
         }
-        return false;
+        return playerMap.get(name).getPlayerMission().getMissionText();
     }
 
     @Override
@@ -35,8 +36,8 @@ public class PlayerManager implements IPlayerManager{
 
         if (playerMap.containsKey(name)){
             allowedColors.add(playerMap.get(name).getPlayerColor());
+            playerOrder.remove(playerMap.get(name));
             playerMap.remove(name);
-            playerOrder.remove(name);
             return true;
         }
         return false;
@@ -44,10 +45,10 @@ public class PlayerManager implements IPlayerManager{
 
 
     @Override
-    public String nextPlayersTurn(String currentPlayer) {
+    public Player nextPlayersTurn(String currentPlayer) {
 
-        if(playerOrder.contains(currentPlayer)){
-            int currentIndex = playerOrder.indexOf(currentPlayer);
+        if(playerMap.containsKey(currentPlayer) && playerOrder.contains(playerMap.get(currentPlayer))){
+            int currentIndex = playerOrder.indexOf(playerMap.get(currentPlayer));
             int nextIndex = (currentIndex + 1) % playerOrder.size();
             return playerOrder.get(nextIndex);
         }

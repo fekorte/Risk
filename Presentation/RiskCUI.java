@@ -1,6 +1,7 @@
 package Presentation;
 
 import Business.*;
+import Common.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +15,7 @@ public class RiskCUI {
     private final WorldManager worldManager;
     private final GameManager gameManager;
 
-    String currentPlayerName;
+    Player currentPlayer;
 
     boolean gameStarted;
     boolean gameSetUp;
@@ -95,7 +96,8 @@ public class RiskCUI {
                 System.out.println("Possible colors are: " + playerManager.getAllowedColors());
                 System.out.println("Color > ");
                 String playerColor = readInput();
-                playerManager.addPlayer(playerName, playerColor);
+                System.out.println("Player has been added. " + playerName + ", do not share your mission with anyone else. Your mission is: " +
+                        playerManager.addPlayer(playerName, playerColor));
             }
             case "r" -> { //remove player
 
@@ -107,19 +109,18 @@ public class RiskCUI {
 
                 if(playerManager.readyToStartGame()){
                     gameSetUp = true;
-                    currentPlayerName = gameManager.startFirstRound();
+                    currentPlayer = gameManager.startFirstRound();
                     riskTurn();
                 }
             }
-            case "c" -> { //show available colors
-                System.out.println(playerManager.getAllowedColors());
-            }
+            case "c" -> //show available colors
+                    System.out.println(playerManager.getAllowedColors());
         }
     }
 
     private void riskTurn() throws IOException {
 
-        System.out.println("New round! It's your turn " + currentPlayerName);
+        System.out.println("New round! It's your turn " + currentPlayer);
 
         //receiveUnits
         int receivedUnits = gameManager.receiveUnits();
@@ -147,11 +148,11 @@ public class RiskCUI {
             gameManager.saveGame();
         }
 
-        if(!gameManager.isMissionSolved()){
-            currentPlayerName = playerManager.nextPlayersTurn(currentPlayerName);
+        if(currentPlayer.getPlayerMission().isMissionCompleted(currentPlayer.getPlayerName())){
+            currentPlayer = playerManager.nextPlayersTurn(currentPlayer.getPlayerName());
             riskTurn();
         } else {
-            System.out.println("Congratulations!! You've won " + currentPlayerName);
+            System.out.println("Congratulations!! You've won " + currentPlayer);
             System.out.println(worldManager.getAllCountryInfos());
             gameManager.quitGame();
             gameStarted = false;
@@ -189,7 +190,7 @@ public class RiskCUI {
 
         switch(line) {
             case "a" -> //show players' country infos
-                    System.out.println(worldManager.getAllCountriesFromPlayer(currentPlayerName));
+                    System.out.println(worldManager.getAllCountriesFromPlayer(currentPlayer.getPlayerName()));
 
             case "b" -> //show all country infos
                     System.out.println(worldManager.getAllCountryInfos());
@@ -216,7 +217,7 @@ public class RiskCUI {
         System.out.println("Now you have to distribute your units. Where do you want to place them? ");
 
         while(receivedUnits != 0){
-            System.out.println("This is the current unit contribution: " + worldManager.getAllCountriesFromPlayer(currentPlayerName));
+            System.out.println("This is the current unit contribution: " + worldManager.getAllCountriesFromPlayer(currentPlayer.getPlayerName()));
 
             System.out.println("Country > ");
             String selectedCountry = readInput();
@@ -250,8 +251,8 @@ public class RiskCUI {
 
         System.out.println(gameManager.defend(attackedCountry, attackingCountry, units));
 
-        if(worldManager.getCountryOwner(attackedCountry).equals(currentPlayerName)){
-            System.out.println(currentPlayerName + " do you want to move additional units to the conquered country? Y/N > ");
+        if(worldManager.getCountryOwner(attackedCountry).equals(currentPlayer.getPlayerName())){
+            System.out.println(currentPlayer + " do you want to move additional units to the conquered country? Y/N > ");
             if (readInput().equals("Y")) {
                 System.out.println("Please note that at least one unit has to remain in " + attackingCountry);
                 System.out.println("Units > ");

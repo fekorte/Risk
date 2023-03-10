@@ -11,4 +11,6 @@ public class Continent {
         this.continentName = continentName;
         this.countries = countries;
     }
+
+    public List<Country> getCountries(){ return countries; }
 }

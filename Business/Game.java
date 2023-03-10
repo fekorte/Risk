@@ -1,5 +1,7 @@
 package Business;
 
+import Common.Player;
+
 public class Game implements GameManager {
 
     public Game(){}
@@ -15,7 +17,7 @@ public class Game implements GameManager {
     }
 
     @Override
-    public String startFirstRound() {
+    public Player startFirstRound() {
         return null;
     }
 
@@ -44,8 +46,4 @@ public class Game implements GameManager {
         return null;
     }
 
-    @Override
-    public boolean isMissionSolved() {
-        return false;
-    }
 }

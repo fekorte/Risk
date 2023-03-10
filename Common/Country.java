@@ -17,4 +17,12 @@ public class Country {
         this.neighbours = neighbours;
         this.army = army;
     }
+
+    public String getCountryName(){ return countryName; }
+
+    public Army getArmy(){ return army; }
+
+    public List<Country> getNeighbours(){ return neighbours; }
+
+    public String getCountryInfo(){ return "Name: " + countryName + ", " + abbreviation + ", " + continent + ", Owner: " + army.getPlayer().getPlayerName() + "\n"; }
 }

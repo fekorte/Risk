@@ -1,8 +1,10 @@
 package Common;
 
-public class Mission {
+public abstract class Mission {
     boolean isCompleted;
+    String missionText;
     public Mission(){ isCompleted = false; }
-    public boolean isMissionCompleted(){ return isCompleted; }
-    public void setIsCompleted(boolean isCompleted){ this.isCompleted = isCompleted; }
+
+    public abstract String getMissionText();
+    public abstract boolean isMissionCompleted(String playerName);
 }

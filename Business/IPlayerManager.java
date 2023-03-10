@@ -1,9 +1,11 @@
 package Business;
 
+import Common.Player;
+
 public interface IPlayerManager {
-    boolean addPlayer(String name, String color);
+    String addPlayer(String name, String color);
     boolean removePlayer(String name);
-    String nextPlayersTurn(String currentPlayer);
+    Player nextPlayersTurn(String currentPlayer);
     String getAllowedColors();
     String getPlayersInfo();
     void clearPlayers();

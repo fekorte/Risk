@@ -9,4 +9,5 @@ public class Army {
         this.units = units;
         this.player = player;
     }
+    public Player getPlayer(){ return player; }
 }

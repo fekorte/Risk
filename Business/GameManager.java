@@ -1,11 +1,13 @@
 package Business;
 
+import Common.Player;
+
 public interface GameManager {
 
 
     void saveGame();
     void quitGame();
-    String startFirstRound();
+    Player startFirstRound();
 
 
 
@@ -15,5 +17,4 @@ public interface GameManager {
     String defend(String countryToDefend, String attackingCountry, int units);
     String moveUnits(String sourceCountry, String destinationCountry, int units);
 
-    boolean isMissionSolved();
 }

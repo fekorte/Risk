@@ -190,7 +190,7 @@ public class RiskCUI {
 
         switch(line) {
             case "a" -> //show players' country infos
-                    System.out.println(gameManager.getAllCountriesFromPlayer(currentPlayer.getPlayerName()));
+                    System.out.println(gameManager.getAllCountriesInfoPlayer(currentPlayer.getPlayerName()));
 
             case "b" -> //show all country infos
                     System.out.println(worldManager.getAllCountryInfos());
@@ -217,7 +217,7 @@ public class RiskCUI {
         System.out.println("Now you have to distribute your units. Where do you want to place them? ");
 
         while(receivedUnits != 0){
-            System.out.println("This is the current unit contribution: " + gameManager.getAllCountriesFromPlayer(currentPlayer.getPlayerName()));
+            System.out.println("This is the current unit contribution: " + gameManager.getAllCountriesInfoPlayer(currentPlayer.getPlayerName()));
 
             System.out.println("Country > ");
             String selectedCountry = readInput();

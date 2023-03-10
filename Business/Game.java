@@ -8,10 +8,12 @@ import java.util.*;
 
 public class Game implements GameManager {
 
-    Map<Player, List<Country>> countryPlayerMap;
-    Map<String, Country> countryMap;
     IPlayerManager playerManager;
     IWorldManager worldManager;
+
+    //the following two maps keep track of country ownership
+    Map<Player, List<Country>> countryPlayerMap;
+    Map<String, Country> countryMap;
 
 
     public Game(IPlayerManager playerManager, IWorldManager worldManager){
@@ -34,7 +36,7 @@ public class Game implements GameManager {
         countryPlayerMap.clear();
     }
 
-    public String getAllCountriesFromPlayer(String playerName){
+    public String getAllCountriesInfoPlayer(String playerName){
 
         StringBuilder playerCountries = new StringBuilder();
         for(Country country : countryPlayerMap.get(playerManager.getPlayerMap().get(playerName))){
@@ -60,6 +62,7 @@ public class Game implements GameManager {
 
             country.setArmy(new Army(1, player));
 
+            countryMap.put(country.getCountryName(), country);
             countryPlayerMap.get(player).add(country);
 
             lastPlayer = player;

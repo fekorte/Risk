@@ -1,19 +1,21 @@
 package Business;
 
+import Common.Country;
 import Common.MissionConquerWorld;
 import Common.Player;
 
 import java.util.*;
 
 public class PlayerManager implements IPlayerManager{
-
+    IWorldManager worldManager;
     Map<String, Player> playerMap;
     List<Player> playerOrder;
     ArrayList<String> allowedColors;
 
 
-    public PlayerManager(){
+    public PlayerManager(IWorldManager worldManager){
 
+        this.worldManager = worldManager;
         playerMap = new HashMap<>();
         playerOrder = new ArrayList<>();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
@@ -34,7 +36,7 @@ public class PlayerManager implements IPlayerManager{
     public String addPlayer(String name, String color) {
 
         if(!playerMap.containsKey(name) && playerMap.size() != 6 &&  allowedColors.contains(color)){
-            Player newPlayer = new Player(name, color, new MissionConquerWorld());
+            Player newPlayer = new Player(name, color, new MissionConquerWorld((List<Country>) worldManager.getCountryMap().values()));
             playerMap.put(newPlayer.getPlayerName(), newPlayer);
             playerOrder.add(newPlayer);
             allowedColors.remove(color);

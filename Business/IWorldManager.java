@@ -11,5 +11,4 @@ public interface IWorldManager {
     String getCountryOwner(String country);
     String getCountryNeighbours(String country);
     Map<String, Country> getCountryMap();
-    void setCountryMap(Map<String, Country> countryMap);
 }

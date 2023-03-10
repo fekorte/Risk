@@ -1,11 +1,16 @@
 package Common;
 
+import java.util.List;
+
 public class MissionConquerWorld extends Mission{
 
-    public MissionConquerWorld(){
+    List<Country> world;
+
+    public MissionConquerWorld(List<Country> world){
 
         super();
         missionText = "Conquer the world.";
+        this.world = world;
     }
 
     @Override
@@ -14,17 +19,17 @@ public class MissionConquerWorld extends Mission{
     @Override
     public boolean isMissionCompleted(String playerName) {
 
-       if(world.isEmpty()){
+       if(countries.isEmpty()){
            return false;
        }
-
-        for(Continent continent : world.keySet()){
-            for(Country country : continent.getCountries()){
-                if(!country.getArmy().getPlayer().getPlayerName().equals(playerName)){
+        for(Country country : world){
+            for(Country owned : countries.values()){
+                if(!country.getCountryName().equals(owned.getCountryName())){
                     return false;
                 }
             }
         }
+
         return true;
     }
 }

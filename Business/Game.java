@@ -47,8 +47,6 @@ public class Game implements GameManager {
     @Override
     public Player startFirstRound() {
 
-        Map<String, Country> countryMapWithArmies = new HashMap<>();
-
         List<Country> countryList = (List<Country>) countryMap.values();
         List<Player> playerList = (List<Player>) playerManager.getPlayerMap().values();
 
@@ -63,12 +61,10 @@ public class Game implements GameManager {
             country.setArmy(new Army(1, player));
 
             countryPlayerMap.get(player).add(country);
-            countryMapWithArmies.put(country.getCountryName(), country);
 
             lastPlayer = player;
         }
 
-        worldManager.setCountryMap(countryMapWithArmies);
         return lastPlayer;
     }
 
@@ -95,7 +91,7 @@ public class Game implements GameManager {
     @Override
     public String moveUnits(String sourceCountry, String destinationCountry, int units) {
 
-        //countryMap.get(sourceCountry).getArmy().getPlayer().getPlayerMission().setWorld(worldManager.getCountryMap());
+        countryMap.get(sourceCountry).getArmy().getPlayer().getPlayerMission().setCountries(worldManager.getCountryMap());
         return null;
     }
 

@@ -1,7 +1,6 @@
 package Presentation;
 
 import Business.*;
-import Common.MissionConquerWorld;
 import Common.Player;
 
 import java.io.BufferedReader;
@@ -27,8 +26,8 @@ public class RiskCUI {
     public RiskCUI() throws IOException {
 
         in = new BufferedReader(new InputStreamReader(System.in));
-        playerManager = new PlayerManager();
         worldManager = new World();
+        playerManager = new PlayerManager(worldManager);
         gameManager = new Game(playerManager, worldManager);
         gameStarted = false;
         gameSetUp = false;

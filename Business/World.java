@@ -10,7 +10,6 @@ public class World implements IWorldManager {
 
     private Map<String, Country> countryMap; //Key is the country name
 
-
     public World(){
 
         countryMap = new HashMap<>();
@@ -43,6 +42,4 @@ public class World implements IWorldManager {
     }
 
     public Map<String, Country> getCountryMap(){ return countryMap; }
-
-    public void setCountryMap(Map<String, Country> countryMap){ this.countryMap = countryMap; }
 }

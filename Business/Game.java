@@ -12,7 +12,7 @@ public class Game implements GameManager {
     IWorldManager worldManager;
 
     //the following two maps keep track of country ownership
-    Map<Player, List<Country>> countryPlayerMap;
+    Map<String, List<Country>> countryPlayerMap; //key is player name
     Map<String, Country> countryMap;
 
 
@@ -39,7 +39,7 @@ public class Game implements GameManager {
     public String getAllCountriesInfoPlayer(String playerName){
 
         StringBuilder playerCountries = new StringBuilder();
-        for(Country country : countryPlayerMap.get(playerManager.getPlayerMap().get(playerName))){
+        for(Country country : countryPlayerMap.get(playerName)){
             playerCountries.append(country.getCountryName()).append(" ");
         }
         return playerCountries.toString();
@@ -69,18 +69,17 @@ public class Game implements GameManager {
             country.setArmy(new Army(1, player));
 
             countryMap.put(country.getCountryName(), country);
-            countryPlayerMap.get(player).add(country);
+            countryPlayerMap.get(player.getPlayerName()).add(country);
 
             lastPlayer = player;
         }
-
         return lastPlayer;
     }
 
     @Override
     public int receiveUnits(String playerName) {
 
-        List<Country> playerCountries = countryPlayerMap.get(playerManager.getPlayerMap().get(playerName));
+        List<Country> playerCountries = countryPlayerMap.get(playerName);
         int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;
 
         List<String> conqueredContinents = worldManager.getConqueredContinents(playerCountries);
@@ -100,8 +99,14 @@ public class Game implements GameManager {
     }
 
     @Override
-    public boolean distributeUnits(String selectedCountry, int units) {
-        return false;
+    public boolean distributeUnits(String playerName, String selectedCountry, int units) {
+
+        if(!getCountryOwner(selectedCountry).equals(playerName)){
+            return false;
+        }
+        countryMap.get(selectedCountry).setArmy(new Army(units, playerManager.getPlayer(playerName)));
+        countryPlayerMap.put(playerName, (List<Country>) countryMap.values());
+        return true;
     }
 
     @Override
@@ -118,8 +123,13 @@ public class Game implements GameManager {
     public String moveUnits(String sourceCountry, String destinationCountry, int units) {
 
         Player currentPlayer = countryMap.get(sourceCountry).getArmy().getPlayer();
-        currentPlayer.getPlayerMission().setCountries(countryPlayerMap.get(currentPlayer));
+        currentPlayer.getPlayerMission().setCountries(countryPlayerMap.get(currentPlayer.getPlayerName()));
         return null;
     }
 
+    public static int rollDice(){
+
+        Random random = new Random();
+        return random.nextInt(6) + 1;
+    }
 }

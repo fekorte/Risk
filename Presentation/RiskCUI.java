@@ -224,7 +224,7 @@ public class RiskCUI {
             System.out.println("Units > ");
             int units = Integer.parseInt(readInput());
 
-            if(gameManager.distributeUnits(selectedCountry, units)){
+            if(gameManager.distributeUnits(currentPlayer.getPlayerName(), selectedCountry, units)){
                 receivedUnits =- units;
                 System.out.println(units + " have been moved to " + selectedCountry + ". You have " + receivedUnits + " left.");
             }

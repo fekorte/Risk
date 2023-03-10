@@ -12,5 +12,6 @@ public interface IPlayerManager {
     Player nextPlayersTurn(String currentPlayer);
     String getAllowedColors();
     Map<String, Player> getPlayerMap();
+    Player getPlayer(String playerName);
     String getPlayersInfo();
 }

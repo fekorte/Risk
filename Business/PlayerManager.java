@@ -70,6 +70,8 @@ public class PlayerManager implements IPlayerManager{
     @Override
     public Map<String, Player> getPlayerMap(){ return playerMap; }
 
+    public Player getPlayer(String playerName){ return playerMap.get(playerName); }
+
     @Override
     public String getPlayersInfo(){
 

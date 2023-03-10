@@ -7,12 +7,13 @@ import java.util.*;
 
 public class World implements IWorldManager {
 
-    private Map<String, Country> countryMap; //Key is the country name
-    private Map<Continent, List<String>> continentListMap;
+    private final Map<String, Country> countryMap; //Key is the country name
+    private final List<Continent> continents;
+
     public World(){
 
-        continentListMap = new HashMap<>();
         countryMap = new HashMap<>();
+        continents = new ArrayList<>();
     }
 
     @Override
@@ -37,5 +38,16 @@ public class World implements IWorldManager {
 
     public Map<String, Country> getCountryMap(){ return countryMap; }
 
-    public Map<Continent, List<String>> getConqueredContinents(){ return continentListMap; }
+    public List<Continent> getContinents(){ return continents; }
+
+    public List<String> getConqueredContinents(List<Country> playersCountries){
+
+        List<String> conqueredContinents = new ArrayList<>();
+        for(Continent continent : continents){
+            if(continent.isContinentConquered(playersCountries)){
+                conqueredContinents.add(continent.getContinentName());
+            }
+        }
+        return conqueredContinents;
+    }
 }

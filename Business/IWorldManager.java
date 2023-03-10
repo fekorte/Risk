@@ -11,5 +11,5 @@ public interface IWorldManager {
     String getAllCountryInfos();
     String getCountryNeighbours(String country);
     Map<String, Country> getCountryMap();
-    Map<Continent, List<String>> getConqueredContinents();
+    List<String> getConqueredContinents(List<Country> playersCountries);
 }

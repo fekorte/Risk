@@ -1,7 +1,6 @@
 package Business;
 
 import Common.Army;
-import Common.Continent;
 import Common.Country;
 import Common.Player;
 
@@ -81,9 +80,23 @@ public class Game implements GameManager {
     @Override
     public int receiveUnits(String playerName) {
 
-        int armySize = countryPlayerMap.get(playerManager.getPlayerMap().get(playerName)).size();
-        //worldManager.getConqueredContinents(countryPlayerMap.get(playerManager.getPlayerMap().get(playerName)));
-        return (armySize < 9) ? 3 : armySize / 3;
+        List<Country> playerCountries = countryPlayerMap.get(playerManager.getPlayerMap().get(playerName));
+        int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;
+
+        List<String> conqueredContinents = worldManager.getConqueredContinents(playerCountries);
+        if(conqueredContinents.contains("Australia") || conqueredContinents.contains("South America")){
+            armySize += 2;
+        }
+        if(conqueredContinents.contains("Africa")){
+            armySize += 3;
+        }
+        if(conqueredContinents.contains("Europe") || conqueredContinents.contains("North America")){
+            armySize += 5;
+        }
+        if(conqueredContinents.contains("Asia")){
+            armySize += 7;
+        }
+        return armySize;
     }
 
     @Override

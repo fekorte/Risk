@@ -12,7 +12,7 @@ public class RiskCUI {
     private final BufferedReader in;
     private final IPlayerManager playerManager;
 
-    private final WorldManager worldManager;
+    private final IWorldManager worldManager;
     private final GameManager gameManager;
 
     Player currentPlayer;
@@ -28,7 +28,7 @@ public class RiskCUI {
         in = new BufferedReader(new InputStreamReader(System.in));
         playerManager = new PlayerManager();
         worldManager = new World();
-        gameManager = new Game(playerManager);
+        gameManager = new Game(playerManager, worldManager);
         gameStarted = false;
         gameSetUp = false;
         doneWithStep = false;
@@ -68,7 +68,6 @@ public class RiskCUI {
         if("n".equals(line) && gameStarted){
             gameStarted = false;
             gameSetUp = false;
-            playerManager.clearPlayers();
             gameManager.quitGame();
             return;
         }

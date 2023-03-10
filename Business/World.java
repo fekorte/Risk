@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class World implements WorldManager{
+public class World implements IWorldManager {
 
     private Map<String, Country> countryMap; //Key is the country abbreviation
     private List<Continent> continents;
@@ -44,4 +44,8 @@ public class World implements WorldManager{
         }
         return neighbourInfo;
     }
+
+    public Map<String, Country> getCountryMap(){ return countryMap; }
+
+    public void setCountryMap(Map<String, Country> countryMap){ this.countryMap = countryMap; }
 }

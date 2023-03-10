@@ -1,20 +1,22 @@
 package Business;
 
+import Common.Army;
 import Common.Country;
 import Common.Player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Game implements GameManager {
 
     Map<Player, List<Country>> countryPlayerMap;
     IPlayerManager playerManager;
+    IWorldManager worldManager;
 
-    public Game(IPlayerManager playerManager){
+
+    public Game(IPlayerManager playerManager, IWorldManager worldManager){
 
         this.playerManager = playerManager;
+        this.worldManager = worldManager;
         countryPlayerMap = new HashMap<>();
     }
 
@@ -26,6 +28,8 @@ public class Game implements GameManager {
     @Override
     public void quitGame() {
 
+        playerManager.clearPlayers();
+        countryPlayerMap.clear();
     }
 
     public String getAllCountriesFromPlayer(String playerName){
@@ -40,7 +44,30 @@ public class Game implements GameManager {
 
     @Override
     public Player startFirstRound() {
-        return null;
+
+        Map<String, Country> countryMapWithArmies = new HashMap<>();
+
+        List<Country> countryList = (List<Country>) worldManager.getCountryMap().values();
+        List<Player> playerList = (List<Player>) playerManager.getPlayerMap().values();
+
+        Collections.shuffle(countryList);
+        Collections.shuffle(playerList);
+
+        Player lastPlayer = null;
+        for (int i = 0; i < countryList.size(); i++) {
+            Country country = countryList.get(i);
+            Player player = playerList.get(i % playerList.size());
+
+            country.setArmy(new Army(1, player));
+
+            countryPlayerMap.get(player).add(country);
+            countryMapWithArmies.put(country.getCountryName(), country);
+
+            lastPlayer = player;
+        }
+
+        worldManager.setCountryMap(countryMapWithArmies);
+        return lastPlayer;
     }
 
     @Override

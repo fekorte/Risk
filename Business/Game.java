@@ -9,6 +9,7 @@ import java.util.*;
 public class Game implements GameManager {
 
     Map<Player, List<Country>> countryPlayerMap;
+    Map<String, Country> countryMap;
     IPlayerManager playerManager;
     IWorldManager worldManager;
 
@@ -17,6 +18,7 @@ public class Game implements GameManager {
 
         this.playerManager = playerManager;
         this.worldManager = worldManager;
+        countryMap = worldManager.getCountryMap();
         countryPlayerMap = new HashMap<>();
     }
 
@@ -47,7 +49,7 @@ public class Game implements GameManager {
 
         Map<String, Country> countryMapWithArmies = new HashMap<>();
 
-        List<Country> countryList = (List<Country>) worldManager.getCountryMap().values();
+        List<Country> countryList = (List<Country>) countryMap.values();
         List<Player> playerList = (List<Player>) playerManager.getPlayerMap().values();
 
         Collections.shuffle(countryList);
@@ -92,6 +94,8 @@ public class Game implements GameManager {
 
     @Override
     public String moveUnits(String sourceCountry, String destinationCountry, int units) {
+
+        //countryMap.get(sourceCountry).getArmy().getPlayer().getPlayerMission().setWorld(worldManager.getCountryMap());
         return null;
     }
 

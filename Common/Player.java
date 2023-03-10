@@ -12,12 +12,7 @@ public class Player {
         this.playerMission = playerMission;
     }
 
-    public String getPlayerName(){
-        return playerName;
-    }
-
-    public String getPlayerColor() { return playerColor; }
-
-    public Mission getPlayerMission() { return playerMission; }
-
+    public String getPlayerName(){ return playerName; }
+    public String getPlayerColor(){ return playerColor; }
+    public Mission getPlayerMission(){ return playerMission;}
 }

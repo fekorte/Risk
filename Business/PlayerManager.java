@@ -16,14 +16,25 @@ public class PlayerManager implements IPlayerManager{
 
         playerMap = new HashMap<>();
         playerOrder = new ArrayList<>();
-        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow"));
+        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
     }
+
+    @Override
+    public void clearPlayers(){
+
+        playerMap.clear();
+        playerOrder.clear();
+        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
+    }
+
+    @Override
+    public boolean readyToStartGame() { return (playerMap.size() > 1); }
 
     @Override
     public String addPlayer(String name, String color) {
 
         if(!playerMap.containsKey(name) && playerMap.size() != 6 &&  allowedColors.contains(color)){
-            Player newPlayer = new Player(name, color, new MissionConquerWorld(new ArrayList<>()));
+            Player newPlayer = new Player(name, color, new MissionConquerWorld());
             playerMap.put(newPlayer.getPlayerName(), newPlayer);
             playerOrder.add(newPlayer);
             allowedColors.remove(color);
@@ -32,17 +43,14 @@ public class PlayerManager implements IPlayerManager{
     }
 
     @Override
-    public boolean removePlayer(String name) {
+    public void removePlayer(String name) {
 
         if (playerMap.containsKey(name)){
             allowedColors.add(playerMap.get(name).getPlayerColor());
             playerOrder.remove(playerMap.get(name));
             playerMap.remove(name);
-            return true;
         }
-        return false;
     }
-
 
     @Override
     public Player nextPlayersTurn(String currentPlayer) {
@@ -58,6 +66,9 @@ public class PlayerManager implements IPlayerManager{
     public String getAllowedColors(){ return allowedColors.toString(); }
 
     @Override
+    public Map<String, Player> getPlayerMap(){ return playerMap; }
+
+    @Override
     public String getPlayersInfo(){
 
         StringBuilder playerInfo = new StringBuilder();
@@ -66,17 +77,4 @@ public class PlayerManager implements IPlayerManager{
         }
         return playerInfo.toString();
     }
-
-    public Map<String, Player> getPlayerMap(){ return playerMap; }
-
-    @Override
-    public void clearPlayers(){
-
-        playerMap.clear();
-        playerOrder.clear();
-        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow"));
-    }
-
-    @Override
-    public boolean readyToStartGame() { return (playerMap.size() > 1); }
 }

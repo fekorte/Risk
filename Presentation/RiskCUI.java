@@ -246,17 +246,35 @@ public class RiskCUI {
 
     private void defend(String attackingCountry, String attackedCountry, int unitsFromAttacker, List<Integer> attackerDiceResult) throws IOException {
 
-        System.out.println("Your country has been attacked " + gameManager.getCountryOwner(attackedCountry) + "! You have to defend it!");
-        System.out.println(gameManager.defend(attackedCountry, attackingCountry, attackerDiceResult, unitsFromAttacker));
+        String defenderName = gameManager.getCountryOwner(attackedCountry);
 
-        if(gameManager.getCountryOwner(attackedCountry).equals(currentPlayer.getPlayerName())) {
+        System.out.println("Your country has been attacked " + defenderName + "! You have to defend it!");
+        List<Integer> defenderDiceResult = gameManager.defend(attackedCountry, attackingCountry, attackerDiceResult, unitsFromAttacker);
+
+        System.out.println(defenderName + " rolled " + defenderDiceResult + " and " + currentPlayer.getPlayerName() + " rolled " + attackerDiceResult + ". ");
+
+        if(!gameManager.getCountryOwner(attackedCountry).equals(currentPlayer.getPlayerName())) {
+
+            System.out.println(defenderName + " was able to defend " + attackedCountry + ". ");
+        } else {
+
+            System.out.println(currentPlayer.getPlayerName() + " was able to conquer " + attackedCountry + ". " + attackingCountry + " unit amount: " +  worldManager.getCountryMap().get(attackingCountry).getArmy().getUnits() +
+            ". Current unit amount in " + attackedCountry + ": " + worldManager.getCountryMap().get(attackedCountry).getArmy().getUnits()+ ".");
             System.out.println(currentPlayer + " do you want to move additional units to the conquered country? Y/N > ");
             if (readInput().equals("Y")) {
                 System.out.println("Please note that at least one unit has to remain in " + attackingCountry);
+
                 System.out.println("Units > ");
                 int unitsToMove = Integer.parseInt(readInput());
                 gameManager.moveUnits(attackingCountry, attackedCountry, unitsToMove);
             }
+        }
+        System.out.println(worldManager.getCountryMap().get(attackedCountry).getArmy().getUnits() + " units remain in " + attackedCountry + " and "
+                + worldManager.getCountryMap().get(attackingCountry).getArmy().getUnits() + " units remain in " + attackingCountry + "\n");
+
+        if(gameManager.getAllCountriesInfoPlayer(defenderName).isEmpty()){
+            System.out.println(defenderName + " your last country has been conquered, the game has to continue without you.");
+            playerManager.removePlayer(defenderName);
         }
     }
 

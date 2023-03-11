@@ -150,7 +150,7 @@ public class Game implements GameManager {
     }
 
     @Override
-    public String defend(String countryToDefend, String attackingCountry, List<Integer> attackerDiceResult, int attackerUnits) {
+    public List<Integer> defend(String countryToDefend, String attackingCountry, List<Integer> attackerDiceResult, int attackerUnits) {
 
         List<Integer> defenderDiceResult = new ArrayList<>();
         int unitsDefender = countryMap.get(countryToDefend).getArmy().getUnits();
@@ -176,15 +176,13 @@ public class Game implements GameManager {
             }
         }
 
-        String defenderName = countryMap.get(countryToDefend).getArmy().getPlayer().getPlayerName();
-        String result = defenderName + " was able to defend " + countryToDefend + ".";
         if(countryMap.get(countryToDefend).getArmy().getUnits() == 0){
             countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, countryMap.get(attackingCountry).getArmy().getPlayer()));
-            countryPlayerMap.get(defenderName).remove(countryToDefend);
+            countryPlayerMap.get(countryMap.get(countryToDefend).getArmy().getPlayer().getPlayerName()).remove(countryToDefend);
             countryPlayerMap.get(currentPlayerName).put(countryToDefend, countryMap.get(countryToDefend));
-            result = currentPlayerName + " conquered " + countryToDefend + ".";
         }
-        return defenderName + " rolled " + defenderDiceResult + " and " + currentPlayerName + " rolled " + attackerDiceResult + ". " + defenderName + ", you lost " + lostPointsDefender + " units and " + currentPlayerName + " lost " + lostPointsAttacker + " units. " + result + "\n";
+
+        return defenderDiceResult;
      }
 
     @Override

@@ -16,7 +16,7 @@ public interface GameManager {
     int receiveUnits(String playerName);
     boolean distributeUnits(String selectedCountry, int units);
     List<Integer> attack(String attackingCountry, String attackedCountry, int units);
-    String defend(String countryToDefend, String attackingCountry, List<Integer> attackerDiceResult, int attackerUnits);
+    List<Integer> defend(String countryToDefend, String attackingCountry, List<Integer> attackerDiceResult, int attackerUnits);
     String moveUnits(String sourceCountry, String destinationCountry, int units);
 
 }

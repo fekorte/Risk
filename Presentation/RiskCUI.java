@@ -6,6 +6,8 @@ import Common.Player;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RiskCUI {
 
@@ -237,28 +239,23 @@ public class RiskCUI {
         String attackedCountry = readInput();
         System.out.println("Units (select max. 3, keep in mind that one unit has to remain in your country)  > ");
         int units = Integer.parseInt(readInput());
-        System.out.println(gameManager.attack(attackingCountry, attackedCountry, units));
-
-        defend(attackingCountry, attackedCountry, units);
+        List<Integer> attackerDiceResult = gameManager.attack(attackingCountry, attackedCountry, units);
+        System.out.println(attackingCountry + " has attacked " + attackedCountry + ". " + currentPlayer.getPlayerName() + " you've rolled " + attackerDiceResult);
+        defend(attackingCountry, attackedCountry, units, attackerDiceResult);
     }
 
-    private void defend(String attackingCountry, String attackedCountry, int unitsFromAttacker) throws IOException {
+    private void defend(String attackingCountry, String attackedCountry, int unitsFromAttacker, List<Integer> attackerDiceResult) throws IOException {
 
         System.out.println("Your country has been attacked " + gameManager.getCountryOwner(attackedCountry) + "! You have to defend it!");
-        System.out.println("Units (select max. 2)  > ");
-        int units = Integer.parseInt(readInput());
+        System.out.println(gameManager.defend(attackedCountry, attackingCountry, attackerDiceResult, unitsFromAttacker));
 
-        System.out.println(gameManager.defend(attackedCountry, attackingCountry, units));
-
-        if(gameManager.getCountryOwner(attackedCountry).equals(currentPlayer.getPlayerName())){
+        if(gameManager.getCountryOwner(attackedCountry).equals(currentPlayer.getPlayerName())) {
             System.out.println(currentPlayer + " do you want to move additional units to the conquered country? Y/N > ");
             if (readInput().equals("Y")) {
                 System.out.println("Please note that at least one unit has to remain in " + attackingCountry);
                 System.out.println("Units > ");
                 int unitsToMove = Integer.parseInt(readInput());
-                gameManager.moveUnits(attackingCountry, attackedCountry, unitsToMove + unitsFromAttacker);
-            } else {
-                gameManager.moveUnits(attackingCountry, attackedCountry, unitsFromAttacker);
+                gameManager.moveUnits(attackingCountry, attackedCountry, unitsToMove);
             }
         }
     }

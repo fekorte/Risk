@@ -16,4 +16,6 @@ public class Army {
     public int getUnits(){ return units; }
 
     public void addUnits(int units){ this.units += units; }
+
+    public void removeUnits(int units){ this.units -= units; }
 }

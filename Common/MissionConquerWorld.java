@@ -20,8 +20,6 @@ public class MissionConquerWorld extends Mission{
     @Override
     public boolean isMissionCompleted(String playerName) {
 
-        List<String> playerCountries = countries.stream().map(Country::getCountryName).toList();
-        List<String> worldCountries = world.stream().map(Country::getCountryName).toList();
-        return ((new HashSet<>(playerCountries).containsAll(worldCountries)));
+        return (new HashSet<>(countries).containsAll(world));
     }
 }

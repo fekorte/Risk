@@ -14,6 +14,8 @@ public class Game implements GameManager {
     Map<String, Map<String, Country>> countryPlayerMap; //key 1 is player name, key 2 is country name
     Map<String, Country> countryMap; //key is country name
 
+    List<String> involvedCountries; //String: country name
+
 
     public Game(IPlayerManager playerManager, IWorldManager worldManager){
 
@@ -21,6 +23,7 @@ public class Game implements GameManager {
         this.worldManager = worldManager;
         countryMap = worldManager.getCountryMap();
         countryPlayerMap = new HashMap<>();
+        involvedCountries = new ArrayList<>();
     }
 
 
@@ -88,6 +91,7 @@ public class Game implements GameManager {
     @Override
     public int receiveUnits(String playerName) {
 
+        involvedCountries.clear();
         this.currentPlayerName = playerName;
         List<Country> playerCountries = new ArrayList<>(countryPlayerMap.get(playerName).values());
         int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;
@@ -140,6 +144,13 @@ public class Game implements GameManager {
             //return "One unit has to remain in " + attackingCountry;
             return null;
         }
+        if(!involvedCountries.contains(attackedCountry)){
+            involvedCountries.add(attackedCountry);
+        }
+
+        if(!involvedCountries.contains(attackingCountry)){
+            involvedCountries.add(attackingCountry);
+        }
 
         List<Integer> attackerDiceResult = new ArrayList<>();
         while(units != 0){
@@ -164,12 +175,10 @@ public class Game implements GameManager {
         int comparisonSize = Math.min(attackerDiceResult.size(), defenderDiceResult.size());
 
         int lostPointsAttacker = 0;
-        int lostPointsDefender = 0;
 
         for (int i = 0; i < comparisonSize - 1; i++){
             if ((attackerDiceResult.get(i) > defenderDiceResult.get(i))) {
                 countryMap.get(countryToDefend).getArmy().removeUnits(1);
-                lostPointsDefender++;
             } else {
                 countryMap.get(attackingCountry).getArmy().removeUnits(1);
                 lostPointsAttacker++;
@@ -186,11 +195,28 @@ public class Game implements GameManager {
      }
 
     @Override
-    public String moveUnits(String sourceCountry, String destinationCountry, int units) {
+    public void moveUnits(String sourceCountry, String destinationCountry, int units, boolean afterConquering) {
 
-        Player currentPlayer = countryMap.get(sourceCountry).getArmy().getPlayer();
-        currentPlayer.getPlayerMission().setCountries(new ArrayList<>(countryPlayerMap.get(currentPlayer.getPlayerName()).values()));
-        return null;
+        if(!afterConquering){
+            if(involvedCountries.contains(sourceCountry) || involvedCountries.contains(destinationCountry)){
+                return;
+            }
+        }
+
+        if(!getCountryOwner(sourceCountry).equals(currentPlayerName)){
+            return;
+        }
+
+        if(countryMap.get(sourceCountry).getArmy().getUnits() - units <= 1){
+            return;
+        }
+
+        if(!countryMap.get(sourceCountry).getNeighbours().contains(countryMap.get(destinationCountry))){
+            return;
+        }
+
+        countryMap.get(sourceCountry).getArmy().removeUnits(units);
+        countryMap.get(destinationCountry).getArmy().addUnits(units);
     }
 
     public static int rollDice(){

@@ -253,20 +253,20 @@ public class RiskCUI {
 
         System.out.println(defenderName + " rolled " + defenderDiceResult + " and " + currentPlayer.getPlayerName() + " rolled " + attackerDiceResult + ". ");
 
-        if(!gameManager.getCountryOwner(attackedCountry).equals(currentPlayer.getPlayerName())) {
-
+        if(!gameManager.getCountryOwner(attackedCountry).equals(currentPlayer.getPlayerName())){
             System.out.println(defenderName + " was able to defend " + attackedCountry + ". ");
-        } else {
 
+        } else {
             System.out.println(currentPlayer.getPlayerName() + " was able to conquer " + attackedCountry + ". " + attackingCountry + " unit amount: " +  worldManager.getCountryMap().get(attackingCountry).getArmy().getUnits() +
             ". Current unit amount in " + attackedCountry + ": " + worldManager.getCountryMap().get(attackedCountry).getArmy().getUnits()+ ".");
             System.out.println(currentPlayer + " do you want to move additional units to the conquered country? Y/N > ");
+
             if (readInput().equals("Y")) {
                 System.out.println("Please note that at least one unit has to remain in " + attackingCountry);
 
                 System.out.println("Units > ");
                 int unitsToMove = Integer.parseInt(readInput());
-                gameManager.moveUnits(attackingCountry, attackedCountry, unitsToMove);
+                gameManager.moveUnits(attackingCountry, attackedCountry, unitsToMove, true);
             }
         }
         System.out.println(worldManager.getCountryMap().get(attackedCountry).getArmy().getUnits() + " units remain in " + attackedCountry + " and "
@@ -288,7 +288,7 @@ public class RiskCUI {
         System.out.println("Amount of units > ");
         int units = Integer.parseInt(readInput());
 
-        gameManager.moveUnits(sourceCountry, destinationCountry, units);
+        gameManager.moveUnits(sourceCountry, destinationCountry, units, false);
     }
 
     private String readInput() throws IOException {

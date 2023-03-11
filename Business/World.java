@@ -1,5 +1,6 @@
 package Business;
 
+import Common.Army;
 import Common.Continent;
 import Common.Country;
 
@@ -12,7 +13,17 @@ public class World implements IWorldManager {
 
     public World(){
 
+        List<Country> neighbours = new ArrayList<>();
+        List<Country> neighbours2 = new ArrayList<>();
+        Country country = new Country("Germany", "DE", new Continent("Europe", neighbours), neighbours, new Army());
+        Country country2 = new Country("Greece", "G", new Continent("Europe", neighbours2), neighbours2, new Army());
+        country.addNeighbour(country2);
+        country2.addNeighbour(country);
+
         countryMap = new HashMap<>();
+        countryMap.put(country.getCountryName(), country);
+        countryMap.put(country2.getCountryName(), country2);
+
         continents = new ArrayList<>();
     }
 
@@ -37,8 +48,6 @@ public class World implements IWorldManager {
     }
 
     public Map<String, Country> getCountryMap(){ return countryMap; }
-
-    public List<Continent> getContinents(){ return continents; }
 
     public List<String> getConqueredContinents(List<Country> playersCountries){
 

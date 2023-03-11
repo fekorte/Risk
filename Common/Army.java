@@ -12,4 +12,8 @@ public class Army {
     }
 
     public Player getPlayer(){ return player; }
+
+    public int getUnits(){ return units; }
+
+    public void addUnits(int units){ this.units += units; }
 }

@@ -10,10 +10,11 @@ public class Game implements GameManager {
 
     IPlayerManager playerManager;
     IWorldManager worldManager;
+    String currentPlayerName;
 
     //the following two maps keep track of country ownership
     Map<String, List<Country>> countryPlayerMap; //key is player name
-    Map<String, Country> countryMap;
+    Map<String, Country> countryMap; //key is country name
 
 
     public Game(IPlayerManager playerManager, IWorldManager worldManager){
@@ -23,6 +24,7 @@ public class Game implements GameManager {
         countryMap = worldManager.getCountryMap();
         countryPlayerMap = new HashMap<>();
     }
+
 
     @Override
     public void saveGame() {
@@ -40,7 +42,8 @@ public class Game implements GameManager {
 
         StringBuilder playerCountries = new StringBuilder();
         for(Country country : countryPlayerMap.get(playerName)){
-            playerCountries.append(country.getCountryName()).append(" ");
+            playerCountries.append(country.getCountryName()).append(": ");
+            playerCountries.append(country.getArmy().getUnits()).append("\n");
         }
         return playerCountries.toString();
     }
@@ -55,8 +58,16 @@ public class Game implements GameManager {
     @Override
     public Player startFirstRound() {
 
-        List<Country> countryList = (List<Country>) countryMap.values();
-        List<Player> playerList = (List<Player>) playerManager.getPlayerMap().values();
+        List<Country> countryList = new ArrayList<>(countryMap.values());
+        List<Player> playerList = new ArrayList<>((playerManager.getPlayerMap().values()));
+
+        if(playerList.isEmpty() || playerList.size() == 1){
+            return null;
+        }
+
+        for(Player player : playerList){
+            countryPlayerMap.put(player.getPlayerName(), new ArrayList<>());
+        }
 
         Collections.shuffle(countryList);
         Collections.shuffle(playerList);
@@ -79,7 +90,8 @@ public class Game implements GameManager {
     @Override
     public int receiveUnits(String playerName) {
 
-        List<Country> playerCountries = countryPlayerMap.get(playerName);
+        this.currentPlayerName = playerName;
+        List<Country> playerCountries = new ArrayList<>(countryPlayerMap.get(playerName));
         int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;
 
         List<String> conqueredContinents = worldManager.getConqueredContinents(playerCountries);
@@ -99,19 +111,35 @@ public class Game implements GameManager {
     }
 
     @Override
-    public boolean distributeUnits(String playerName, String selectedCountry, int units) {
+    public boolean distributeUnits(String selectedCountry, int units) {
 
-        if(!getCountryOwner(selectedCountry).equals(playerName)){
+        if(!getCountryOwner(selectedCountry).equals(currentPlayerName)){
             return false;
         }
-        countryMap.get(selectedCountry).setArmy(new Army(units, playerManager.getPlayer(playerName)));
-        countryPlayerMap.put(playerName, (List<Country>) countryMap.values());
+        countryMap.get(selectedCountry).getArmy().addUnits(units);
         return true;
     }
 
     @Override
     public String attack(String attackingCountry, String attackedCountry, int units) {
-        return null;
+
+        int unitsAttacker = countryMap.get(attackingCountry).getArmy().getUnits();
+        if(!worldManager.getCountryNeighbours(attackingCountry).contains(attackedCountry) || unitsAttacker < 2){
+            return "Please select a neighbouring country and only attack with a country which has at least two units";
+        }
+        if(units > 3){
+            return "You can only use three units for your attack.";
+        }
+
+        if(unitsAttacker == units){
+            return "One unit has to remain in " + attackingCountry;
+        }
+        List<Integer> diceResult = new ArrayList<>();
+        while(units != 0){
+            diceResult.add(rollDice());
+            units--;
+        }
+        return "You attacked " + attackedCountry + "! You rolled: " + diceResult;
     }
 
     @Override

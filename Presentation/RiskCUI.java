@@ -16,7 +16,6 @@ public class RiskCUI {
     private final GameManager gameManager;
 
     Player currentPlayer;
-
     boolean gameStarted;
     boolean gameSetUp;
 
@@ -106,9 +105,9 @@ public class RiskCUI {
             }
             case "s" -> { //start game after players were selected
 
-                if(playerManager.readyToStartGame()){
+                this.currentPlayer = gameManager.startFirstRound();
+                if(currentPlayer != null){
                     gameSetUp = true;
-                    currentPlayer = gameManager.startFirstRound();
                     riskTurn();
                 }
             }
@@ -119,15 +118,15 @@ public class RiskCUI {
 
     private void riskTurn() throws IOException {
 
-        System.out.println("New round! It's your turn " + currentPlayer);
+        System.out.println("New round! It's your turn " + currentPlayer.getPlayerName());
 
         //receiveUnits
         int receivedUnits = gameManager.receiveUnits(currentPlayer.getPlayerName());
-        System.out.println("You receive " + receivedUnits + " units");
+        System.out.println("You receive " + receivedUnits + " units.");
 
 
         //distribute units
-        System.out.println("You can distribute your received units to your countries. You can inform yourself in this menu to plan better.");
+        System.out.println("You can distribute your received units to your countries. You can inform yourself in this menu to plan better how to distribute your units.");
         playerChoice(false, false);
         distributeUnits(receivedUnits);
 
@@ -214,7 +213,7 @@ public class RiskCUI {
 
     private void distributeUnits(int receivedUnits) throws IOException {
 
-        System.out.println("Now you have to distribute your units. Where do you want to place them? ");
+        System.out.println("Now you have to distribute your units. " + "You received " + receivedUnits + ". Where do you want to place them? ");
 
         while(receivedUnits != 0){
             System.out.println("This is the current unit contribution: " + gameManager.getAllCountriesInfoPlayer(currentPlayer.getPlayerName()));
@@ -224,8 +223,8 @@ public class RiskCUI {
             System.out.println("Units > ");
             int units = Integer.parseInt(readInput());
 
-            if(gameManager.distributeUnits(currentPlayer.getPlayerName(), selectedCountry, units)){
-                receivedUnits =- units;
+            if(gameManager.distributeUnits(selectedCountry, units)){
+                receivedUnits -= units;
                 System.out.println(units + " have been moved to " + selectedCountry + ". You have " + receivedUnits + " left.");
             }
         }

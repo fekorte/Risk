@@ -20,15 +20,13 @@ public class Country {
 
     public String getCountryName(){ return countryName; }
 
-    public String getAbbreviation(){ return abbreviation; }
-
-    public Continent getContinent() { return continent; }
-
     public Army getArmy(){ return army; }
 
     public void setArmy(Army army) { this.army = army; }
 
     public List<Country> getNeighbours(){ return neighbours; }
 
-    public String getCountryInfo(){ return "Name: " + countryName + ", " + abbreviation + ", " + continent + ", Owner: " + army.getPlayer().getPlayerName() + "\n"; }
+    public void addNeighbour(Country neighbouringCountry){ neighbours.add(neighbouringCountry); }
+
+    public String getCountryInfo(){ return "Name: " + countryName + ", " + abbreviation + ", " + continent.getContinentName() + ", Owner: " + army.getPlayer().getPlayerName() + "\n"; }
 }

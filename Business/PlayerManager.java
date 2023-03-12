@@ -11,7 +11,6 @@ public class PlayerManager implements IPlayerManager{
     List<Player> playerOrder;
     ArrayList<String> allowedColors;
 
-
     public PlayerManager(IWorldManager worldManager){
 
         this.worldManager = worldManager;

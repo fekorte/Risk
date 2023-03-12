@@ -13,7 +13,6 @@ public class Game implements GameManager {
     String currentPlayerName;
     Map<String, Map<String, Country>> countryPlayerMap; //key 1 is player name, key 2 is country name
     Map<String, Country> countryMap; //key is country name
-
     List<String> involvedCountries; //String: country name
 
 
@@ -91,6 +90,10 @@ public class Game implements GameManager {
     @Override
     public int receiveUnits(String playerName) {
 
+        if(!playerManager.getPlayerMap().containsKey(playerName)){
+            return 0;
+        }
+
         involvedCountries.clear();
         this.currentPlayerName = playerName;
         List<Country> playerCountries = new ArrayList<>(countryPlayerMap.get(playerName).values());
@@ -113,12 +116,16 @@ public class Game implements GameManager {
     }
 
     @Override
-    public boolean distributeUnits(String selectedCountry, int units) {
+    public boolean distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) {
 
         if(!getCountryOwner(selectedCountry).equals(currentPlayerName)){
             return false;
         }
-        countryMap.get(selectedCountry).getArmy().addUnits(units);
+
+        if(receivedUnits - selectedUnits < 0){
+            return false;
+        }
+        countryMap.get(selectedCountry).getArmy().addUnits(selectedUnits);
         return true;
     }
 

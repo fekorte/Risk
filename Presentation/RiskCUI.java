@@ -42,36 +42,19 @@ public class RiskCUI {
         }
 
         if(gameStarted && !gameSetUp){
-            System.out.print("Commands: \n  Add player:  'p'");
-            System.out.print("         \n  Remove player:  'r'");
-            System.out.print("         \n  Show all players:  'a'");
-            System.out.print("         \n  Show available colors: 'c'");
+            System.out.print("Commands: \n  Add player:  'a'");
+            System.out.print("         \n  Remove player:  'b'");
+            System.out.print("         \n  Show all players:  'c'");
+            System.out.print("         \n  Show available colors: 'd'");
             System.out.print("         \n  Start game:  's'");
         }
-
-        if(gameStarted && gameSetUp){
-            System.out.print("Commands: \n  Show game overview:  'o'");
-            System.out.print("         \n  Save game:  's'");
-            System.out.print("         \n  Show all players:  'a'");
-        }
-
         System.out.print("         \n  ---------------------");
-        if(gameStarted){
-            System.out.print("         \n  New game:        'n'");
-        }
         System.out.println("         \n  Quit:        'q'");
         System.out.print("> ");
         System.out.flush();
     }
 
     private void processInput(String line) throws IOException {
-
-        if("n".equals(line) && gameStarted){
-            gameStarted = false;
-            gameSetUp = false;
-            gameManager.quitGame();
-            return;
-        }
 
         if(!gameStarted && !gameSetUp){ //process input for start game in the very beginning
             if ("s".equals(line)) {
@@ -88,8 +71,7 @@ public class RiskCUI {
     private void processGameSetUpInput(String line) throws IOException{
 
         switch (line) {
-            case "a" -> System.out.println(playerManager.getPlayersInfo());
-            case "p" -> { //add player
+            case "a" -> { //add player
 
                 System.out.println("Name > ");
                 String playerName = readInput();
@@ -99,12 +81,18 @@ public class RiskCUI {
                 System.out.println("Player has been added. " + playerName + ", do not share your mission with anyone else. Your mission is: " +
                         playerManager.addPlayer(playerName, playerColor));
             }
-            case "r" -> { //remove player
+            case "b" -> { //remove player
 
                 System.out.println("Name > ");
                 String playerToRemove = readInput();
                 playerManager.removePlayer(playerToRemove);
             }
+
+            case "c" -> System.out.println(playerManager.getPlayersInfo());
+
+            case "d" -> //show available colors
+                    System.out.println(playerManager.getAllowedColors());
+
             case "s" -> { //start game after players were selected
 
                 this.currentPlayer = gameManager.startFirstRound();
@@ -113,8 +101,7 @@ public class RiskCUI {
                     riskTurn();
                 }
             }
-            case "c" -> //show available colors
-                    System.out.println(playerManager.getAllowedColors());
+
         }
     }
 
@@ -174,15 +161,20 @@ public class RiskCUI {
 
     private void gameOverviewMenu(boolean attack, boolean moveUnits){
 
-        System.out.print("Commands: \n  Show your country infos:  'a'");
+        System.out.print("Commands: \n  Show all players:  'a'");
         System.out.print("         \n  Show all country infos:  'b'");
-        System.out.print("         \n  Get info about neighbouring countries:  'c'");
-        System.out.println("         \n  Done, continue with next step:  'd'");
+        System.out.print("         \n  Show your country infos:  'c'");
+        System.out.print("         \n  Get info about neighbouring countries:  'd'");
+        System.out.println("         \n  Done, continue with next step:  'e'");
         if(attack){
-            System.out.println("         \n  Attack:  'e'");
+            System.out.println("         \n  Attack:  'f'");
         } else if(moveUnits){
-            System.out.println("         \n  Move units:  'e'");
+            System.out.println("         \n  Move units:  'f'");
         }
+        System.out.print("         \n  ---------------------");
+        System.out.print("         \n  Save game:  's'");
+        System.out.print("         \n  Start new game:        'n'");
+        System.out.println("         \n  Quit:        'q'");
         System.out.print("> ");
         System.out.flush();
     }
@@ -190,20 +182,28 @@ public class RiskCUI {
     private void processGameInput(String line, boolean attack, boolean moveUnits) throws IOException {
 
         switch(line) {
-            case "a" -> //show players' country infos
-                    System.out.println(gameManager.getAllCountriesInfoPlayer(currentPlayer.getPlayerName()));
+            case "a" -> System.out.println(playerManager.getPlayersInfo());
 
             case "b" -> //show all country infos
                     System.out.println(worldManager.getAllCountryInfos());
 
-            case "c" -> { //get info about neighbouring countries
+            case "c" -> //show players' country infos
+                    System.out.println(gameManager.getAllCountriesInfoPlayer(currentPlayer.getPlayerName()));
+
+            case "d" -> { //get info about neighbouring countries
                 System.out.println("Country > ");
                 String selectedCountry = readInput();
                 System.out.println(worldManager.getCountryNeighbours(selectedCountry));
             }
 
-            case "d" -> //done, continue with next step
+            case "e" -> //done, continue with next step
                     doneWithStep = true;
+            case "n" -> { //start new game
+                gameStarted = false;
+                gameSetUp = false;
+                gameManager.quitGame();
+            }
+            case "s" -> gameManager.saveGame();
         }
 
         if("e".equals(line) && attack){
@@ -223,11 +223,11 @@ public class RiskCUI {
             System.out.println("Country > ");
             String selectedCountry = readInput();
             System.out.println("Units > ");
-            int units = Integer.parseInt(readInput());
+            int selectedUnits = Integer.parseInt(readInput());
 
-            if(gameManager.distributeUnits(selectedCountry, units)){
-                receivedUnits -= units;
-                System.out.println(units + " have been moved to " + selectedCountry + ". You have " + receivedUnits + " left.");
+            if(gameManager.distributeUnits(selectedCountry, selectedUnits, receivedUnits)){
+                receivedUnits -= selectedUnits;
+                System.out.println(selectedUnits + " have been moved to " + selectedCountry + ". You have " + receivedUnits + " left.");
             }
         }
     }
@@ -269,12 +269,19 @@ public class RiskCUI {
                 gameManager.moveUnits(attackingCountry, attackedCountry, unitsToMove, true);
             }
         }
+
         System.out.println(worldManager.getCountryMap().get(attackedCountry).getArmy().getUnits() + " units remain in " + attackedCountry + " and "
                 + worldManager.getCountryMap().get(attackingCountry).getArmy().getUnits() + " units remain in " + attackingCountry + "\n");
 
         if(gameManager.getAllCountriesInfoPlayer(defenderName).isEmpty()){
             System.out.println(defenderName + " your last country has been conquered, the game has to continue without you.");
             playerManager.removePlayer(defenderName);
+            if(playerManager.getPlayerMap().size() == 1){
+                System.out.println(currentPlayer.getPlayerName() + " congratulation, you won!");
+                gameStarted = false;
+                gameSetUp = false;
+                gameManager.quitGame();
+            }
         }
     }
 
@@ -300,7 +307,6 @@ public class RiskCUI {
     public void run() {
 
         String input = "";
-
         do {
             showMenu();
 

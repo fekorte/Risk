@@ -5,11 +5,14 @@ import Common.Continent;
 import Common.Country;
 import Common.Exceptions.*;
 import Common.Player;
+import Persistence.IPersistence;
 
+import java.io.IOException;
 import java.util.*;
 
 public class Game implements GameManager {
 
+    IPersistence persistence;
     IPlayerManager playerManager;
     IWorldManager worldManager;
     String currentPlayerName;
@@ -18,8 +21,9 @@ public class Game implements GameManager {
     List<String> involvedCountries; //String: country name
 
 
-    public Game(IPlayerManager playerManager, IWorldManager worldManager){
+    public Game(IPlayerManager playerManager, IWorldManager worldManager, IPersistence persistence) throws IOException {
 
+        this.persistence = persistence;
         this.playerManager = playerManager;
         this.worldManager = worldManager;
         countryMap = worldManager.getCountryMap();
@@ -29,15 +33,25 @@ public class Game implements GameManager {
 
 
     @Override
-    public void saveGame() {
+    public void saveGame() throws IOException {
 
+        persistence.savePlayers(playerManager.getPlayerMap());
+        persistence.saveGameStateWorld(worldManager.getContinents());
     }
 
     @Override
-    public void quitGame() {
+    public void quitGame() throws IOException {
 
         playerManager.clearPlayers();
+        worldManager.clearWorld();
         countryPlayerMap.clear();
+    }
+
+    @Override
+    public void newGame() throws IOException {
+
+        persistence.resetGameState();
+        quitGame();
     }
 
     public String getAllCountriesInfoPlayer(String playerName){

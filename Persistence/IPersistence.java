@@ -15,6 +15,7 @@ public interface IPersistence {
     boolean saveGameStateWorld(Map<String, Continent> continentMap) throws IOException;
     Map<String, Continent>  fetchGameStateWorld() throws IOException;
     boolean savePlayers(Map<String, Player> playerMap) throws IOException;
+    public void resetGameState() throws IOException;
     Map<String, Player> fetchPlayers() throws IOException;
 
 }

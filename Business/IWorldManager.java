@@ -3,6 +3,7 @@ package Business;
 import Common.Continent;
 import Common.Country;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -12,4 +13,5 @@ public interface IWorldManager {
     Map<String, Country> getCountryMap();
     List<String> getConqueredContinents(List<Country> playersCountries);
     Map<String, Continent> getContinents();
+    void clearWorld() throws IOException;
 }

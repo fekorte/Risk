@@ -1,9 +1,7 @@
 package Business;
 
-import Common.Army;
 import Common.Continent;
 import Common.Country;
-import Persistence.FilePersistence;
 import Persistence.IPersistence;
 
 import java.io.IOException;
@@ -11,14 +9,23 @@ import java.util.*;
 
 public class World implements IWorldManager {
 
-    private final Map<String, Country> countryMap; //Key is the country name
-    private final Map<String, Continent> continents; //Key is continent name
+    IPersistence persistence;
+    private Map<String, Country> countryMap; //Key is the country name
+    private Map<String, Continent> continents; //Key is continent name
 
-    public World() throws IOException {
+    public World(IPersistence persistence) throws IOException {
 
-        IPersistence persistence = new FilePersistence();
-        continents = new HashMap<>(persistence.fetchContinents());
+        this.persistence = persistence;
+        initialize();
+    }
 
+    public void initialize() throws IOException {
+
+        if(!persistence.fetchGameStateWorld().isEmpty()) {
+            continents = new HashMap<>(persistence.fetchGameStateWorld());
+        } else {
+            continents = new HashMap<>(persistence.fetchContinents());
+        }
         countryMap = new HashMap<>();
         for(Continent continent : continents.values()){
             for(Country country : continent.getCountries()){
@@ -27,6 +34,12 @@ public class World implements IWorldManager {
         }
     }
 
+    public void clearWorld() throws IOException {
+
+        continents.clear();
+        countryMap.clear();
+        initialize();
+    }
     @Override
     public String getAllCountryInfos() {
 
@@ -40,11 +53,11 @@ public class World implements IWorldManager {
     @Override
     public String getCountryNeighbours(String country){
 
-        String neighbourInfo = "";
+        StringBuilder neighbourInfo = new StringBuilder();
         for(Country neighbour : countryMap.get(country).getNeighbours()){
-            neighbourInfo = neighbour.getCountryName() + " ";
+            neighbourInfo.append(neighbour.getCountryName()).append(" ");
         }
-        return neighbourInfo;
+        return neighbourInfo.toString();
     }
 
     public Map<String, Country> getCountryMap(){ return countryMap; }

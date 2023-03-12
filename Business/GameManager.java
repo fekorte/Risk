@@ -3,12 +3,14 @@ package Business;
 import Common.Exceptions.*;
 import Common.Player;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface GameManager {
 
-    void saveGame();
-    void quitGame();
+    void saveGame() throws IOException;
+    void quitGame() throws IOException;
+    void newGame() throws IOException;
     String getAllCountriesInfoPlayer(String playerName);
     String getCountryOwner(String country);
     Player startFirstRound() throws ExceptionNotEnoughPlayer;

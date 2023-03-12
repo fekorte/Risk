@@ -3,6 +3,8 @@ package Presentation;
 import Business.*;
 import Common.Exceptions.*;
 import Common.Player;
+import Persistence.FilePersistence;
+import Persistence.IPersistence;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,9 +29,11 @@ public class RiskCUI {
     public RiskCUI() throws IOException {
 
         in = new BufferedReader(new InputStreamReader(System.in));
-        worldManager = new World();
+
+        IPersistence persistence = new FilePersistence();
+        worldManager = new World(persistence);
         playerManager = new PlayerManager(worldManager);
-        gameManager = new Game(playerManager, worldManager);
+        gameManager = new Game(playerManager, worldManager, persistence);
         gameStarted = false;
         gameSetUp = false;
         doneWithStep = false;
@@ -209,7 +213,10 @@ public class RiskCUI {
             case "n" -> { //start new game
                 gameStarted = false;
                 gameSetUp = false;
-                gameManager.quitGame();
+                System.out.println("Previously saved data will be deleted. Do you want to continue? Y/N > ");
+                if (readInput().equals("Y")) {
+                    gameManager.newGame();
+                }
             }
             case "s" -> gameManager.saveGame();
         }

@@ -154,6 +154,17 @@ public class FilePersistence implements IPersistence{
         return !playerMap.isEmpty();
     }
 
+    public void resetGameState() throws IOException {
+
+        openForWriting("Data/GameStatePlayer");
+        printLine("");
+        close();
+        openForWriting("Data/GameStateWorld");
+        printLine("");
+        close();
+    }
+
+
     private String readLine() throws IOException {
         if (reader != null)
             return reader.readLine();

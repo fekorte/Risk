@@ -2,6 +2,7 @@ package Business;
 
 import Common.Army;
 import Common.Country;
+import Common.Exceptions.*;
 import Common.Player;
 
 import java.util.*;
@@ -38,7 +39,7 @@ public class Game implements GameManager {
         countryPlayerMap.clear();
     }
 
-    public String getAllCountriesInfoPlayer(String playerName) {
+    public String getAllCountriesInfoPlayer(String playerName){
 
         StringBuilder playerCountries = new StringBuilder();
         for (Country country : countryPlayerMap.get(playerName).values()) {
@@ -56,13 +57,13 @@ public class Game implements GameManager {
 
 
     @Override
-    public Player startFirstRound() {
+    public Player startFirstRound() throws ExceptionNotEnoughPlayer {
 
         List<Country> countryList = new ArrayList<>(countryMap.values());
         List<Player> playerList = new ArrayList<>((playerManager.getPlayerMap().values()));
 
         if(playerList.isEmpty() || playerList.size() == 1){
-            return null;
+            throw new ExceptionNotEnoughPlayer();
         }
 
         for(Player player : playerList){
@@ -88,10 +89,10 @@ public class Game implements GameManager {
     }
 
     @Override
-    public int receiveUnits(String playerName) {
+    public int receiveUnits(String playerName) throws ExceptionObjectDoesntExist{
 
         if(!playerManager.getPlayerMap().containsKey(playerName)){
-            return 0;
+           throw new ExceptionObjectDoesntExist(playerName);
         }
 
         involvedCountries.clear();
@@ -116,40 +117,41 @@ public class Game implements GameManager {
     }
 
     @Override
-    public boolean distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) {
+    public void distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits{
 
         if(!getCountryOwner(selectedCountry).equals(currentPlayerName)){
-            return false;
+            throw new ExceptionCountryNotOwned(selectedCountry, currentPlayerName);
         }
 
         if(receivedUnits - selectedUnits < 0){
-            return false;
+            throw new ExceptionTooManyUnits(receivedUnits);
         }
         countryMap.get(selectedCountry).getArmy().addUnits(selectedUnits);
-        return true;
     }
 
     @Override
-    public List<Integer> attack(String attackingCountry, String attackedCountry, int units) {
+    public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits{
 
         if(!getCountryOwner(attackingCountry).equals(currentPlayerName)){
-            //return "You can only attack from a country that belongs to you.";
-            return null;
+            throw new ExceptionCountryNotOwned(attackingCountry, currentPlayerName);
+        }
+
+
+        if(!worldManager.getCountryNeighbours(attackingCountry).contains(attackedCountry)){
+            throw new ExceptionCountryIsNoNeighbour(attackingCountry, attackedCountry);
         }
 
         int unitsAttacker = countryMap.get(attackingCountry).getArmy().getUnits();
-        if(!worldManager.getCountryNeighbours(attackingCountry).contains(attackedCountry) || unitsAttacker < 2){
-            //return "Please select a neighbouring country and only attack with a country which has at least two units";
-            return null;
+        if(unitsAttacker < 2){
+            throw new ExceptionTooLessUnits(2);
         }
+
         if(units > 3){
-            //return "You can only use three units for your attack.";
-            return null;
+            throw new ExceptionTooManyUnits(3);
         }
 
         if(unitsAttacker == units){
-            //return "One unit has to remain in " + attackingCountry;
-            return null;
+            throw new ExceptionTooManyUnits(unitsAttacker - 1);
         }
         if(!involvedCountries.contains(attackedCountry)){
             involvedCountries.add(attackedCountry);
@@ -202,24 +204,24 @@ public class Game implements GameManager {
      }
 
     @Override
-    public void moveUnits(String sourceCountry, String destinationCountry, int units, boolean afterConquering) {
+    public void moveUnits(String sourceCountry, String destinationCountry, int units, boolean afterConquering) throws ExceptionInvolvedCountrySelected, ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryIsNoNeighbour {
 
         if(!afterConquering){
             if(involvedCountries.contains(sourceCountry) || involvedCountries.contains(destinationCountry)){
-                return;
+                throw new ExceptionInvolvedCountrySelected();
             }
         }
 
         if(!getCountryOwner(sourceCountry).equals(currentPlayerName)){
-            return;
+            throw new ExceptionCountryNotOwned(sourceCountry, currentPlayerName);
         }
 
-        if(countryMap.get(sourceCountry).getArmy().getUnits() - units <= 1){
-            return;
+        if(countryMap.get(sourceCountry).getArmy().getUnits() - units < 1){
+            throw new ExceptionTooManyUnits(countryMap.get(sourceCountry).getArmy().getUnits() - 1);
         }
 
         if(!countryMap.get(sourceCountry).getNeighbours().contains(countryMap.get(destinationCountry))){
-            return;
+            throw new ExceptionCountryIsNoNeighbour(sourceCountry, destinationCountry);
         }
 
         countryMap.get(sourceCountry).getArmy().removeUnits(units);

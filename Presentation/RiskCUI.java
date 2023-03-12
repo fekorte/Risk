@@ -1,12 +1,12 @@
 package Presentation;
 
 import Business.*;
+import Common.Exceptions.*;
 import Common.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 public class RiskCUI {
@@ -94,14 +94,16 @@ public class RiskCUI {
                     System.out.println(playerManager.getAllowedColors());
 
             case "s" -> { //start game after players were selected
-
-                this.currentPlayer = gameManager.startFirstRound();
-                if(currentPlayer != null){
-                    gameSetUp = true;
-                    riskTurn();
+                try{
+                    this.currentPlayer = gameManager.startFirstRound();
+                    if(currentPlayer != null){
+                        gameSetUp = true;
+                        riskTurn();
+                    }
+                } catch (ExceptionNotEnoughPlayer e){
+                    System.out.println(e.getMessage());
                 }
             }
-
         }
     }
 
@@ -110,9 +112,15 @@ public class RiskCUI {
         System.out.println("New round! It's your turn " + currentPlayer.getPlayerName());
 
         //receiveUnits
-        int receivedUnits = gameManager.receiveUnits(currentPlayer.getPlayerName());
-        System.out.println("You receive " + receivedUnits + " units.");
-
+        int receivedUnits = 0;
+        try{
+            receivedUnits = gameManager.receiveUnits(currentPlayer.getPlayerName());
+            System.out.println("You receive " + receivedUnits + " units.");
+        } catch(ExceptionObjectDoesntExist e){
+            e.printStackTrace();
+            currentPlayer = playerManager.nextPlayersTurn(currentPlayer.getPlayerName());
+            riskTurn();
+        }
 
         //distribute units
         System.out.println("You can distribute your received units to your countries. You can inform yourself in this menu to plan better how to distribute your units.");
@@ -217,7 +225,7 @@ public class RiskCUI {
 
         System.out.println("Now you have to distribute your units. " + "You received " + receivedUnits + ". Where do you want to place them? ");
 
-        while(receivedUnits != 0){
+        while (receivedUnits != 0) {
             System.out.println("This is the current unit contribution: " + gameManager.getAllCountriesInfoPlayer(currentPlayer.getPlayerName()));
 
             System.out.println("Country > ");
@@ -225,9 +233,12 @@ public class RiskCUI {
             System.out.println("Units > ");
             int selectedUnits = Integer.parseInt(readInput());
 
-            if(gameManager.distributeUnits(selectedCountry, selectedUnits, receivedUnits)){
+            try {
+                gameManager.distributeUnits(selectedCountry, selectedUnits, receivedUnits);
                 receivedUnits -= selectedUnits;
                 System.out.println(selectedUnits + " have been moved to " + selectedCountry + ". You have " + receivedUnits + " left.");
+            } catch (ExceptionCountryNotOwned | ExceptionTooManyUnits e) {
+                System.out.println(e.getMessage());
             }
         }
     }
@@ -239,9 +250,13 @@ public class RiskCUI {
         String attackedCountry = readInput();
         System.out.println("Units (select max. 3, keep in mind that one unit has to remain in your country)  > ");
         int units = Integer.parseInt(readInput());
-        List<Integer> attackerDiceResult = gameManager.attack(attackingCountry, attackedCountry, units);
-        System.out.println(attackingCountry + " has attacked " + attackedCountry + ". " + currentPlayer.getPlayerName() + " you've rolled " + attackerDiceResult);
-        defend(attackingCountry, attackedCountry, units, attackerDiceResult);
+        try{
+            List<Integer> attackerDiceResult = gameManager.attack(attackingCountry, attackedCountry, units);
+            System.out.println(attackingCountry + " has attacked " + attackedCountry + ". " + currentPlayer.getPlayerName() + " you've rolled " + attackerDiceResult);
+            defend(attackingCountry, attackedCountry, units, attackerDiceResult);
+        } catch(ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits e){
+            System.out.println(e.getMessage());
+        }
     }
 
     private void defend(String attackingCountry, String attackedCountry, int unitsFromAttacker, List<Integer> attackerDiceResult) throws IOException {
@@ -266,7 +281,11 @@ public class RiskCUI {
 
                 System.out.println("Units > ");
                 int unitsToMove = Integer.parseInt(readInput());
-                gameManager.moveUnits(attackingCountry, attackedCountry, unitsToMove, true);
+                try{
+                    gameManager.moveUnits(attackingCountry, attackedCountry, unitsToMove, true);
+                } catch(ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e){
+                    System.out.println(e.getMessage());
+                }
             }
         }
 
@@ -295,7 +314,12 @@ public class RiskCUI {
         System.out.println("Amount of units > ");
         int units = Integer.parseInt(readInput());
 
-        gameManager.moveUnits(sourceCountry, destinationCountry, units, false);
+        try{
+            gameManager.moveUnits(sourceCountry, destinationCountry, units, false);
+        } catch(ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
+            System.out.println(e.getMessage());
+        }
+
     }
 
     private String readInput() throws IOException {

@@ -11,9 +11,9 @@ public interface IPersistence {
     void openForReading(String dataSource) throws IOException;
     void openForWriting(String dataSource) throws IOException;
     boolean close();
-    List<Continent> fetchContinents() throws IOException;
-    boolean saveGameStateWorld(List<Continent> continents) throws IOException;
-    List<Continent> fetchGameStateWorld() throws IOException;
+    Map<String, Continent> fetchContinents() throws IOException;
+    boolean saveGameStateWorld(Map<String, Continent> continentMap) throws IOException;
+    Map<String, Continent>  fetchGameStateWorld() throws IOException;
     boolean savePlayers(Map<String, Player> playerMap) throws IOException;
     Map<String, Player> fetchPlayers() throws IOException;
 

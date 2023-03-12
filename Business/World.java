@@ -3,28 +3,28 @@ package Business;
 import Common.Army;
 import Common.Continent;
 import Common.Country;
+import Persistence.FilePersistence;
+import Persistence.IPersistence;
 
+import java.io.IOException;
 import java.util.*;
 
 public class World implements IWorldManager {
 
     private final Map<String, Country> countryMap; //Key is the country name
-    private final List<Continent> continents;
+    private final Map<String, Continent> continents; //Key is continent name
 
-    public World(){
+    public World() throws IOException {
 
-        List<Country> neighbours = new ArrayList<>();
-        List<Country> neighbours2 = new ArrayList<>();
-        Country country = new Country("Germany", "DE", new Continent("Europe", neighbours), neighbours, new Army());
-        Country country2 = new Country("Greece", "G", new Continent("Europe", neighbours2), neighbours2, new Army());
-        country.addNeighbour(country2);
-        country2.addNeighbour(country);
+        IPersistence persistence = new FilePersistence();
+        continents = new HashMap<>(persistence.fetchContinents());
 
         countryMap = new HashMap<>();
-        countryMap.put(country.getCountryName(), country);
-        countryMap.put(country2.getCountryName(), country2);
-
-        continents = new ArrayList<>();
+        for(Continent continent : continents.values()){
+            for(Country country : continent.getCountries()){
+                countryMap.put(country.getCountryName(), country);
+            }
+        }
     }
 
     @Override
@@ -52,11 +52,13 @@ public class World implements IWorldManager {
     public List<String> getConqueredContinents(List<Country> playersCountries){
 
         List<String> conqueredContinents = new ArrayList<>();
-        for(Continent continent : continents){
+        for(Continent continent : continents.values()){
             if(continent.isContinentConquered(playersCountries)){
                 conqueredContinents.add(continent.getContinentName());
             }
         }
         return conqueredContinents;
     }
+
+    public Map<String, Continent> getContinents() { return continents; }
 }

@@ -1,5 +1,6 @@
 package Business;
 
+import Common.Continent;
 import Common.Country;
 
 import java.util.List;
@@ -10,4 +11,5 @@ public interface IWorldManager {
     String getCountryNeighbours(String country);
     Map<String, Country> getCountryMap();
     List<String> getConqueredContinents(List<Country> playersCountries);
+    Map<String, Continent> getContinents();
 }

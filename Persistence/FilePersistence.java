@@ -35,23 +35,23 @@ public class FilePersistence implements IPersistence{
     }
 
     @Override
-    public List<Continent> fetchContinents() throws IOException {
+    public Map<String, Continent> fetchContinents() throws IOException {
 
-        openForReading("Continents.txt");
-        List<Continent> continents = new ArrayList<>();
+        openForReading("Data/Continents.txt");
+        Map<String, Continent> continents = new HashMap<>();
         while(reader != null && reader.ready()){
             String continentName = readLine();
             int pointsForConquering = Integer.parseInt(readLine());
             Continent continent = new Continent(continentName, pointsForConquering, new ArrayList<>());
-            continents.add(continent);
+            continents.put(continentName, continent);
         }
         close();
 
         //read country infos of each continent
         Map<String, List<String>> neighbours = new HashMap<>();
         Map<String, Country> countryMap = new HashMap<>();
-        for(Continent continent : continents){
-            openForReading(continent + ".txt");
+        for(Continent continent : continents.values()){
+            openForReading("Data/" + continent.getContinentName() + ".txt");
             while(reader != null && reader.ready()){
                 String countryName = readLine();
                 String abbreviation = readLine();
@@ -85,10 +85,10 @@ public class FilePersistence implements IPersistence{
 
 
     @Override
-    public boolean saveGameStateWorld(List<Continent> continents) throws IOException {
+    public boolean saveGameStateWorld(Map<String, Continent> continentMap) throws IOException {
 
-        openForWriting("GameStateWorld.txt");
-        for(Continent continent : continents){
+        openForWriting("Data/GameStateWorld.txt");
+        for(Continent continent : continentMap.values()){
             for(Country country : continent.getCountries()){
                 printLine(country.getCountryName());
                 printLine(country.getArmy().getPlayer().getPlayerName());
@@ -98,17 +98,17 @@ public class FilePersistence implements IPersistence{
         }
         close();
 
-        return !continents.isEmpty();
+        return !continentMap.isEmpty();
     }
 
     @Override
-    public List<Continent> fetchGameStateWorld() throws IOException {
+    public Map<String, Continent>  fetchGameStateWorld() throws IOException {
         Map<String, Player> playerMap = fetchPlayers();
-        List<Continent> continents = fetchContinents();
+        Map<String, Continent> continents = fetchContinents();
 
-        openForReading("GameStateWorld.txt");
+        openForReading("Data/GameStateWorld.txt");
         while(reader != null && reader.ready()){
-            for(Continent continent : continents){
+            for(Continent continent : continents.values()){
                 for(Country country : continent.getCountries()){
                     String countryName = readLine();
                     String playerName = readLine();
@@ -127,7 +127,7 @@ public class FilePersistence implements IPersistence{
     public Map<String, Player> fetchPlayers() throws IOException {
 
         Map<String, Player> playerMap = new HashMap<>();
-        openForReading("GameStatePlayers.txt");
+        openForReading("Data/GameStatePlayers.txt");
         while(reader != null && reader.ready()) {
             String playerName = readLine();
             String color = readLine();
@@ -143,7 +143,7 @@ public class FilePersistence implements IPersistence{
     @Override
     public boolean savePlayers(Map<String, Player> playerMap) throws IOException {
 
-        openForWriting("GameStatePlayers.txt");
+        openForWriting("Data/GameStatePlayers.txt");
         for(Player player : playerMap.values()){
             printLine(player.getPlayerName());
             printLine(player.getPlayerColor());

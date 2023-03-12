@@ -1,5 +1,9 @@
 package Business;
 
+import Common.Exceptions.ExceptionColorAlreadyExists;
+import Common.Exceptions.ExceptionObjectDoesntExist;
+import Common.Exceptions.ExceptionPlayerAlreadyExists;
+import Common.Exceptions.ExceptionTooManyPlayer;
 import Common.MissionConquerWorld;
 import Common.Player;
 
@@ -30,36 +34,48 @@ public class PlayerManager implements IPlayerManager{
 
 
     @Override
-    public String addPlayer(String name, String color) {
+    public String addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists {
 
-        if(!playerMap.containsKey(name) && playerMap.size() != 6 &&  allowedColors.contains(color)){
-            Player newPlayer = new Player(name, color, new MissionConquerWorld((new ArrayList<>(worldManager.getCountryMap().values()))));
-            playerMap.put(newPlayer.getPlayerName(), newPlayer);
-            playerOrder.add(newPlayer);
-            allowedColors.remove(color);
+        if(playerMap.containsKey(name)){
+            throw new ExceptionPlayerAlreadyExists(name);
         }
+        if(playerMap.size() == 6){
+            throw new ExceptionTooManyPlayer();
+        }
+        if(!allowedColors.contains(color)){
+            throw new ExceptionColorAlreadyExists(color);
+        }
+
+        Player newPlayer = new Player(name, color, new MissionConquerWorld((new ArrayList<>(worldManager.getCountryMap().values()))));
+        playerMap.put(newPlayer.getPlayerName(), newPlayer);
+        playerOrder.add(newPlayer);
+        allowedColors.remove(color);
+
         return playerMap.get(name).getPlayerMission().getMissionText();
     }
 
     @Override
-    public void removePlayer(String name) {
+    public void removePlayer(String name) throws ExceptionObjectDoesntExist {
 
-        if (playerMap.containsKey(name)){
-            allowedColors.add(playerMap.get(name).getPlayerColor());
-            playerOrder.remove(playerMap.get(name));
-            playerMap.remove(name);
+        if (!playerMap.containsKey(name)){
+            throw new ExceptionObjectDoesntExist(name);
         }
+
+        allowedColors.add(playerMap.get(name).getPlayerColor());
+        playerOrder.remove(playerMap.get(name));
+        playerMap.remove(name);
     }
 
     @Override
-    public Player nextPlayersTurn(String currentPlayer) {
+    public Player nextPlayersTurn(String currentPlayer) throws ExceptionObjectDoesntExist {
 
         if(playerMap.containsKey(currentPlayer) && playerOrder.contains(playerMap.get(currentPlayer))){
-            int currentIndex = playerOrder.indexOf(playerMap.get(currentPlayer));
-            int nextIndex = (currentIndex + 1) % playerOrder.size();
-            return playerOrder.get(nextIndex);
+            throw new ExceptionObjectDoesntExist(currentPlayer);
         }
-        return null;
+
+        int currentIndex = playerOrder.indexOf(playerMap.get(currentPlayer));
+        int nextIndex = (currentIndex + 1) % playerOrder.size();
+        return playerOrder.get(nextIndex);
     }
 
     public String getAllowedColors(){ return allowedColors.toString(); }

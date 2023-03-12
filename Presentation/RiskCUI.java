@@ -82,14 +82,23 @@ public class RiskCUI {
                 System.out.println("Possible colors are: " + playerManager.getAllowedColors());
                 System.out.println("Color > ");
                 String playerColor = readInput();
-                System.out.println("Player has been added. " + playerName + ", do not share your mission with anyone else. Your mission is: " +
-                        playerManager.addPlayer(playerName, playerColor));
+                try{
+                    System.out.println("Player has been added. " + playerName + ", do not share your mission with anyone else. Your mission is: " +
+                            playerManager.addPlayer(playerName, playerColor));
+                } catch (ExceptionPlayerAlreadyExists | ExceptionTooManyPlayer | ExceptionColorAlreadyExists e){
+                    System.out.println(e.getMessage());
+                }
             }
             case "b" -> { //remove player
 
                 System.out.println("Name > ");
                 String playerToRemove = readInput();
-                playerManager.removePlayer(playerToRemove);
+                try{
+                    playerManager.removePlayer(playerToRemove);
+                    System.out.println("Player " + playerToRemove + " has been removed successfully.");
+                } catch(ExceptionObjectDoesntExist e){
+                    System.out.println(e.getMessage());
+                }
             }
 
             case "c" -> System.out.println(playerManager.getPlayersInfo());
@@ -122,8 +131,6 @@ public class RiskCUI {
             System.out.println("You receive " + receivedUnits + " units.");
         } catch(ExceptionObjectDoesntExist e){
             e.printStackTrace();
-            currentPlayer = playerManager.nextPlayersTurn(currentPlayer.getPlayerName());
-            riskTurn();
         }
 
         //distribute units
@@ -148,9 +155,13 @@ public class RiskCUI {
         }
 
 
-        if(currentPlayer.getPlayerMission().isMissionCompleted(currentPlayer.getPlayerName())){
-            currentPlayer = playerManager.nextPlayersTurn(currentPlayer.getPlayerName());
-            riskTurn();
+        if(!currentPlayer.getPlayerMission().isMissionCompleted(currentPlayer.getPlayerName())){
+            try{
+                currentPlayer = playerManager.nextPlayersTurn(currentPlayer.getPlayerName());
+                riskTurn();
+            } catch (ExceptionObjectDoesntExist e){
+                e.printStackTrace();
+            }
         } else {
             System.out.println("Congratulations!! You've won " + currentPlayer);
             System.out.println(worldManager.getAllCountryInfos());
@@ -301,7 +312,12 @@ public class RiskCUI {
 
         if(gameManager.getAllCountriesInfoPlayer(defenderName).isEmpty()){
             System.out.println(defenderName + " your last country has been conquered, the game has to continue without you.");
-            playerManager.removePlayer(defenderName);
+            try{
+                playerManager.removePlayer(defenderName);
+            } catch (ExceptionObjectDoesntExist e){
+                e.printStackTrace();
+            }
+
             if(playerManager.getPlayerMap().size() == 1){
                 System.out.println(currentPlayer.getPlayerName() + " congratulation, you won!");
                 gameStarted = false;

@@ -1,0 +1,47 @@
+Iceland
+IS
+3
+Greenland
+Great Britain
+Scandinavia
+
+Great Britain
+GB
+3
+Scandinavia
+Northern Europe
+Western Europe
+
+Scandinavia
+SE
+2
+Northern Europe
+Ukraine
+
+Ukraine
+UA
+5
+Northern Europe
+Southern Europe
+Middle East
+Afghanistan
+Ural
+
+Northern Europe
+NP
+2
+Southern Europe
+Western Europe
+
+Southern Europe
+SP
+4
+Middle East
+Egypt
+North Africa
+Western Europe
+
+Western Europe
+WP
+1
+North Africa

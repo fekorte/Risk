@@ -1,0 +1,32 @@
+North Africa
+NA
+3
+Egypt
+East Africa
+Congo
+
+Egypt
+EG
+1
+East Africa
+
+Congo
+CD
+2
+East Africa
+South Africa
+
+East Africa
+EA
+2
+South Africa
+Madagascar
+
+South Africa
+SA
+1
+Madagascar
+
+Madagascar
+MD
+0

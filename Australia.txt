@@ -1,0 +1,20 @@
+Indonesia
+ID
+2
+New Guinea
+Western Australia
+
+New Guinea
+PNG
+2
+Eastern Australia
+Western Australia
+
+Western Australia
+WA
+1
+Eastern Australia
+
+Eastern Australia
+EAA
+0

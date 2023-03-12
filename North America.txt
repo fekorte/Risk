@@ -1,0 +1,52 @@
+Alaska
+AK
+2
+North West Territory
+Alberta
+
+North West Territory
+NT
+3
+Alberta
+Ontario
+Greenland
+
+Alberta
+AB
+2
+Ontario
+Western United States
+
+Ontario
+ON
+4
+Western United States
+Eastern United States
+Quebec
+Greenland
+
+Quebec
+QC
+2
+Greenland
+Eastern United States
+
+Greenland
+GL
+0
+
+Western United States
+WU
+2
+Eastern United States
+Central America
+
+Eastern United States
+EU
+1
+Central America
+
+Central America
+CA
+1
+Venezuela

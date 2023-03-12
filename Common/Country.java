@@ -5,11 +5,11 @@ import java.util.List;
 public class Country {
     private String countryName;
     private String abbreviation;
-    private Continent continent;
+    private String continent;
     private List<Country> neighbours; //change it to map?
     private Army army;
 
-    public Country(String countryName, String abbreviation, Continent continent, List<Country> neighbours, Army army){
+    public Country(String countryName, String abbreviation, String continent, List<Country> neighbours, Army army){
 
         this.countryName = countryName;
         this.abbreviation = abbreviation;
@@ -28,5 +28,5 @@ public class Country {
 
     public void addNeighbour(Country neighbouringCountry){ neighbours.add(neighbouringCountry); }
 
-    public String getCountryInfo(){ return "Name: " + countryName + ", " + abbreviation + ", " + continent.getContinentName() + ", Owner: " + army.getPlayer().getPlayerName() + "\n"; }
+    public String getCountryInfo(){ return "Name: " + countryName + ", " + abbreviation + ", " + continent + ", Owner: " + army.getPlayer().getPlayerName() + "\n"; }
 }

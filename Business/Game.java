@@ -56,7 +56,7 @@ public class Game implements GameManager {
     }
 
     public void continueGame(){
-        
+
     }
 
     public String getAllCountriesInfoPlayer(String playerName){

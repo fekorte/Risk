@@ -55,7 +55,7 @@ public class World implements IWorldManager {
 
         StringBuilder neighbourInfo = new StringBuilder();
         for(Country neighbour : countryMap.get(country).getNeighbours()){
-            neighbourInfo.append(neighbour.getCountryName()).append(" ");
+            neighbourInfo.append("| ").append(neighbour.getCountryName()).append(" |");
         }
         return neighbourInfo.toString();
     }

@@ -6,7 +6,9 @@ import Common.Exceptions.ExceptionPlayerAlreadyExists;
 import Common.Exceptions.ExceptionTooManyPlayer;
 import Common.MissionConquerWorld;
 import Common.Player;
+import Persistence.IPersistence;
 
+import java.io.IOException;
 import java.util.*;
 
 public class PlayerManager implements IPlayerManager{
@@ -14,12 +16,23 @@ public class PlayerManager implements IPlayerManager{
     Map<String, Player> playerMap;
     List<Player> playerOrder;
     ArrayList<String> allowedColors;
+    Player currentPlayer;
+    boolean continuePreviousGame;
+    int playerTurns;
 
-    public PlayerManager(IWorldManager worldManager){
+    public PlayerManager(IWorldManager worldManager, IPersistence persistence) throws IOException {
 
         this.worldManager = worldManager;
-        playerMap = new HashMap<>();
+        this.playerTurns = 0;
+        playerMap = persistence.fetchPlayers();
         playerOrder = new ArrayList<>();
+        if(!playerMap.isEmpty()){
+            playerOrder.addAll(playerMap.values());
+            this.currentPlayer = playerOrder.get(0);
+            continuePreviousGame = true;
+        } else {
+            continuePreviousGame = false;
+        }
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
     }
 
@@ -30,8 +43,6 @@ public class PlayerManager implements IPlayerManager{
         playerOrder.clear();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
     }
-
-
 
     @Override
     public String addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists {
@@ -67,15 +78,22 @@ public class PlayerManager implements IPlayerManager{
     }
 
     @Override
-    public Player nextPlayersTurn(String currentPlayer) throws ExceptionObjectDoesntExist {
+    public boolean nextPlayersTurn(){
 
-        if(playerMap.containsKey(currentPlayer) && playerOrder.contains(playerMap.get(currentPlayer))){
-            throw new ExceptionObjectDoesntExist(currentPlayer);
-        }
-
-        int currentIndex = playerOrder.indexOf(playerMap.get(currentPlayer));
+        int currentIndex = playerOrder.indexOf(playerMap.get(currentPlayer.getPlayerName()));
         int nextIndex = (currentIndex + 1) % playerOrder.size();
-        return playerOrder.get(nextIndex);
+        this.currentPlayer = playerOrder.get(nextIndex);
+
+        //Rotate the list, next player is on position one
+        int startIndex = playerOrder.indexOf(playerMap.get(currentPlayer.getPlayerName()));
+        Collections.rotate(playerOrder, -startIndex);
+        playerTurns++;
+
+        if(playerTurns == playerOrder.size()){
+             playerTurns = 0;
+             return true;
+        }
+        return false;
     }
 
     public String getAllowedColors(){ return allowedColors.toString(); }
@@ -92,4 +110,12 @@ public class PlayerManager implements IPlayerManager{
         }
         return playerInfo.toString();
     }
+    public boolean isCurrentsPlayerMissionCompleted(){
+        return currentPlayer.getPlayerMission().isMissionCompleted(currentPlayer.getPlayerName());
+    }
+    public boolean getContinuePreviousGame(){ return continuePreviousGame; }
+
+    public void setCurrentPlayer(String currentPlayerName){ this.currentPlayer = playerMap.get(currentPlayerName); }
+
+    public String getCurrentPlayerName() { return currentPlayer.getPlayerName(); }
 }

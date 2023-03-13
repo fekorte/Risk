@@ -2,7 +2,6 @@ package Presentation;
 
 import Business.*;
 import Common.Exceptions.*;
-import Common.Player;
 import Persistence.FilePersistence;
 import Persistence.IPersistence;
 
@@ -18,11 +17,8 @@ public class RiskCUI {
 
     private final IWorldManager worldManager;
     private final GameManager gameManager;
-
-    Player currentPlayer;
     boolean gameStarted;
     boolean gameSetUp;
-
     boolean doneWithStep;
 
 
@@ -32,11 +28,19 @@ public class RiskCUI {
 
         IPersistence persistence = new FilePersistence();
         worldManager = new World(persistence);
-        playerManager = new PlayerManager(worldManager);
+        playerManager = new PlayerManager(worldManager, persistence);
         gameManager = new Game(playerManager, worldManager, persistence);
-        gameStarted = false;
-        gameSetUp = false;
+
         doneWithStep = false;
+        if(playerManager.getContinuePreviousGame()){
+            gameStarted = true;
+            gameSetUp = true;
+            gameManager.continueGame();
+            riskTurn();
+        } else {
+            gameStarted = false;
+            gameSetUp = false;
+        }
     }
 
     private void showMenu() {
@@ -108,11 +112,9 @@ public class RiskCUI {
 
             case "s" -> { //start game after players were selected
                 try{
-                    this.currentPlayer = gameManager.startFirstRound();
-                    if(currentPlayer != null){
-                        gameSetUp = true;
-                        riskTurn();
-                    }
+                    gameManager.startFirstRound();
+                    gameSetUp = true;
+                    riskTurn();
                 } catch (ExceptionNotEnoughPlayer e){
                     System.out.println(e.getMessage());
                 }
@@ -122,12 +124,12 @@ public class RiskCUI {
 
     private void riskTurn() throws IOException {
 
-        System.out.println("New round! It's your turn " + currentPlayer.getPlayerName());
+        System.out.println("New round! It's your turn " + playerManager.getCurrentPlayerName());
 
         //receiveUnits
         int receivedUnits = 0;
         try{
-            receivedUnits = gameManager.receiveUnits(currentPlayer.getPlayerName());
+            receivedUnits = gameManager.receiveUnits();
             System.out.println("You receive " + receivedUnits + " units.");
         } catch(ExceptionObjectDoesntExist e){
             e.printStackTrace();
@@ -155,15 +157,13 @@ public class RiskCUI {
         }
 
 
-        if(!currentPlayer.getPlayerMission().isMissionCompleted(currentPlayer.getPlayerName())){
-            try{
-                currentPlayer = playerManager.nextPlayersTurn(currentPlayer.getPlayerName());
-                riskTurn();
-            } catch (ExceptionObjectDoesntExist e){
-                e.printStackTrace();
+        if(!playerManager.isCurrentsPlayerMissionCompleted()){
+            if(playerManager.nextPlayersTurn()){ //returns true when it is the first players turn again
+                gameManager.nextRound();
             }
+            riskTurn();
         } else {
-            System.out.println("Congratulations!! You've won " + currentPlayer);
+            System.out.println("Congratulations!! You've won " + playerManager.getCurrentPlayerName());
             System.out.println(worldManager.getAllCountryInfos());
             gameManager.quitGame();
             gameStarted = false;
@@ -184,6 +184,7 @@ public class RiskCUI {
 
     private void gameOverviewMenu(boolean attack, boolean moveUnits){
 
+        System.out.print("Current player: " + playerManager.getCurrentPlayerName() + ", Round: " + gameManager.getRound());
         System.out.print("Commands: \n  Show all players:  'a'");
         System.out.print("         \n  Show all country infos:  'b'");
         System.out.print("         \n  Show your country infos:  'c'");
@@ -211,7 +212,7 @@ public class RiskCUI {
                     System.out.println(worldManager.getAllCountryInfos());
 
             case "c" -> //show players' country infos
-                    System.out.println(gameManager.getAllCountriesInfoPlayer(currentPlayer.getPlayerName()));
+                    System.out.println(gameManager.getAllCountriesInfoPlayer(playerManager.getCurrentPlayerName()));
 
             case "d" -> { //get info about neighbouring countries
                 System.out.println("Country > ");
@@ -229,9 +230,13 @@ public class RiskCUI {
                     gameManager.newGame();
                 }
             }
-            case "s" -> gameManager.saveGame();
+            case "s" -> {
+                if (gameManager.saveGame()) {
+                    System.out.println("Game saved successfully!");
+                }
+            }
+            case "q" -> System.exit(0);
         }
-
         if("e".equals(line) && attack){
             attack();
         } else if("e".equals(line) && moveUnits) {
@@ -244,7 +249,7 @@ public class RiskCUI {
         System.out.println("Now you have to distribute your units. " + "You received " + receivedUnits + ". Where do you want to place them? ");
 
         while (receivedUnits != 0) {
-            System.out.println("This is the current unit contribution: " + gameManager.getAllCountriesInfoPlayer(currentPlayer.getPlayerName()));
+            System.out.println("This is the current unit contribution: " + gameManager.getAllCountriesInfoPlayer(playerManager.getCurrentPlayerName()));
 
             System.out.println("Country > ");
             String selectedCountry = readInput();
@@ -270,7 +275,7 @@ public class RiskCUI {
         int units = Integer.parseInt(readInput());
         try{
             List<Integer> attackerDiceResult = gameManager.attack(attackingCountry, attackedCountry, units);
-            System.out.println(attackingCountry + " has attacked " + attackedCountry + ". " + currentPlayer.getPlayerName() + " you've rolled " + attackerDiceResult);
+            System.out.println(attackingCountry + " has attacked " + attackedCountry + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult);
             defend(attackingCountry, attackedCountry, units, attackerDiceResult);
         } catch(ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits e){
             System.out.println(e.getMessage());
@@ -284,15 +289,15 @@ public class RiskCUI {
         System.out.println("Your country has been attacked " + defenderName + "! You have to defend it!");
         List<Integer> defenderDiceResult = gameManager.defend(attackedCountry, attackingCountry, attackerDiceResult, unitsFromAttacker);
 
-        System.out.println(defenderName + " rolled " + defenderDiceResult + " and " + currentPlayer.getPlayerName() + " rolled " + attackerDiceResult + ". ");
+        System.out.println(defenderName + " rolled " + defenderDiceResult + " and " + playerManager.getCurrentPlayerName() + " rolled " + attackerDiceResult + ". ");
 
-        if(!gameManager.getCountryOwner(attackedCountry).equals(currentPlayer.getPlayerName())){
+        if(!gameManager.getCountryOwner(attackedCountry).equals(playerManager.getCurrentPlayerName())){
             System.out.println(defenderName + " was able to defend " + attackedCountry + ". ");
 
         } else {
-            System.out.println(currentPlayer.getPlayerName() + " was able to conquer " + attackedCountry + ". " + attackingCountry + " unit amount: " +  worldManager.getCountryMap().get(attackingCountry).getArmy().getUnits() +
+            System.out.println(playerManager.getCurrentPlayerName() + " was able to conquer " + attackedCountry + ". " + attackingCountry + " unit amount: " +  worldManager.getCountryMap().get(attackingCountry).getArmy().getUnits() +
             ". Current unit amount in " + attackedCountry + ": " + worldManager.getCountryMap().get(attackedCountry).getArmy().getUnits()+ ".");
-            System.out.println(currentPlayer + " do you want to move additional units to the conquered country? Y/N > ");
+            System.out.println(playerManager.getCurrentPlayerName() + " do you want to move additional units to the conquered country? Y/N > ");
 
             if (readInput().equals("Y")) {
                 System.out.println("Please note that at least one unit has to remain in " + attackingCountry);
@@ -319,7 +324,7 @@ public class RiskCUI {
             }
 
             if(playerManager.getPlayerMap().size() == 1){
-                System.out.println(currentPlayer.getPlayerName() + " congratulation, you won!");
+                System.out.println(playerManager.getCurrentPlayerName() + " congratulation, you've won!");
                 gameStarted = false;
                 gameSetUp = false;
                 gameManager.quitGame();

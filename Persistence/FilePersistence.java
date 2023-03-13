@@ -20,7 +20,7 @@ public class FilePersistence implements IPersistence{
     }
 
     @Override
-    public boolean close(){
+    public void close(){
         if(writer != null)
             writer.close();
         if(reader != null){
@@ -28,10 +28,8 @@ public class FilePersistence implements IPersistence{
                 reader.close();
             } catch(IOException e){
                 e.printStackTrace();
-                return false;
             }
         }
-        return true;
     }
 
     @Override
@@ -97,7 +95,6 @@ public class FilePersistence implements IPersistence{
             }
         }
         close();
-
         return !continentMap.isEmpty();
     }
 
@@ -107,6 +104,9 @@ public class FilePersistence implements IPersistence{
         Map<String, Continent> continents = fetchContinents();
 
         openForReading("Data/GameStateWorld.txt");
+        if(reader == null){
+            continents.clear();
+        }
         while(reader != null && reader.ready()){
             for(Continent continent : continents.values()){
                 for(Country country : continent.getCountries()){
@@ -128,7 +128,7 @@ public class FilePersistence implements IPersistence{
 
         Map<String, Player> playerMap = new HashMap<>();
         openForReading("Data/GameStatePlayers.txt");
-        while(reader != null && reader.ready()) {
+        while(reader != null && reader.ready()){
             String playerName = readLine();
             String color = readLine();
             String missionText = readLine();
@@ -153,13 +153,13 @@ public class FilePersistence implements IPersistence{
         close();
         return !playerMap.isEmpty();
     }
-
+    @Override
     public void resetGameState() throws IOException {
 
-        openForWriting("Data/GameStatePlayer");
+        openForWriting("Data/GameStatePlayers.txt");
         printLine("");
         close();
-        openForWriting("Data/GameStateWorld");
+        openForWriting("Data/GameStateWorld.txt");
         printLine("");
         close();
     }

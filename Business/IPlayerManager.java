@@ -12,8 +12,12 @@ public interface IPlayerManager {
     void clearPlayers();
     String addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists;
     void removePlayer(String name) throws ExceptionObjectDoesntExist;
-    Player nextPlayersTurn(String currentPlayer) throws ExceptionObjectDoesntExist;
+    boolean nextPlayersTurn();
     String getAllowedColors();
     Map<String, Player> getPlayerMap();
     String getPlayersInfo();
+    boolean isCurrentsPlayerMissionCompleted();
+    boolean getContinuePreviousGame();
+    void setCurrentPlayer(String currentPlayerName);
+    String getCurrentPlayerName();
 }

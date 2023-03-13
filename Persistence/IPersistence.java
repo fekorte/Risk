@@ -10,12 +10,12 @@ import java.util.Map;
 public interface IPersistence {
     void openForReading(String dataSource) throws IOException;
     void openForWriting(String dataSource) throws IOException;
-    boolean close();
+    void close();
     Map<String, Continent> fetchContinents() throws IOException;
     boolean saveGameStateWorld(Map<String, Continent> continentMap) throws IOException;
     Map<String, Continent>  fetchGameStateWorld() throws IOException;
     boolean savePlayers(Map<String, Player> playerMap) throws IOException;
-    public void resetGameState() throws IOException;
+    void resetGameState() throws IOException;
     Map<String, Player> fetchPlayers() throws IOException;
 
 }

@@ -8,15 +8,18 @@ import java.util.List;
 
 public interface GameManager {
 
-    void saveGame() throws IOException;
+    boolean  saveGame() throws IOException;
     void quitGame() throws IOException;
     void newGame() throws IOException;
+    void continueGame();
     String getAllCountriesInfoPlayer(String playerName);
     String getCountryOwner(String country);
-    Player startFirstRound() throws ExceptionNotEnoughPlayer;
+    void startFirstRound() throws ExceptionNotEnoughPlayer;
+    void nextRound();
+    int getRound();
 
 
-    int receiveUnits(String playerName) throws ExceptionObjectDoesntExist;
+    int receiveUnits() throws ExceptionObjectDoesntExist;
     void distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits;
     List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits;
     List<Integer> defend(String countryToDefend, String attackingCountry, List<Integer> attackerDiceResult, int attackerUnits);

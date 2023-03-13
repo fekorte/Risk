@@ -28,5 +28,5 @@ public class Country {
 
     public void addNeighbour(Country neighbouringCountry){ neighbours.add(neighbouringCountry); }
 
-    public String getCountryInfo(){ return "Name: " + countryName + ", " + abbreviation + ", " + continent + ", Owner: " + army.getPlayer().getPlayerName() + "\n"; }
+    public String getCountryInfo(){ return "Name: " + countryName + ", " + abbreviation + ", " + continent + ", Owner: " + army.getPlayer().getPlayerName() + ", Army size: " + army.getUnits() + "\n"; }
 }

@@ -1,17 +1,8 @@
 package Business;
 
-import Common.Continent;
-import Common.Country;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
 public interface IWorldManager {
     String getAllCountryInfos();
-    String getCountryNeighbours(String country);
-    Map<String, Country> getCountryMap();
-    List<String> getConqueredContinents(List<Country> playersCountries);
-    Map<String, Continent> getContinents();
-    void clearWorld() throws IOException;
+    String getCountryNeighbours(String countryName);
+    int getUnitAmountOfCountry(String countryName);
+    String getCountryOwner(String country);
 }

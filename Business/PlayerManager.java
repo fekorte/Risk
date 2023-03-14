@@ -1,5 +1,6 @@
 package Business;
 
+import Common.Country;
 import Common.Exceptions.ExceptionColorAlreadyExists;
 import Common.Exceptions.ExceptionObjectDoesntExist;
 import Common.Exceptions.ExceptionPlayerAlreadyExists;
@@ -11,21 +12,25 @@ import Persistence.IPersistence;
 import java.io.IOException;
 import java.util.*;
 
-public class PlayerManager implements IPlayerManager{
+public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     IWorldManager worldManager;
+    WorldFriend worldFriend;
     Map<String, Player> playerMap;
     List<Player> playerOrder;
     ArrayList<String> allowedColors;
     Player currentPlayer;
     boolean continuePreviousGame;
     int playerTurns;
+    int round;
 
     public PlayerManager(IWorldManager worldManager, IPersistence persistence) throws IOException {
 
         this.worldManager = worldManager;
-        this.playerTurns = 0;
+        worldFriend = (WorldFriend) worldManager;
         playerMap = persistence.fetchPlayers();
         playerOrder = new ArrayList<>();
+        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
+
         if(!playerMap.isEmpty()){
             playerOrder.addAll(playerMap.values());
             this.currentPlayer = playerOrder.get(0);
@@ -33,7 +38,9 @@ public class PlayerManager implements IPlayerManager{
         } else {
             continuePreviousGame = false;
         }
-        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
+
+        this.playerTurns = 0;
+        this.round = 0;
     }
 
     @Override
@@ -57,7 +64,7 @@ public class PlayerManager implements IPlayerManager{
             throw new ExceptionColorAlreadyExists(color);
         }
 
-        Player newPlayer = new Player(name, color, new MissionConquerWorld((new ArrayList<>(worldManager.getCountryMap().values()))));
+        Player newPlayer = new Player(name, color, new MissionConquerWorld((new ArrayList<>(worldFriend.getCountryMap().values()))), new HashMap<>());
         playerMap.put(newPlayer.getPlayerName(), newPlayer);
         playerOrder.add(newPlayer);
         allowedColors.remove(color);
@@ -80,6 +87,10 @@ public class PlayerManager implements IPlayerManager{
     @Override
     public boolean nextPlayersTurn(){
 
+        if(currentPlayer.getPlayerMission().isMissionCompleted(currentPlayer.getPlayerName())){
+            return false;
+        }
+
         int currentIndex = playerOrder.indexOf(playerMap.get(currentPlayer.getPlayerName()));
         int nextIndex = (currentIndex + 1) % playerOrder.size();
         this.currentPlayer = playerOrder.get(nextIndex);
@@ -90,12 +101,12 @@ public class PlayerManager implements IPlayerManager{
         playerTurns++;
 
         if(playerTurns == playerOrder.size()){
+             round++;
              playerTurns = 0;
-             return true;
         }
-        return false;
+        return true;
     }
-
+    @Override
     public String getAllowedColors(){ return allowedColors.toString(); }
 
     @Override
@@ -110,12 +121,21 @@ public class PlayerManager implements IPlayerManager{
         }
         return playerInfo.toString();
     }
-    public boolean isCurrentsPlayerMissionCompleted(){
-        return currentPlayer.getPlayerMission().isMissionCompleted(currentPlayer.getPlayerName());
-    }
-    public boolean getContinuePreviousGame(){ return continuePreviousGame; }
+    @Override
+    public String getAllCountriesInfoPlayer(String playerName){
 
+        return playerMap.get(playerName).conqueredCountriesToString();
+    }
+    @Override
+    public boolean continuePreviousGame(){ return continuePreviousGame; }
+    @Override
     public void setCurrentPlayer(String currentPlayerName){ this.currentPlayer = playerMap.get(currentPlayerName); }
 
+    @Override
     public String getCurrentPlayerName() { return currentPlayer.getPlayerName(); }
+
+    @Override
+    public int getPlayerNumber() { return playerMap.size(); }
+    @Override
+    public int getRound(){ return round; }
 }

@@ -7,7 +7,7 @@ import Persistence.IPersistence;
 import java.io.IOException;
 import java.util.*;
 
-public class World implements IWorldManager {
+public class World implements IWorldManager, WorldFriend{
 
     IPersistence persistence;
     private Map<String, Country> countryMap; //Key is the country name
@@ -33,7 +33,7 @@ public class World implements IWorldManager {
             }
         }
     }
-
+    @Override
     public void clearWorld() throws IOException {
 
         continents.clear();
@@ -60,8 +60,13 @@ public class World implements IWorldManager {
         return neighbourInfo.toString();
     }
 
+    @Override
+    public int getUnitAmountOfCountry(String countryName) {
+        return getCountryMap().get(countryName).getArmy().getUnits();
+    }
+    @Override
     public Map<String, Country> getCountryMap(){ return countryMap; }
-
+    @Override
     public List<String> getConqueredContinents(List<Country> playersCountries){
 
         List<String> conqueredContinents = new ArrayList<>();
@@ -73,5 +78,11 @@ public class World implements IWorldManager {
         return conqueredContinents;
     }
 
+    @Override
+    public String getCountryOwner(String country){
+
+        return countryMap.get(country).getArmy().getPlayer().getPlayerName();
+    }
+    @Override
     public Map<String, Continent> getContinents() { return continents; }
 }

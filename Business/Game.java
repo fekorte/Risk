@@ -1,7 +1,6 @@
 package Business;
 
 import Common.Army;
-import Common.Continent;
 import Common.Country;
 import Common.Exceptions.*;
 import Common.Player;
@@ -14,21 +13,21 @@ public class Game implements GameManager {
 
     IPersistence persistence;
     IPlayerManager playerManager;
+    PlayerManagerFriend playerManagerFriend;
     IWorldManager worldManager;
-    Map<String, Map<String, Country>> countryPlayerMap; //key 1 is player name, key 2 is country name
+    WorldFriend worldFriend;
     Map<String, Country> countryMap; //key is country name
     List<String> involvedCountries; //String: country name
-    int round;
 
 
     public Game(IPlayerManager playerManager, IWorldManager worldManager, IPersistence persistence){
 
-        this.round = 0;
         this.persistence = persistence;
         this.playerManager = playerManager;
+        playerManagerFriend = (PlayerManagerFriend) playerManager;
         this.worldManager = worldManager;
-        countryMap = worldManager.getCountryMap();
-        countryPlayerMap = new HashMap<>();
+        worldFriend = (WorldFriend) worldManager;
+        countryMap = worldFriend.getCountryMap();
         involvedCountries = new ArrayList<>();
     }
 
@@ -36,16 +35,15 @@ public class Game implements GameManager {
     @Override
     public boolean saveGame() throws IOException {
 
-        return persistence.savePlayers(playerManager.getPlayerMap()) && persistence.saveGameStateWorld(worldManager.getContinents());
+        return persistence.savePlayers(playerManagerFriend.getPlayerMap()) && persistence.saveGameStateWorld(worldFriend.getContinents());
     }
 
     @Override
     public void quitGame() throws IOException {
 
-        this.round = 0;
-        playerManager.clearPlayers();
-        worldManager.clearWorld();
-        countryPlayerMap.clear();
+        playerManagerFriend.clearPlayers();
+        worldFriend.clearWorld();
+        countryMap.clear();
     }
 
     @Override
@@ -55,39 +53,14 @@ public class Game implements GameManager {
         quitGame();
     }
 
-    public void continueGame(){
-
-    }
-
-    public String getAllCountriesInfoPlayer(String playerName){
-
-        StringBuilder playerCountries = new StringBuilder();
-        for (Country country : countryPlayerMap.get(playerName).values()) {
-            playerCountries.append(country.getCountryName()).append(": ");
-            playerCountries.append(country.getArmy().getUnits()).append("\n");
-        }
-        return playerCountries.toString();
-    }
-
-    @Override
-    public String getCountryOwner(String country){
-
-        return countryMap.get(country).getArmy().getPlayer().getPlayerName();
-    }
-
-
     @Override
     public void startFirstRound() throws ExceptionNotEnoughPlayer {
 
         List<Country> countryList = new ArrayList<>(countryMap.values());
-        List<Player> playerList = new ArrayList<>((playerManager.getPlayerMap().values()));
+        List<Player> playerList = new ArrayList<>((playerManagerFriend.getPlayerMap().values()));
 
         if(playerList.isEmpty() || playerList.size() == 1){
             throw new ExceptionNotEnoughPlayer();
-        }
-
-        for(Player player : playerList){
-            countryPlayerMap.put(player.getPlayerName(), new HashMap<>());
         }
 
         Collections.shuffle(countryList);
@@ -101,26 +74,24 @@ public class Game implements GameManager {
             country.setArmy(new Army(1, player));
 
             countryMap.put(country.getCountryName(), country);
-            countryPlayerMap.get(player.getPlayerName()).put(country.getCountryName(), country);
 
             lastPlayer = player;
         }
         if(lastPlayer != null){
-            playerManager.setCurrentPlayer(lastPlayer.getPlayerName());
+            playerManagerFriend.setCurrentPlayer(lastPlayer.getPlayerName());
         }
     }
-
-    public void nextRound(){ this.round++; }
-    public int getRound(){ return round; }
 
     @Override
     public int receiveUnits() throws ExceptionObjectDoesntExist{
 
         String playerName = playerManager.getCurrentPlayerName();
-        if(!playerManager.getPlayerMap().containsKey(playerName)){
+        if(!playerManagerFriend.getPlayerMap().containsKey(playerName)){
            throw new ExceptionObjectDoesntExist(playerName);
         }
         involvedCountries.clear();
+
+        /*
         List<Country> playerCountries = new ArrayList<>(countryPlayerMap.get(playerName).values());
         int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;
 
@@ -131,12 +102,15 @@ public class Game implements GameManager {
             armySize += continents.get(conqueredContinent).getPointsForConquering();
         }
         return armySize;
+
+         */
+        return 0;
     }
 
     @Override
     public void distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits{
 
-        if(!getCountryOwner(selectedCountry).equals(playerManager.getCurrentPlayerName())){
+        if(!worldManager.getCountryOwner(selectedCountry).equals(playerManager.getCurrentPlayerName())){
             throw new ExceptionCountryNotOwned(selectedCountry, playerManager.getCurrentPlayerName());
         }
 
@@ -149,7 +123,7 @@ public class Game implements GameManager {
     @Override
     public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits{
 
-        if(!getCountryOwner(attackingCountry).equals(playerManager.getCurrentPlayerName())){
+        if(!worldManager.getCountryOwner(attackingCountry).equals(playerManager.getCurrentPlayerName())){
             throw new ExceptionCountryNotOwned(attackingCountry, playerManager.getCurrentPlayerName());
         }
 
@@ -213,8 +187,8 @@ public class Game implements GameManager {
 
         if(countryMap.get(countryToDefend).getArmy().getUnits() == 0){
             countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, countryMap.get(attackingCountry).getArmy().getPlayer()));
-            countryPlayerMap.get(countryMap.get(countryToDefend).getArmy().getPlayer().getPlayerName()).remove(countryToDefend);
-            countryPlayerMap.get(playerManager.getCurrentPlayerName()).put(countryToDefend, countryMap.get(countryToDefend));
+            //countryPlayerMap.get(countryMap.get(countryToDefend).getArmy().getPlayer().getPlayerName()).remove(countryToDefend);
+            //countryPlayerMap.get(playerManager.getCurrentPlayerName()).put(countryToDefend, countryMap.get(countryToDefend));
         }
 
         return defenderDiceResult;
@@ -229,7 +203,7 @@ public class Game implements GameManager {
             }
         }
 
-        if(!getCountryOwner(sourceCountry).equals(playerManager.getCurrentPlayerName())){
+        if(!worldManager.getCountryOwner(sourceCountry).equals(playerManager.getCurrentPlayerName())){
             throw new ExceptionCountryNotOwned(sourceCountry, playerManager.getCurrentPlayerName());
         }
 

@@ -14,5 +14,7 @@ public interface IPersistence {
     Map<String, Continent> fetchContinents() throws IOException;
     boolean saveGameState(Map<String, Player> playerMap) throws IOException;
     Map<String, Player> fetchGameState() throws IOException;
+    void saveGameRoundAndStep(int round, int playerTurns, int step) throws IOException;
+    int[] fetchGameRoundAndStep() throws IOException;
     void resetGameState() throws IOException;
 }

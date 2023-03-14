@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.*;
 
 public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
+    IPersistence persistence;
     IWorldManager worldManager;
     WorldFriend worldFriend;
     Map<String, Player> playerMap;
@@ -25,6 +26,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
 
     public PlayerManager(IWorldManager worldManager, IPersistence persistence) throws IOException {
 
+        this.persistence = persistence;
         this.worldManager = worldManager;
         worldFriend = (WorldFriend) worldManager;
         playerMap = persistence.fetchGameState();
@@ -34,13 +36,21 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         if(!playerMap.isEmpty()){
             playerOrder.addAll(playerMap.values());
             this.currentPlayer = playerOrder.get(0);
+            int[] roundAndStep = persistence.fetchGameRoundAndStep();
+            this.round = roundAndStep[0];
+            this.playerTurns = roundAndStep[1];
             continuePreviousGame = true;
         } else {
+            this.playerTurns = 0;
+            this.round = 0;
             continuePreviousGame = false;
         }
+    }
 
-        this.playerTurns = 0;
-        this.round = 0;
+    public boolean saveGame(int gameStep) throws IOException {
+
+        persistence.saveGameRoundAndStep(round, playerTurns, gameStep);
+        return persistence.saveGameState(getPlayerMap());
     }
 
     @Override

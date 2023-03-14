@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface GameManager {
 
-    boolean saveGame() throws IOException;
     void quitGame() throws IOException;
     void newGame() throws IOException;
     void startFirstRound() throws ExceptionNotEnoughPlayer;
+    int getSavedGameStep() throws IOException;
 
     int receiveUnits() throws ExceptionObjectDoesntExist;
     void distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits;

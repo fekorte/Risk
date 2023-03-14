@@ -18,6 +18,7 @@ public class RiskCUI {
     boolean gameStarted;
     boolean gameSetUp;
     boolean doneWithStep;
+    int gameStep;
 
 
     public RiskCUI(IWorldManager worldManager, IPlayerManager playerManager, GameManager gameManager) throws IOException {
@@ -31,10 +32,19 @@ public class RiskCUI {
         if(playerManager.continuePreviousGame()){
             gameStarted = true;
             gameSetUp = true;
-            riskTurn();
+            gameStep = gameManager.getSavedGameStep();
+            switch(gameStep){
+                case(1) -> riskTurn();
+                case (2) -> {
+                    stepTwo();
+                    stepThree();
+                }
+                case(3) -> stepThree();
+            }
         } else {
             gameStarted = false;
             gameSetUp = false;
+            gameStep = 1;
         }
     }
 
@@ -119,6 +129,15 @@ public class RiskCUI {
 
     private void riskTurn() throws IOException {
 
+        stepOne();
+        stepTwo();
+        stepThree();
+    }
+
+
+
+    private void stepOne() throws IOException {
+
         System.out.println("New round! It's your turn " + playerManager.getCurrentPlayerName());
 
         //receiveUnits
@@ -134,12 +153,18 @@ public class RiskCUI {
         System.out.println("You can distribute your received units to your countries. You can inform yourself in this menu to plan better how to distribute your units.");
         playerChoice(false, false);
         distributeUnits(receivedUnits);
+    }
 
+
+    private void stepTwo() throws IOException {
 
         //attack and defend
         System.out.println("All your units have been distributed. Now it is time to attack.");
         playerChoice(true, false);
 
+    }
+
+    private void stepThree() throws IOException {
 
         //moveUnits
         System.out.println("Move your units to neighbouring countries which belong to you.");
@@ -205,8 +230,10 @@ public class RiskCUI {
                 System.out.println(worldManager.getCountryNeighbours(selectedCountry));
             }
 
-            case "e" -> //done, continue with next step
-                    doneWithStep = true;
+            case "e" -> { //done, continue with next step
+                doneWithStep = true;
+                gameStep++;
+            }
             case "n" -> { //start new game
                 gameStarted = false;
                 gameSetUp = false;
@@ -216,7 +243,7 @@ public class RiskCUI {
                 }
             }
             case "s" -> {
-                if (gameManager.saveGame()) {
+                if (playerManager.saveGame(gameStep)) {
                     System.out.println("Game saved successfully!");
                 }
             }

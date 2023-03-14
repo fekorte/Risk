@@ -31,13 +31,6 @@ public class Game implements GameManager {
         involvedCountries = new ArrayList<>();
     }
 
-
-    @Override
-    public boolean saveGame() throws IOException {
-
-        return persistence.saveGameState(playerManagerFriend.getPlayerMap());
-    }
-
     @Override
     public void quitGame() throws IOException {
 
@@ -51,6 +44,12 @@ public class Game implements GameManager {
 
         persistence.resetGameState();
         quitGame();
+    }
+
+    public int getSavedGameStep() throws IOException {
+
+        int[] roundAndStep = persistence.fetchGameRoundAndStep();
+        return roundAndStep[2];
     }
 
     @Override

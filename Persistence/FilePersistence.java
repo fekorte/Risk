@@ -138,6 +138,26 @@ public class FilePersistence implements IPersistence{
     }
 
     @Override
+    public void saveGameRoundAndStep(int round, int playerTurns, int step) throws IOException {
+
+        openForWriting("Data/GameRoundAndStep.txt");
+        printLine(String.valueOf(round));
+        printLine(String.valueOf(playerTurns));
+        printLine(String.valueOf(step));
+        close();
+    }
+
+    @Override
+    public int[] fetchGameRoundAndStep() throws IOException {
+        openForReading("Data/GameRoundAndStep.txt");
+        int[] roundAndStep = new int[3];
+        roundAndStep[0] = Integer.parseInt(readLine());
+        roundAndStep[1] = Integer.parseInt(readLine());
+        roundAndStep[2] = Integer.parseInt(readLine());
+        return roundAndStep;
+    }
+
+    @Override
     public void resetGameState() throws IOException {
 
         openForWriting("Data/GameState.txt");

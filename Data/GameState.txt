@@ -1,72 +1,4 @@
-R
-Blue
-Conquer the world.
- 
-63
-Asia
-Ural
-1
-Asia
-Afghanistan
-1
-Europe
-Northern Europe
-1
-North America
-Alberta
-1
-Asia
-Japan
-1
-North America
-Eastern United States
-1
-Europe
-Ukraine
-1
-Africa
-Egypt
-1
-Africa
-Madagascar
-1
-Europe
-Scandinavia
-1
-Africa
-Congo
-1
-Asia
-India
-1
-Asia
-Middle East
-1
-South America
-Venezuela
-1
-Australia
-New Guinea
-1
-North America
-North West Territory
-1
-North America
-Alaska
-1
-Asia
-Kamchatka
-1
-North America
-Greenland
-1
-Australia
-Eastern Australia
-1
-Africa
-East Africa
-1
-Z
+Dino
 Red
 Conquer the world.
  
@@ -74,35 +6,38 @@ Conquer the world.
 Australia
 Western Australia
 1
-North America
-Central America
-1
 South America
 Argentina
 1
 Asia
+Afghanistan
+1
+North America
+Alberta
+1
+Asia
 Siam
+1
+Asia
+Japan
 1
 North America
 Quebec
 1
 Africa
-North Africa
+Egypt
 1
 Europe
 Iceland
 1
-Europe
-Western Europe
+Asia
+Middle East
 1
 Asia
 Yakutsk
 1
-Asia
-Mongolia
-1
-Europe
-Great Britain
+Australia
+New Guinea
 1
 Asia
 Irkutsk
@@ -119,17 +54,82 @@ Brazil
 Europe
 Southern Europe
 1
+North America
+Alaska
+1
+North America
+Greenland
+3
+Australia
+Eastern Australia
+1
+Africa
+East Africa
+6
+Green
+Green
+Conquer the world.
+ 
+63
+Asia
+Ural
+1
+North America
+Central America
+1
+Europe
+Northern Europe
+1
+North America
+Eastern United States
+1
+Europe
+Ukraine
+1
+Africa
+North Africa
+1
+Africa
+Madagascar
+1
+Europe
+Scandinavia
+1
+Africa
+Congo
+1
+Europe
+Western Europe
+1
+Asia
+India
+1
+South America
+Venezuela
+1
+Europe
+Great Britain
+1
+Asia
+Mongolia
+1
+North America
+North West Territory
+1
 Africa
 South Africa
+1
+Asia
+Kamchatka
 1
 North America
 Western United States
 1
-North America
-Ontario
-1
 South America
 Peru
+1
+North America
+Ontario
 1
 Australia
 Indonesia

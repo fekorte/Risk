@@ -47,7 +47,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         }
     }
 
-    public boolean saveGame(int gameStep) throws IOException {
+    public boolean save(int gameStep) throws IOException {
 
         persistence.saveGameRoundAndStep(round, playerTurns, gameStep);
         return persistence.saveGameState(getPlayerMap());

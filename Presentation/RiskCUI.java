@@ -243,7 +243,7 @@ public class RiskCUI {
                 }
             }
             case "s" -> {
-                if (playerManager.saveGame(gameStep)) {
+                if (playerManager.save(gameStep)) {
                     System.out.println("Game saved successfully!");
                 }
             }

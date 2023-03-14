@@ -27,7 +27,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
 
         this.worldManager = worldManager;
         worldFriend = (WorldFriend) worldManager;
-        playerMap = persistence.fetchPlayers();
+        playerMap = persistence.fetchGameState();
         playerOrder = new ArrayList<>();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
 
@@ -94,10 +94,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         int currentIndex = playerOrder.indexOf(playerMap.get(currentPlayer.getPlayerName()));
         int nextIndex = (currentIndex + 1) % playerOrder.size();
         this.currentPlayer = playerOrder.get(nextIndex);
-
-        //Rotate the list, next player is on position one
-        int startIndex = playerOrder.indexOf(playerMap.get(currentPlayer.getPlayerName()));
-        Collections.rotate(playerOrder, -startIndex);
+        Collections.rotate(playerOrder, -nextIndex);
         playerTurns++;
 
         if(playerTurns == playerOrder.size()){
@@ -129,7 +126,11 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     @Override
     public boolean continuePreviousGame(){ return continuePreviousGame; }
     @Override
-    public void setCurrentPlayer(String currentPlayerName){ this.currentPlayer = playerMap.get(currentPlayerName); }
+    public void setCurrentPlayer(String currentPlayerName){
+
+        this.currentPlayer = playerMap.get(currentPlayerName);
+        Collections.rotate(playerOrder, playerOrder.indexOf(currentPlayer));
+    }
 
     @Override
     public String getCurrentPlayerName() { return currentPlayer.getPlayerName(); }
@@ -138,4 +139,16 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     public int getPlayerNumber() { return playerMap.size(); }
     @Override
     public int getRound(){ return round; }
+    @Override
+    public List<Country> getCurrentPlayersCountries(){ return new ArrayList<>(currentPlayer.getConqueredCountries().values()); }
+    @Override
+    public void changeCountryOwner(String newOwnerName, String countryName){
+
+        String previousOwnerName = worldManager.getCountryOwner(countryName);
+        playerMap.get(newOwnerName).addConqueredCountry(worldFriend.getCountryMap().get(countryName));
+        playerMap.get(previousOwnerName).removeCountry(countryName);
+    }
+
+    @Override
+    public Player getCurrentPlayer() { return currentPlayer; }
 }

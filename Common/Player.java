@@ -22,11 +22,13 @@ public class Player {
     public Mission getPlayerMission(){ return playerMission;}
     public void addConqueredCountry(Country conqueredCountry){ conqueredCountries.put(conqueredCountry.getCountryName(), conqueredCountry); }
     public void removeCountry(String countryName){ conqueredCountries.remove(countryName); }
+
+    public Map<String, Country> getConqueredCountries(){ return conqueredCountries; }
     public String conqueredCountriesToString(){
 
         StringBuilder conqueredCountriesInfo = new StringBuilder();
         for(Country country : conqueredCountries.values()){
-            conqueredCountriesInfo.append(country.getCountryInfo()).append("\n");
+            conqueredCountriesInfo.append(country.getCountryName()).append(": ").append(country.getArmy().getUnits()).append("\n");
         }
         return conqueredCountriesInfo.toString();
     }

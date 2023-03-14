@@ -40,7 +40,7 @@ public class FilePersistence implements IPersistence{
         while(reader != null && reader.ready()){
             String continentName = readLine();
             int pointsForConquering = Integer.parseInt(readLine());
-            Continent continent = new Continent(continentName, pointsForConquering, new ArrayList<>());
+            Continent continent = new Continent(continentName, pointsForConquering, new HashMap<>());
             continents.put(continentName, continent);
         }
         close();
@@ -83,83 +83,64 @@ public class FilePersistence implements IPersistence{
 
 
     @Override
-    public boolean saveGameStateWorld(Map<String, Continent> continentMap) throws IOException {
+    public boolean saveGameState(Map<String, Player> playerMap) throws IOException {
 
-        openForWriting("Data/GameStateWorld.txt");
-        for(Continent continent : continentMap.values()){
-            for(Country country : continent.getCountries()){
+        openForWriting("Data/GameState.txt");
+        for(Player player : playerMap.values()){
+            printLine(player.getPlayerName());
+            printLine(player.getPlayerColor());
+            printLine(player.getPlayerMission().getMissionText());
+            printLine(" ");
+
+            printLine(String.valueOf(player.getConqueredCountries().size() * 3));
+            for(Country country : player.getConqueredCountries().values()){
+                printLine(country.getContinentName());
                 printLine(country.getCountryName());
-                printLine(country.getArmy().getPlayer().getPlayerName());
                 printLine(String.valueOf(country.getArmy().getUnits()));
-                printLine(" ");
             }
         }
         close();
-        return !continentMap.isEmpty();
+        return !playerMap.isEmpty();
     }
 
+
+
     @Override
-    public Map<String, Continent>  fetchGameStateWorld() throws IOException {
-        Map<String, Player> playerMap = fetchPlayers();
+    public Map<String, Player> fetchGameState() throws IOException {
+        Map<String, Player> playerMap = new HashMap<>();
         Map<String, Continent> continents = fetchContinents();
 
-        openForReading("Data/GameStateWorld.txt");
+        openForReading("Data/GameState.txt");
         if(reader == null){
             continents.clear();
         }
-        while(reader != null && reader.ready()){
-            for(Continent continent : continents.values()){
-                for(Country country : continent.getCountries()){
-                    String countryName = readLine();
-                    String playerName = readLine();
-                    int units = Integer.parseInt(readLine());
-                    String gap = readLine();
-
-                    country.setArmy(new Army(units, playerMap.get(playerName)));
-                }
-            }
-        }
-        close();
-        return continents;
-    }
-
-    @Override
-    public Map<String, Player> fetchPlayers() throws IOException {
-
-        Map<String, Player> playerMap = new HashMap<>();
-        openForReading("Data/GameStatePlayers.txt");
         while(reader != null && reader.ready()){
             String playerName = readLine();
             String color = readLine();
             String missionText = readLine();
             String gap = readLine();
 
-            Player player = new Player(playerName, color, new MissionConquerWorld(new ArrayList<>()));
-            playerMap.put(playerName, player);
+            int numberOfCountries = Integer.parseInt(readLine());
+            Map<String, Country> playersCountries = new HashMap<>();
+            while(numberOfCountries != 0){
+                String continentName = readLine();
+                String countryName = readLine();
+                int units = Integer.parseInt(readLine());
+
+                continents.get(continentName).getCountryFromContinent(countryName).setArmy(new Army(units, playerMap.get(playerName)));
+                playersCountries.put(countryName, continents.get(continentName).getCountryFromContinent(countryName));
+                numberOfCountries -= 3;
+            }
+            playerMap.put(playerName, new Player(playerName, color, new MissionConquerWorld(new ArrayList<>()), playersCountries));
         }
         close();
         return playerMap;
     }
-    @Override
-    public boolean savePlayers(Map<String, Player> playerMap) throws IOException {
 
-        openForWriting("Data/GameStatePlayers.txt");
-        for(Player player : playerMap.values()){
-            printLine(player.getPlayerName());
-            printLine(player.getPlayerColor());
-            printLine(player.getPlayerMission().getMissionText());
-            printLine(" ");
-        }
-        close();
-        return !playerMap.isEmpty();
-    }
     @Override
     public void resetGameState() throws IOException {
 
-        openForWriting("Data/GameStatePlayers.txt");
-        printLine("");
-        close();
-        openForWriting("Data/GameStateWorld.txt");
+        openForWriting("Data/GameState.txt");
         printLine("");
         close();
     }

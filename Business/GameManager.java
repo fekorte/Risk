@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GameManager {
 
-    boolean  saveGame() throws IOException;
+    boolean saveGame() throws IOException;
     void quitGame() throws IOException;
     void newGame() throws IOException;
     void startFirstRound() throws ExceptionNotEnoughPlayer;

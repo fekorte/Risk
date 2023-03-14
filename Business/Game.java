@@ -35,7 +35,7 @@ public class Game implements GameManager {
     @Override
     public boolean saveGame() throws IOException {
 
-        return persistence.savePlayers(playerManagerFriend.getPlayerMap()) && persistence.saveGameStateWorld(worldFriend.getContinents());
+        return persistence.saveGameState(playerManagerFriend.getPlayerMap());
     }
 
     @Override
@@ -73,8 +73,7 @@ public class Game implements GameManager {
 
             country.setArmy(new Army(1, player));
 
-            countryMap.put(country.getCountryName(), country);
-
+            player.addConqueredCountry(country);
             lastPlayer = player;
         }
         if(lastPlayer != null){
@@ -91,20 +90,10 @@ public class Game implements GameManager {
         }
         involvedCountries.clear();
 
-        /*
-        List<Country> playerCountries = new ArrayList<>(countryPlayerMap.get(playerName).values());
+        List<Country> playerCountries = playerManagerFriend.getCurrentPlayersCountries();
         int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;
 
-        List<String> conqueredContinents = worldManager.getConqueredContinents(playerCountries);
-        Map<String, Continent> continents = worldManager.getContinents();
-
-        for(String conqueredContinent : conqueredContinents){
-            armySize += continents.get(conqueredContinent).getPointsForConquering();
-        }
-        return armySize;
-
-         */
-        return 0;
+        return armySize + worldFriend.getPointsForConqueredContinents(playerCountries);
     }
 
     @Override
@@ -164,7 +153,7 @@ public class Game implements GameManager {
     public List<Integer> defend(String countryToDefend, String attackingCountry, List<Integer> attackerDiceResult, int attackerUnits) {
 
         List<Integer> defenderDiceResult = new ArrayList<>();
-        int unitsDefender = countryMap.get(countryToDefend).getArmy().getUnits();
+        int unitsDefender = worldManager.getUnitAmountOfCountry(countryToDefend);
         if (unitsDefender != 1) {
             defenderDiceResult.add(rollDice());
         }
@@ -185,10 +174,9 @@ public class Game implements GameManager {
             }
         }
 
-        if(countryMap.get(countryToDefend).getArmy().getUnits() == 0){
-            countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, countryMap.get(attackingCountry).getArmy().getPlayer()));
-            //countryPlayerMap.get(countryMap.get(countryToDefend).getArmy().getPlayer().getPlayerName()).remove(countryToDefend);
-            //countryPlayerMap.get(playerManager.getCurrentPlayerName()).put(countryToDefend, countryMap.get(countryToDefend));
+        if(worldManager.getUnitAmountOfCountry(countryToDefend) == 0){
+            countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, playerManagerFriend.getCurrentPlayer()));
+            playerManagerFriend.changeCountryOwner(playerManager.getCurrentPlayerName(), countryToDefend);
         }
 
         return defenderDiceResult;
@@ -207,11 +195,11 @@ public class Game implements GameManager {
             throw new ExceptionCountryNotOwned(sourceCountry, playerManager.getCurrentPlayerName());
         }
 
-        if(countryMap.get(sourceCountry).getArmy().getUnits() - units < 1){
+        if(worldManager.getUnitAmountOfCountry(sourceCountry) - units < 1){
             throw new ExceptionTooManyUnits(countryMap.get(sourceCountry).getArmy().getUnits() - 1);
         }
 
-        if(!countryMap.get(sourceCountry).getNeighbours().contains(countryMap.get(destinationCountry))){
+        if(!worldManager.getCountryNeighbours(sourceCountry).contains(destinationCountry)){
             throw new ExceptionCountryIsNoNeighbour(sourceCountry, destinationCountry);
         }
 

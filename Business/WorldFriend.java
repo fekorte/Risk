@@ -10,6 +10,6 @@ import java.util.Map;
 public interface WorldFriend {
     void clearWorld() throws IOException;
     Map<String, Country> getCountryMap();
-    List<String> getConqueredContinents(List<Country> playersCountries);
+    int getPointsForConqueredContinents(List<Country> playerCountries);
     Map<String, Continent> getContinents();
 }

@@ -21,14 +21,10 @@ public class World implements IWorldManager, WorldFriend{
 
     public void initialize() throws IOException {
 
-        if(!persistence.fetchGameStateWorld().isEmpty()) {
-            continents = new HashMap<>(persistence.fetchGameStateWorld());
-        } else {
-            continents = new HashMap<>(persistence.fetchContinents());
-        }
+        continents = new HashMap<>(persistence.fetchContinents());
         countryMap = new HashMap<>();
         for(Continent continent : continents.values()){
-            for(Country country : continent.getCountries()){
+            for(Country country : continent.getCountries().values()){
                 countryMap.put(country.getCountryName(), country);
             }
         }
@@ -66,7 +62,7 @@ public class World implements IWorldManager, WorldFriend{
     }
     @Override
     public Map<String, Country> getCountryMap(){ return countryMap; }
-    @Override
+
     public List<String> getConqueredContinents(List<Country> playersCountries){
 
         List<String> conqueredContinents = new ArrayList<>();
@@ -76,6 +72,15 @@ public class World implements IWorldManager, WorldFriend{
             }
         }
         return conqueredContinents;
+    }
+    public int getPointsForConqueredContinents(List<Country> playerCountries){
+
+        int pointsForConqueredContinent = 0;
+        List<String> conqueredContinents = getConqueredContinents(playerCountries);
+        for(String conqueredContinent : conqueredContinents){
+            pointsForConqueredContinent += continents.get(conqueredContinent).getPointsForConquering();
+        }
+        return pointsForConqueredContinent;
     }
 
     @Override

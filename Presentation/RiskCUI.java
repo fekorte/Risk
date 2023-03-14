@@ -169,7 +169,7 @@ public class RiskCUI {
 
     private void gameOverviewMenu(boolean attack, boolean moveUnits){
 
-        System.out.print("Current player: " + playerManager.getCurrentPlayerName() + ", Round: " + playerManager.getRound());
+        System.out.print("Current player: " + playerManager.getCurrentPlayerName() + ", Round: " + playerManager.getRound() + "\n");
         System.out.print("Commands: \n  Show all players:  'a'");
         System.out.print("         \n  Show all country infos:  'b'");
         System.out.print("         \n  Show your country infos:  'c'");

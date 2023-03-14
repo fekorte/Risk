@@ -107,7 +107,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         Collections.rotate(playerOrder, -nextIndex);
         playerTurns++;
 
-        if(playerTurns == playerOrder.size()){
+        if(playerTurns >= playerOrder.size()){
              round++;
              playerTurns = 0;
         }

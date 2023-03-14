@@ -89,6 +89,10 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
             throw new ExceptionObjectDoesntExist(name);
         }
 
+        if(playerTurns != 0){
+            playerTurns--;
+        }
+
         allowedColors.add(playerMap.get(name).getPlayerColor());
         playerOrder.remove(playerMap.get(name));
         playerMap.remove(name);
@@ -107,7 +111,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         Collections.rotate(playerOrder, -nextIndex);
         playerTurns++;
 
-        if(playerTurns >= playerOrder.size()){
+        if(playerTurns == playerOrder.size()){
              round++;
              playerTurns = 0;
         }

@@ -5,9 +5,9 @@ import java.util.List;
 
 public class MissionConquerWorld extends Mission{
 
-    List<Country> world;
+    List<String> world;
 
-    public MissionConquerWorld(List<Country> world){
+    public MissionConquerWorld(List<String> world){
 
         super();
         missionText = "Conquer the world.";
@@ -20,6 +20,6 @@ public class MissionConquerWorld extends Mission{
     @Override
     public boolean isMissionCompleted(String playerName) {
 
-        return (new HashSet<>(countries).containsAll(world));
+        return (new HashSet<>(playersCountries).containsAll(world));
     }
 }

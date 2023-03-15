@@ -8,7 +8,6 @@ import Common.Exceptions.ExceptionTooManyPlayer;
 import java.io.IOException;
 
 public interface IPlayerManager {
-    boolean save(int gameStep)  throws IOException;
     String addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists;
     void removePlayer(String name) throws ExceptionObjectDoesntExist;
     String getAllowedColors();

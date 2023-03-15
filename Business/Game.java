@@ -31,6 +31,11 @@ public class Game implements GameManager {
         involvedCountries = new ArrayList<>();
     }
 
+    public boolean saveGame(int gameStep) throws IOException {
+
+        return persistence.saveGameStateArmies(countryMap) && playerManagerFriend.save(gameStep);
+    }
+
     @Override
     public void quitGame() throws IOException {
 
@@ -44,6 +49,7 @@ public class Game implements GameManager {
 
         persistence.resetGameState();
         quitGame();
+        countryMap = worldFriend.getCountryMap();
     }
 
     public int getSavedGameStep() throws IOException {
@@ -72,7 +78,7 @@ public class Game implements GameManager {
 
             country.setArmy(new Army(1, player.getPlayerName()));
 
-            player.addConqueredCountry(country);
+            player.addConqueredCountry(country.getCountryName());
             lastPlayer = player;
         }
         if(lastPlayer != null){
@@ -89,7 +95,7 @@ public class Game implements GameManager {
         }
         involvedCountries.clear();
 
-        List<Country> playerCountries = playerManagerFriend.getCurrentPlayersCountries();
+        List<String> playerCountries = playerManagerFriend.getCurrentPlayersCountries();
         int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;
 
         return armySize + worldFriend.getPointsForConqueredContinents(playerCountries);

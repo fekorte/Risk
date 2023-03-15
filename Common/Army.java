@@ -2,9 +2,7 @@ package Common;
 
 public class Army {
     private int units;
-    private String playerName;
-
-    public Army(){}
+    private final String playerName;
     public Army(int units, String playerName){
 
         this.units = units;

@@ -1,6 +1,5 @@
 package Business;
 
-import Common.Country;
 import Common.Exceptions.ExceptionColorAlreadyExists;
 import Common.Exceptions.ExceptionObjectDoesntExist;
 import Common.Exceptions.ExceptionPlayerAlreadyExists;
@@ -29,7 +28,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         this.persistence = persistence;
         this.worldManager = worldManager;
         worldFriend = (WorldFriend) worldManager;
-        playerMap = persistence.fetchGameState();
+        playerMap = persistence.fetchGameStatePlayers();
         playerOrder = new ArrayList<>();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
 
@@ -50,7 +49,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     public boolean save(int gameStep) throws IOException {
 
         persistence.saveGameRoundAndStep(round, playerTurns, gameStep);
-        return persistence.saveGameState(getPlayerMap());
+        return persistence.saveGameStatePlayers(getPlayerMap());
     }
 
     @Override
@@ -74,7 +73,8 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
             throw new ExceptionColorAlreadyExists(color);
         }
 
-        Player newPlayer = new Player(name, color, new MissionConquerWorld((new ArrayList<>(worldFriend.getCountryMap().values()))), new HashMap<>());
+        Player newPlayer = new Player(name, color);
+        newPlayer.setPlayerMission(new MissionConquerWorld(new ArrayList<>()));
         playerMap.put(newPlayer.getPlayerName(), newPlayer);
         playerOrder.add(newPlayer);
         allowedColors.remove(color);
@@ -135,7 +135,11 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     @Override
     public String getAllCountriesInfoPlayer(String playerName){
 
-        return playerMap.get(playerName).conqueredCountriesToString();
+        StringBuilder countryInfos = new StringBuilder();
+        for(String country : playerMap.get(playerName).getConqueredCountryNames()){
+            countryInfos.append(country).append(": ").append(worldFriend.getCountryMap().get(country).getArmy().getUnits()).append("\n");
+        }
+        return countryInfos.toString();
     }
     @Override
     public boolean continuePreviousGame(){ return continuePreviousGame; }
@@ -154,12 +158,12 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     @Override
     public int getRound(){ return round; }
     @Override
-    public List<Country> getCurrentPlayersCountries(){ return new ArrayList<>(currentPlayer.getConqueredCountries().values()); }
+    public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayer.getPlayerName()).getConqueredCountryNames(); }
     @Override
     public void changeCountryOwner(String newOwnerName, String countryName){
 
         String previousOwnerName = worldManager.getCountryOwner(countryName);
-        playerMap.get(newOwnerName).addConqueredCountry(worldFriend.getCountryMap().get(countryName));
+        playerMap.get(newOwnerName).addConqueredCountry(countryName);
         playerMap.get(previousOwnerName).removeCountry(countryName);
     }
 }

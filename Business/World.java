@@ -11,28 +11,22 @@ public class World implements IWorldManager, WorldFriend{
 
     IPersistence persistence;
     private Map<String, Country> countryMap; //Key is the country name
-    private Map<String, Continent> continents; //Key is continent name
+    private final Map<String, Continent> continents; //Key is continent name
 
     public World(IPersistence persistence) throws IOException {
 
         this.persistence = persistence;
+        continents = persistence.fetchContinents();
         initialize();
     }
 
     public void initialize() throws IOException {
 
-        continents = persistence.fetchContinents();
-        countryMap = new HashMap<>();
-        for(Continent continent : continents.values()){
-            for(Country country : continent.getCountries().values()){
-                countryMap.put(country.getCountryName(), country);
-            }
-        }
+        countryMap = (persistence.fetchGameStateArmies().isEmpty()) ? persistence.fetchCountries() : persistence.fetchGameStateArmies();
     }
     @Override
     public void clearWorld() throws IOException {
 
-        continents.clear();
         countryMap.clear();
         initialize();
     }
@@ -50,8 +44,8 @@ public class World implements IWorldManager, WorldFriend{
     public String getCountryNeighbours(String country){
 
         StringBuilder neighbourInfo = new StringBuilder();
-        for(Country neighbour : countryMap.get(country).getNeighbours()){
-            neighbourInfo.append("| ").append(neighbour.getCountryName()).append(" |");
+        for(String neighbourName : countryMap.get(country).getNeighbours()){
+            neighbourInfo.append("| ").append(neighbourName).append(" |");
         }
         return neighbourInfo.toString();
     }
@@ -63,7 +57,7 @@ public class World implements IWorldManager, WorldFriend{
     @Override
     public Map<String, Country> getCountryMap(){ return countryMap; }
 
-    public List<String> getConqueredContinents(List<Country> playersCountries){
+    public List<String> getConqueredContinents(List<String> playersCountries){
 
         List<String> conqueredContinents = new ArrayList<>();
         for(Continent continent : continents.values()){
@@ -73,7 +67,7 @@ public class World implements IWorldManager, WorldFriend{
         }
         return conqueredContinents;
     }
-    public int getPointsForConqueredContinents(List<Country> playerCountries){
+    public int getPointsForConqueredContinents(List<String> playerCountries){
 
         int pointsForConqueredContinent = 0;
         List<String> conqueredContinents = getConqueredContinents(playerCountries);

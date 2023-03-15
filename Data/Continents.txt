@@ -1,12 +1,60 @@
 Australia
 2
+4
+Indonesia
+New Guinea
+Western Australia
+Eastern Australia
 South America
 2
+4
+Venezuela
+Brazil
+Peru
+Argentina
 Africa
 3
+6
+North Africa
+Egypt
+Congo
+East Africa
+South Africa
+Madagascar
 Europe
 5
+7
+Iceland
+Great Britain
+Scandinavia
+Ukraine
+Northern Europe
+Southern Europe
+Western Europe
 North America
 5
+9
+Alaska
+North West Territory
+Alberta
+Ontario
+Quebec
+Greenland
+Western United States
+Eastern United States
+Central America
 Asia
 7
+12
+Middle East
+India
+Afghanistan
+China
+Siam
+Ural
+Mongolia
+Siberia
+Yakutsk
+Irkutsk
+Kamchatka
+Japan

@@ -21,7 +21,7 @@ public class World implements IWorldManager, WorldFriend{
 
     public void initialize() throws IOException {
 
-        continents = new HashMap<>(persistence.fetchContinents());
+        continents = persistence.fetchContinents();
         countryMap = new HashMap<>();
         for(Continent continent : continents.values()){
             for(Country country : continent.getCountries().values()){

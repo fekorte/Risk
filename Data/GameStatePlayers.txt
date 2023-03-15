@@ -1,50 +1,50 @@
 T
-Blue
- 
-63
-North Africa
-Scandinavia
-Ural
-Afghanistan
-Siam
-Argentina
-Western Australia
-Ukraine
-Japan
-Indonesia
-Siberia
-Congo
-Madagascar
-Egypt
-Southern Europe
-Venezuela
-Kamchatka
-Irkutsk
-Middle East
-Eastern United States
-Alaska
-F
 Red
  
-63
-New Guinea
-Iceland
-India
-Alberta
-Great Britain
-Eastern Australia
-Quebec
-East Africa
-Brazil
-China
-Western Europe
-Greenland
-Northern Europe
-Central America
-Ontario
-North West Territory
-Mongolia
-Yakutsk
-Peru
+66
+Kamchatka
+Ukraine
 South Africa
 Western United States
+Brazil
+China
+Indonesia
+Alaska
+Southern Europe
+Northern Europe
+Ural
+Argentina
+Quebec
+Ontario
+Peru
+Siam
+Yakutsk
+Congo
+Scandinavia
+Madagascar
+India
+Venezuela
+E
+Blue
+ 
+60
+Egypt
+New Guinea
+North Africa
+Western Europe
+Middle East
+Japan
+North West Territory
+Mongolia
+Great Britain
+Eastern United States
+Alberta
+Greenland
+Iceland
+Central America
+Western Australia
+Eastern Australia
+East Africa
+Irkutsk
+Siberia
+Afghanistan

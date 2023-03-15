@@ -180,8 +180,9 @@ public class Game implements GameManager {
         }
 
         if(worldManager.getUnitAmountOfCountry(countryToDefend) == 0){
+            String previousOwner = countryMap.get(countryToDefend).getArmy().getPlayerName();
             countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, playerManager.getCurrentPlayerName()));
-            playerManagerFriend.changeCountryOwner(playerManager.getCurrentPlayerName(), countryToDefend);
+            playerManagerFriend.changeCountryOwner(playerManager.getCurrentPlayerName(), previousOwner, countryToDefend);
         }
 
         return defenderDiceResult;

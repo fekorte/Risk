@@ -12,5 +12,5 @@ public interface PlayerManagerFriend {
     Map<String, Player> getPlayerMap();
     void setCurrentPlayer(String currentPlayerName);
     List<String> getCurrentPlayersCountries();
-    void changeCountryOwner(String newOwnerName, String countryName);
+    void changeCountryOwner(String newOwnerName, String previousOwnerName, String countryName);
 }

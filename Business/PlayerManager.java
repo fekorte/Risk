@@ -160,9 +160,8 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     @Override
     public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayer.getPlayerName()).getConqueredCountryNames(); }
     @Override
-    public void changeCountryOwner(String newOwnerName, String countryName){
+    public void changeCountryOwner(String newOwnerName, String previousOwnerName, String countryName){
 
-        String previousOwnerName = worldManager.getCountryOwner(countryName);
         playerMap.get(newOwnerName).addConqueredCountry(countryName);
         playerMap.get(previousOwnerName).removeCountry(countryName);
     }

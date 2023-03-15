@@ -3,7 +3,6 @@ package Business;
 import Common.Country;
 import Common.Player;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -13,5 +12,4 @@ public interface PlayerManagerFriend {
     void setCurrentPlayer(String currentPlayerName);
     List<Country> getCurrentPlayersCountries();
     void changeCountryOwner(String newOwnerName, String countryName);
-    Player getCurrentPlayer();
 }

@@ -249,9 +249,9 @@ public class RiskCUI {
             }
             case "q" -> System.exit(0);
         }
-        if("e".equals(line) && attack){
+        if("f".equals(line) && attack){
             attack();
-        } else if("e".equals(line) && moveUnits) {
+        } else if("f".equals(line) && moveUnits) {
             moveUnits();
         }
     }

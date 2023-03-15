@@ -162,7 +162,4 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         playerMap.get(newOwnerName).addConqueredCountry(worldFriend.getCountryMap().get(countryName));
         playerMap.get(previousOwnerName).removeCountry(countryName);
     }
-
-    @Override
-    public Player getCurrentPlayer() { return currentPlayer; }
 }

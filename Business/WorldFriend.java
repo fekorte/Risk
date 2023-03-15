@@ -11,5 +11,4 @@ public interface WorldFriend {
     void clearWorld() throws IOException;
     Map<String, Country> getCountryMap();
     int getPointsForConqueredContinents(List<Country> playerCountries);
-    Map<String, Continent> getContinents();
 }

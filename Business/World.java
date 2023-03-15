@@ -84,10 +84,5 @@ public class World implements IWorldManager, WorldFriend{
     }
 
     @Override
-    public String getCountryOwner(String country){
-
-        return countryMap.get(country).getArmy().getPlayer().getPlayerName();
-    }
-    @Override
-    public Map<String, Continent> getContinents() { return continents; }
+    public String getCountryOwner(String country){ return countryMap.get(country).getArmy().getPlayerName(); }
 }

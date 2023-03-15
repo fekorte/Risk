@@ -127,8 +127,8 @@ public class FilePersistence implements IPersistence{
                 String countryName = readLine();
                 int units = Integer.parseInt(readLine());
 
-                continents.get(continentName).getCountryFromContinent(countryName).setArmy(new Army(units, playerMap.get(playerName)));
                 playersCountries.put(countryName, continents.get(continentName).getCountryFromContinent(countryName));
+                playersCountries.get(countryName).setArmy(new Army(units, playerName));
                 numberOfCountries -= 3;
             }
             playerMap.put(playerName, new Player(playerName, color, new MissionConquerWorld(new ArrayList<>()), playersCountries));

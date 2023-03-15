@@ -2,16 +2,16 @@ package Common;
 
 public class Army {
     private int units;
-    private Player player;
+    private String playerName;
 
     public Army(){}
-    public Army(int units, Player player){
+    public Army(int units, String playerName){
 
         this.units = units;
-        this.player = player;
+        this.playerName = playerName;
     }
 
-    public Player getPlayer(){ return player; }
+    public String getPlayerName(){ return playerName; }
 
     public int getUnits(){ return units; }
 

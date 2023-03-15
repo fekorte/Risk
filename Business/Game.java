@@ -70,7 +70,7 @@ public class Game implements GameManager {
             Country country = countryList.get(i);
             Player player = playerList.get(i % playerList.size());
 
-            country.setArmy(new Army(1, player));
+            country.setArmy(new Army(1, player.getPlayerName()));
 
             player.addConqueredCountry(country);
             lastPlayer = player;
@@ -164,7 +164,7 @@ public class Game implements GameManager {
 
         int lostPointsAttacker = 0;
 
-        for (int i = 0; i < comparisonSize - 1; i++){
+        for (int i = 0; i < comparisonSize; i++){
             if ((attackerDiceResult.get(i) > defenderDiceResult.get(i))) {
                 countryMap.get(countryToDefend).getArmy().removeUnits(1);
             } else {
@@ -174,7 +174,7 @@ public class Game implements GameManager {
         }
 
         if(worldManager.getUnitAmountOfCountry(countryToDefend) == 0){
-            countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, playerManagerFriend.getCurrentPlayer()));
+            countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, playerManager.getCurrentPlayerName()));
             playerManagerFriend.changeCountryOwner(playerManager.getCurrentPlayerName(), countryToDefend);
         }
 

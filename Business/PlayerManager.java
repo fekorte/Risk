@@ -4,7 +4,6 @@ import Common.Exceptions.ExceptionColorAlreadyExists;
 import Common.Exceptions.ExceptionObjectDoesntExist;
 import Common.Exceptions.ExceptionPlayerAlreadyExists;
 import Common.Exceptions.ExceptionTooManyPlayer;
-import Common.Mission;
 import Common.MissionConquerWorld;
 import Common.Player;
 import Persistence.IPersistence;
@@ -19,6 +18,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     Map<String, Player> playerMap;
     List<Player> playerOrder;
     ArrayList<String> allowedColors;
+    MissionFactory missionFactory;
     Player currentPlayer;
     boolean continuePreviousGame;
     int playerTurns;
@@ -155,11 +155,29 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
 
     @Override
     public String getCurrentPlayerName() { return currentPlayer.getPlayerName(); }
-
     @Override
     public int getPlayerNumber() { return playerMap.size(); }
     @Override
     public int getRound(){ return round; }
+
+    public List<String> getPlayerColors(){
+        List<String> allColors = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
+        allColors.removeAll(allowedColors);
+        return allColors;
+    }
+    @Override
+    public void setPlayerMission(boolean missionRisk){
+
+        MissionFactory factory = new MissionFactory(worldFriend.getContinents(), worldFriend.getCountryMap(), getPlayerColors());
+
+        Random random = new Random();
+        for(Player player : playerOrder){
+            if(!missionRisk){
+                factory.createMission(player.getPlayerColor(), 6); //6 = mission for everyone => conquer the world
+            }
+            factory.createMission(player.getPlayerColor(), random.nextInt(5) + 1);
+        }
+    }
     @Override
     public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayer.getPlayerName()).getConqueredCountryNames(); }
     @Override
@@ -167,12 +185,5 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
 
         playerMap.get(newOwnerName).addConqueredCountry(countryName);
         playerMap.get(previousOwnerName).removeCountry(countryName);
-    }
-
-    public void setPlayerMission(){
-
-        for(Player player : playerOrder){
-            player.setPlayerMission(new MissionConquerWorld(new ArrayList<>(worldFriend.getCountryMap().keySet())));
-        }
     }
 }

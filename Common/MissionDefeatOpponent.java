@@ -10,6 +10,7 @@ public class MissionDefeatOpponent extends Mission{
 
         this.opponentColor = opponentColor;
         this.missionText = "Destroy all " + opponentColor + " troops.";
+        this.missionNumber = 6;
     }
 
     public String getOpponent(){ return opponentColor; }

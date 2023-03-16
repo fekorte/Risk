@@ -13,7 +13,8 @@ public class MissionConquerContinents extends Mission{
 
     public MissionConquerContinents(Map<String, Continent> continentMap, String firstContinentName, String secondContinentName, boolean oneMore){
 
-        this.missionText = (oneMore) ? "Conquer " + firstContinentName + ", " + secondContinentName + " and one other continent." : "Conquer " + firstContinentName + " and " + secondContinentName + ".";
+        this.missionNumber = (!oneMore) ? 1 : 2;
+        this.missionText = (!oneMore) ? "Conquer " + firstContinentName + " and " + secondContinentName + "." : "Conquer " + firstContinentName + ", " + secondContinentName + " and one other continent.";
         this.continentMap = continentMap;
         this.firstContinentName = firstContinentName;
         this.secondContinentName = secondContinentName;

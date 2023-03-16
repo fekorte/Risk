@@ -102,7 +102,7 @@ public class FilePersistence implements IPersistence{
         for(Player player : playerOrder){
             printLine(player.getPlayerName());
             printLine(player.getPlayerColor());
-            //printLine(player.getPlayerMission().getMissionText());
+            printLine(String.valueOf(player.getPlayerMission().getMissionNumber()));
             printLine(" ");
 
             printLine(String.valueOf(player.getConqueredCountryNames().size()));
@@ -125,7 +125,7 @@ public class FilePersistence implements IPersistence{
         while(reader != null && reader.ready()){
             String playerName = readLine();
             String color = readLine();
-            //String missionText = readLine();
+            int missionNumber = Integer.parseInt(readLine());
             String gap = readLine();
 
             Player newPlayer = new Player(playerName, color);
@@ -141,6 +141,8 @@ public class FilePersistence implements IPersistence{
         close();
         return playerOrder;
     }
+
+
     @Override
     public boolean saveGameStateArmies(Map<String, Country> countryMap) throws IOException {
 

@@ -59,7 +59,7 @@ public class Game implements GameManager {
     }
 
     @Override
-    public void startFirstRound() throws ExceptionNotEnoughPlayer {
+    public void startFirstRound(boolean missionRisk) throws ExceptionNotEnoughPlayer {
 
         List<Country> countryList = new ArrayList<>(countryMap.values());
         List<Player> playerList = new ArrayList<>((playerManagerFriend.getPlayerMap().values()));
@@ -68,7 +68,7 @@ public class Game implements GameManager {
             throw new ExceptionNotEnoughPlayer();
         }
 
-        playerManagerFriend.setPlayerMission();
+        playerManagerFriend.setPlayerMission(missionRisk);
 
         Collections.shuffle(countryList);
         Collections.shuffle(playerList);
@@ -87,6 +87,8 @@ public class Game implements GameManager {
             playerManagerFriend.setCurrentPlayer(lastPlayer.getPlayerName());
         }
     }
+
+
 
     @Override
     public int receiveUnits() throws ExceptionObjectDoesntExist{

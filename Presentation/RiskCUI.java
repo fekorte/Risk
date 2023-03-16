@@ -16,6 +16,8 @@ public class RiskCUI {
     private final IWorldManager worldManager;
     private final GameManager gameManager;
     boolean gameStarted;
+    boolean riskVersionSelected;
+    boolean standardRisk;
     boolean gameSetUp;
     boolean doneWithStep;
     int gameStep;
@@ -31,6 +33,7 @@ public class RiskCUI {
         doneWithStep = false;
         if(playerManager.continuePreviousGame()){
             gameStarted = true;
+            riskVersionSelected = true;
             gameSetUp = true;
             gameStep = gameManager.getSavedGameStep();
             switch(gameStep){
@@ -43,6 +46,7 @@ public class RiskCUI {
             }
         } else {
             gameStarted = false;
+            riskVersionSelected = false;
             gameSetUp = false;
             gameStep = 1;
         }
@@ -54,7 +58,12 @@ public class RiskCUI {
             System.out.print("Commands: \n  Start game:  's'");
         }
 
-        if(gameStarted && !gameSetUp){
+        if(gameStarted && !gameSetUp && !riskVersionSelected){
+            System.out.print("Commands: \n  Play standard version:  'a'");
+            System.out.print("         \n  Play mission risk:  'b'");
+        }
+
+        if(gameStarted && !gameSetUp && riskVersionSelected){
             System.out.print("Commands: \n  Add player:  'a'");
             System.out.print("         \n  Remove player:  'b'");
             System.out.print("         \n  Show all players:  'c'");
@@ -76,7 +85,20 @@ public class RiskCUI {
             }
         }
 
-        if(gameStarted && !gameSetUp){ //process input for game set up (select players)
+        if(gameStarted && !gameSetUp && !riskVersionSelected){
+            if ("a".equals(line)) {
+                riskVersionSelected = true;
+                standardRisk = true;
+                return;
+            }
+            if ("b".equals(line)) {
+                riskVersionSelected = true;
+                standardRisk = false;
+                return;
+            }
+        }
+
+        if(gameStarted && !gameSetUp && riskVersionSelected){ //process input for game set up (select players)
             processGameSetUpInput(line);
         }
     }
@@ -117,7 +139,7 @@ public class RiskCUI {
 
             case "s" -> { //start game after players were selected
                 try{
-                    gameManager.startFirstRound();
+                    gameManager.startFirstRound(standardRisk);
                     gameSetUp = true;
                     riskTurn();
                 } catch (ExceptionNotEnoughPlayer e){

@@ -56,6 +56,7 @@ public class World implements IWorldManager, WorldFriend{
     }
     @Override
     public Map<String, Country> getCountryMap(){ return countryMap; }
+    public Map<String, Continent> getContinents(){ return continents; }
 
     public List<String> getConqueredContinents(List<String> playersCountries){
 

@@ -9,7 +9,8 @@ public class MissionConquerWorld extends Mission{
     public MissionConquerWorld(List<String> world){
 
         this.world = world;
-        missionText = "Conquer the world.";
+        this.missionNumber = 5;
+        this.missionText = "Conquer the world.";
     }
 
     @Override

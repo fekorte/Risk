@@ -13,5 +13,5 @@ public interface PlayerManagerFriend {
     void setCurrentPlayer(String currentPlayerName);
     List<String> getCurrentPlayersCountries();
     void changeCountryOwner(String newOwnerName, String previousOwnerName, String countryName);
-    void setPlayerMission();
+    void setPlayerMission(boolean missionRisk);
 }

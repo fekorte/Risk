@@ -9,7 +9,7 @@ public interface GameManager {
     boolean saveGame(int gameStep) throws IOException;
     void quitGame() throws IOException;
     void newGame() throws IOException;
-    void startFirstRound() throws ExceptionNotEnoughPlayer;
+    void startFirstRound(boolean missionRisk) throws ExceptionNotEnoughPlayer;
     int getSavedGameStep() throws IOException;
 
     int receiveUnits() throws ExceptionObjectDoesntExist;

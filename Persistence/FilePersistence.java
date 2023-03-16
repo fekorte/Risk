@@ -189,9 +189,9 @@ public class FilePersistence implements IPersistence{
 
         openForReading("Data/GameRoundAndStep.txt");
         int[] roundAndStep = new int[3];
-        roundAndStep[0] = Integer.parseInt(readLine());
-        roundAndStep[1] = Integer.parseInt(readLine());
-        roundAndStep[2] = Integer.parseInt(readLine());
+        roundAndStep[0] = Integer.parseInt(readLine()); //int round
+        roundAndStep[1] = Integer.parseInt(readLine()); //int playerTurns (more specific, several turns inside one round)
+        roundAndStep[2] = Integer.parseInt(readLine()); //int steps (more specific, several steps in one turn)
         return roundAndStep;
     }
 

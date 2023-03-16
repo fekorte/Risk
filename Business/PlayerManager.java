@@ -18,7 +18,6 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     Map<String, Player> playerMap;
     List<Player> playerOrder;
     ArrayList<String> allowedColors;
-    MissionFactory missionFactory;
     Player currentPlayer;
     boolean continuePreviousGame;
     int playerTurns;
@@ -173,9 +172,9 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         Random random = new Random();
         for(Player player : playerOrder){
             if(!missionRisk){
-                factory.createMission(player.getPlayerColor(), 6); //6 = mission for everyone => conquer the world
+                player.setPlayerMission(factory.createMission(player.getPlayerColor(), 6)); //6 = mission for everyone => conquer the world
             }
-            factory.createMission(player.getPlayerColor(), random.nextInt(5) + 1);
+            player.setPlayerMission(factory.createMission(player.getPlayerColor(), random.nextInt(5) + 1));
         }
     }
     @Override

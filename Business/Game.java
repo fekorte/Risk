@@ -68,8 +68,6 @@ public class Game implements GameManager {
             throw new ExceptionNotEnoughPlayer();
         }
 
-        playerManagerFriend.setPlayerMission(missionRisk);
-
         Collections.shuffle(countryList);
         Collections.shuffle(playerList);
 
@@ -86,6 +84,8 @@ public class Game implements GameManager {
         if(lastPlayer != null){
             playerManagerFriend.setCurrentPlayer(lastPlayer.getPlayerName());
         }
+
+        playerManagerFriend.setPlayerMission(missionRisk);
     }
 
 

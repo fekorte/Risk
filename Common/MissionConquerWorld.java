@@ -4,21 +4,16 @@ import java.util.HashSet;
 import java.util.List;
 
 public class MissionConquerWorld extends Mission{
-
-    List<String> world;
+    private final List<String> world;
 
     public MissionConquerWorld(List<String> world){
 
-        super();
-        missionText = "Conquer the world.";
         this.world = world;
+        missionText = "Conquer the world.";
     }
 
     @Override
-    public String getMissionText(){ return missionText; }
-
-    @Override
-    public boolean isMissionCompleted() {
+    public boolean isMissionCompleted(List<String> playersCountries) {
 
         return (new HashSet<>(playersCountries).containsAll(world));
     }

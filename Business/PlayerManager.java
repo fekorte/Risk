@@ -4,6 +4,7 @@ import Common.Exceptions.ExceptionColorAlreadyExists;
 import Common.Exceptions.ExceptionObjectDoesntExist;
 import Common.Exceptions.ExceptionPlayerAlreadyExists;
 import Common.Exceptions.ExceptionTooManyPlayer;
+import Common.Mission;
 import Common.MissionConquerWorld;
 import Common.Player;
 import Persistence.IPersistence;
@@ -103,8 +104,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     @Override
     public boolean nextPlayersTurn(){
 
-        currentPlayer.getPlayerMission().setPlayersCountries(currentPlayer.getConqueredCountryNames());
-        if(currentPlayer.getPlayerMission().isMissionCompleted()){
+        if(currentPlayer.getPlayerMission().isMissionCompleted(currentPlayer.getConqueredCountryNames())){
             return false;
         }
 
@@ -170,6 +170,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     }
 
     public void setPlayerMission(){
+
         for(Player player : playerOrder){
             player.setPlayerMission(new MissionConquerWorld(new ArrayList<>(worldFriend.getCountryMap().keySet())));
         }

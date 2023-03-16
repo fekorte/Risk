@@ -4,7 +4,6 @@ import Common.Exceptions.ExceptionColorAlreadyExists;
 import Common.Exceptions.ExceptionObjectDoesntExist;
 import Common.Exceptions.ExceptionPlayerAlreadyExists;
 import Common.Exceptions.ExceptionTooManyPlayer;
-import Common.MissionConquerWorld;
 import Common.Player;
 import Persistence.IPersistence;
 
@@ -63,7 +62,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     }
 
     @Override
-    public String addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists {
+    public void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists {
 
         if(playerMap.containsKey(name)){
             throw new ExceptionPlayerAlreadyExists(name);
@@ -76,12 +75,9 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         }
 
         Player newPlayer = new Player(name, color);
-        newPlayer.setPlayerMission(new MissionConquerWorld(new ArrayList<>()));
         playerMap.put(newPlayer.getPlayerName(), newPlayer);
         playerOrder.add(newPlayer);
         allowedColors.remove(color);
-
-        return playerMap.get(name).getPlayerMission().getMissionText();
     }
 
     @Override
@@ -135,14 +131,15 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         return playerInfo.toString();
     }
     @Override
-    public String getAllCountriesInfoPlayer(String playerName){
+    public String getAllCountriesInfoPlayer(){
 
         StringBuilder countryInfos = new StringBuilder();
-        for(String country : playerMap.get(playerName).getConqueredCountryNames()){
+        for(String country : playerMap.get(currentPlayer.getPlayerName()).getConqueredCountryNames()){
             countryInfos.append(country).append(": ").append(worldFriend.getCountryMap().get(country).getArmy().getUnits()).append("\n");
         }
         return countryInfos.toString();
     }
+    public boolean playerDefeated(String playerName){ return playerMap.get(playerName).getConqueredCountryNames().isEmpty(); }
     @Override
     public boolean continuePreviousGame(){ return continuePreviousGame; }
     @Override
@@ -164,19 +161,21 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         allColors.removeAll(allowedColors);
         return allColors;
     }
-    @Override
-    public void setPlayerMission(boolean missionRisk){
+
+    public void setPlayerMission(boolean standardRisk){
 
         MissionFactory factory = new MissionFactory(worldFriend.getContinents(), worldFriend.getCountryMap(), getPlayerColors());
 
         Random random = new Random();
         for(Player player : playerOrder){
-            if(!missionRisk){
-                player.setPlayerMission(factory.createMission(player.getPlayerColor(), 6)); //6 = mission for everyone => conquer the world
+            if(standardRisk){
+               player.setPlayerMission(factory.createMission(player.getPlayerColor(), 6)); //6 = mission for everyone => conquer the world
             }
-            player.setPlayerMission(factory.createMission(player.getPlayerColor(), random.nextInt(5) + 1));
+            player.setPlayerMission(factory.createMission(player.getPlayerColor(), random.nextInt(5)));
         }
     }
+
+    public String getCurrentPlayerMission(){ return playerMap.get(currentPlayer.getPlayerName()).getPlayerMission().getMissionText(); }
     @Override
     public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayer.getPlayerName()).getConqueredCountryNames(); }
     @Override

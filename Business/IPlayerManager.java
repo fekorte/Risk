@@ -6,14 +6,16 @@ import Common.Exceptions.ExceptionPlayerAlreadyExists;
 import Common.Exceptions.ExceptionTooManyPlayer;
 
 public interface IPlayerManager {
-    String addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists;
+    void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists;
     void removePlayer(String name) throws ExceptionObjectDoesntExist;
     String getAllowedColors();
     String getPlayersInfo();
-    String getAllCountriesInfoPlayer(String playerName);
+    String getAllCountriesInfoPlayer();
+    boolean playerDefeated(String playerName);
     boolean nextPlayersTurn();
     boolean continuePreviousGame();
     String getCurrentPlayerName();
+    String getCurrentPlayerMission();
     int getPlayerNumber();
     int getRound();
 }

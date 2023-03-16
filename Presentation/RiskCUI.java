@@ -114,8 +114,8 @@ public class RiskCUI {
                 System.out.println("Color > ");
                 String playerColor = readInput();
                 try{
-                    System.out.println("Player has been added. " + playerName + ", do not share your mission with anyone else. Your mission is: " +
-                            playerManager.addPlayer(playerName, playerColor));
+                    playerManager.addPlayer(playerName, playerColor);
+                    System.out.println( playerName + " has been added. ");
                 } catch (ExceptionPlayerAlreadyExists | ExceptionTooManyPlayer | ExceptionColorAlreadyExists e){
                     System.out.println(e.getMessage());
                 }
@@ -222,11 +222,12 @@ public class RiskCUI {
         System.out.print("         \n  Show all country infos:  'b'");
         System.out.print("         \n  Show your country infos:  'c'");
         System.out.print("         \n  Get info about neighbouring countries:  'd'");
-        System.out.println("         \n  Done, continue with next step:  'e'");
+        System.out.print("         \n  Show my mission:  'e'");
+        System.out.println("         \n  Done, continue with next step:  'f'");
         if(attack){
-            System.out.println("         \n  Attack:  'f'");
+            System.out.println("         \n  Attack:  'g'");
         } else if(moveUnits){
-            System.out.println("         \n  Move units:  'f'");
+            System.out.println("         \n  Move units:  'g'");
         }
         System.out.print("         \n  ---------------------");
         System.out.print("         \n  Save game:  's'");
@@ -245,7 +246,7 @@ public class RiskCUI {
                     System.out.println(worldManager.getAllCountryInfos());
 
             case "c" -> //show players' country infos
-                    System.out.println(playerManager.getAllCountriesInfoPlayer(playerManager.getCurrentPlayerName()));
+                    System.out.println(playerManager.getAllCountriesInfoPlayer());
 
             case "d" -> { //get info about neighbouring countries
                 System.out.println("Country > ");
@@ -253,7 +254,8 @@ public class RiskCUI {
                 System.out.println(worldManager.getCountryNeighbours(selectedCountry));
             }
 
-            case "e" -> { //done, continue with next step
+            case "e" -> System.out.println(playerManager.getCurrentPlayerMission());
+            case "f" -> { //done, continue with next step
                 doneWithStep = true;
                 gameStep++;
             }
@@ -272,9 +274,9 @@ public class RiskCUI {
             }
             case "q" -> System.exit(0);
         }
-        if("f".equals(line) && attack){
+        if("g".equals(line) && attack){
             attack();
-        } else if("f".equals(line) && moveUnits) {
+        } else if("g".equals(line) && moveUnits) {
             moveUnits();
         }
     }
@@ -284,7 +286,7 @@ public class RiskCUI {
         System.out.println("Now you have to distribute your units. " + "You received " + receivedUnits + ". Where do you want to place them? ");
 
         while (receivedUnits != 0) {
-            System.out.println("This is the current unit contribution: " + playerManager.getAllCountriesInfoPlayer(playerManager.getCurrentPlayerName()));
+            System.out.println("This is the current unit contribution: " + playerManager.getAllCountriesInfoPlayer());
 
             System.out.println("Country > ");
             String selectedCountry = readInput();
@@ -350,7 +352,7 @@ public class RiskCUI {
         System.out.println(worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                 + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry + "\n");
 
-        if(playerManager.getAllCountriesInfoPlayer(defenderName).isEmpty()){
+        if(playerManager.playerDefeated(defenderName)){
             System.out.println(defenderName + " your last country has been conquered, the game has to continue without you.");
             try{
                 playerManager.removePlayer(defenderName);

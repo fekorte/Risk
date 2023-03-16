@@ -28,12 +28,14 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         this.persistence = persistence;
         this.worldManager = worldManager;
         worldFriend = (WorldFriend) worldManager;
-        playerMap = persistence.fetchGameStatePlayers();
-        playerOrder = new ArrayList<>();
+        playerOrder = persistence.fetchGameStatePlayers();
+        playerMap = new HashMap<>();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
 
-        if(!playerMap.isEmpty()){
-            playerOrder.addAll(playerMap.values());
+        if(!playerOrder.isEmpty()){
+            for (Player player : playerOrder) {
+                playerMap.put(player.getPlayerName(), player);
+            }
             this.currentPlayer = playerOrder.get(0);
             int[] roundAndStep = persistence.fetchGameRoundAndStep();
             this.round = roundAndStep[0];
@@ -49,7 +51,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     public boolean save(int gameStep) throws IOException {
 
         persistence.saveGameRoundAndStep(round, playerTurns, gameStep);
-        return persistence.saveGameStatePlayers(getPlayerMap());
+        return persistence.saveGameStatePlayers(playerOrder);
     }
 
     @Override
@@ -165,5 +167,11 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
 
         playerMap.get(newOwnerName).addConqueredCountry(countryName);
         playerMap.get(previousOwnerName).removeCountry(countryName);
+    }
+
+    public void setPlayerMission(){
+        for(Player player : playerOrder){
+            player.setPlayerMission(new MissionConquerWorld(new ArrayList<>(worldFriend.getCountryMap().keySet())));
+        }
     }
 }

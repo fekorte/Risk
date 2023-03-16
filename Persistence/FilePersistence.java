@@ -96,36 +96,36 @@ public class FilePersistence implements IPersistence{
 
 
     @Override
-    public boolean saveGameStatePlayers(Map<String, Player> playerMap) throws IOException {
+    public boolean saveGameStatePlayers(List<Player> playerOrder) throws IOException {
 
         openForWriting("Data/GameStatePlayers.txt");
-        for(Player player : playerMap.values()){
+        for(Player player : playerOrder){
             printLine(player.getPlayerName());
             printLine(player.getPlayerColor());
             //printLine(player.getPlayerMission().getMissionText());
             printLine(" ");
 
-            printLine(String.valueOf(player.getConqueredCountryNames().size() * 3));
+            printLine(String.valueOf(player.getConqueredCountryNames().size()));
             for(String countryName : player.getConqueredCountryNames()){
                 printLine(countryName);
             }
         }
         close();
-        return !playerMap.isEmpty();
+        return !playerOrder.isEmpty();
     }
 
 
     @Override
-    public Map<String, Player> fetchGameStatePlayers() throws IOException {
+    public List<Player> fetchGameStatePlayers() throws IOException {
 
-        Map<String, Player> playerMap = new HashMap<>();
+        List<Player> playerOrder = new ArrayList<>();
         List<String> countryNames = new ArrayList<>(fetchCountries().keySet());
         openForReading("Data/GameStatePlayers.txt");
 
         while(reader != null && reader.ready()){
             String playerName = readLine();
             String color = readLine();
-           // String missionText = readLine();
+            //String missionText = readLine();
             String gap = readLine();
 
             Player newPlayer = new Player(playerName, color);
@@ -134,12 +134,12 @@ public class FilePersistence implements IPersistence{
             while(numberOfCountries != 0){
                 String countryName = readLine();
                 newPlayer.addConqueredCountry(countryName);
-                numberOfCountries -= 3;
+                numberOfCountries--;
             }
-            playerMap.put(newPlayer.getPlayerName(), newPlayer);
+            playerOrder.add(newPlayer);
         }
         close();
-        return playerMap;
+        return playerOrder;
     }
     @Override
     public boolean saveGameStateArmies(Map<String, Country> countryMap) throws IOException {

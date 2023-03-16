@@ -68,6 +68,8 @@ public class Game implements GameManager {
             throw new ExceptionNotEnoughPlayer();
         }
 
+        playerManagerFriend.setPlayerMission();
+
         Collections.shuffle(countryList);
         Collections.shuffle(playerList);
 

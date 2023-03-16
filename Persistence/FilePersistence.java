@@ -119,7 +119,7 @@ public class FilePersistence implements IPersistence{
     public Map<String, Player> fetchGameStatePlayers() throws IOException {
 
         Map<String, Player> playerMap = new HashMap<>();
-
+        List<String> countryNames = new ArrayList<>(fetchCountries().keySet());
         openForReading("Data/GameStatePlayers.txt");
 
         while(reader != null && reader.ready()){
@@ -129,7 +129,7 @@ public class FilePersistence implements IPersistence{
             String gap = readLine();
 
             Player newPlayer = new Player(playerName, color);
-
+            newPlayer.setPlayerMission(new MissionConquerWorld(countryNames));
             int numberOfCountries = Integer.parseInt(readLine());
             while(numberOfCountries != 0){
                 String countryName = readLine();

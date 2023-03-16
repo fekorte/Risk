@@ -129,6 +129,7 @@ public class RiskCUI {
 
     private void riskTurn() throws IOException {
 
+        gameStep = 1;
         stepOne();
         stepTwo();
         stepThree();

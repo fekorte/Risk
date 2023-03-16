@@ -18,7 +18,7 @@ public class MissionConquerWorld extends Mission{
     public String getMissionText(){ return missionText; }
 
     @Override
-    public boolean isMissionCompleted(String playerName) {
+    public boolean isMissionCompleted() {
 
         return (new HashSet<>(playersCountries).containsAll(world));
     }

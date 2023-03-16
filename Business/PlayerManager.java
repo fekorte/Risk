@@ -41,7 +41,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
             continuePreviousGame = true;
         } else {
             this.playerTurns = 0;
-            this.round = 0;
+            this.round = 1;
             continuePreviousGame = false;
         }
     }
@@ -101,7 +101,8 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     @Override
     public boolean nextPlayersTurn(){
 
-        if(currentPlayer.getPlayerMission().isMissionCompleted(currentPlayer.getPlayerName())){
+        currentPlayer.getPlayerMission().setPlayersCountries(currentPlayer.getConqueredCountryNames());
+        if(currentPlayer.getPlayerMission().isMissionCompleted()){
             return false;
         }
 

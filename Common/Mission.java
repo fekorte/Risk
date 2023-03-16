@@ -8,6 +8,6 @@ public abstract class Mission {
     protected List<String> playersCountries;
     public Mission(){ isCompleted = false; }
     public abstract String getMissionText();
-    public abstract boolean isMissionCompleted(String playerName);
+    public abstract boolean isMissionCompleted();
     public void setPlayersCountries(List<String> playersCountries){ this.playersCountries = playersCountries; }
 }

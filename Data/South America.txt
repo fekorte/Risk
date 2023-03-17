@@ -1,11 +1,13 @@
 Venezuela
 VE
+107,107,255
 2
 Brazil
 Peru
 
 Brazil
 BR
+255,102,255
 3
 Peru
 Argentina
@@ -13,9 +15,11 @@ North Africa
 
 Peru
 PE
+77,77,77
 1
 Argentina
 
 Argentina
 AR
+179,179,179
 0

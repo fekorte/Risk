@@ -1,5 +1,6 @@
 Middle East
 ME
+57,56,254
 4
 India
 Afghanistan
@@ -8,6 +9,7 @@ East Africa
 
 India
 IN
+137,56,255
 3
 Afghanistan
 China
@@ -15,12 +17,14 @@ Siam
 
 Afghanistan
 AF
+254,56,255
 2
 China
 Ural
 
 China
 CN
+19,138,254
 4
 Mongolia
 Siam
@@ -29,16 +33,19 @@ Ural
 
 Siam
 TH
+10,10,254
 1
 Indonesia
 
 Ural
 UR
+153,153,153
 1
 Siberia
 
 Mongolia
 MN
+15,255,110
 4
 Japan
 Kamchatka
@@ -47,27 +54,32 @@ Siberia
 
 Siberia
 SI
+254,20,19
 2
 Irkutsk
 Yakutsk
 
 Yakutsk
 YA
+255,137,14
 2
 Kamchatka
 Irkutsk
 
 Irkutsk
 IR
+26,26,26
 1
 Kamchatka
 
 Kamchatka
 KA
+255,255,0
 2
 Alaska
 Japan
 
 Japan
 JP
+102,102,102
 0

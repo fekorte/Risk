@@ -1,11 +1,13 @@
 Alaska
 AK
+204,204,204
 2
 North West Territory
 Alberta
 
 North West Territory
 NT
+255,107,107
 3
 Alberta
 Ontario
@@ -13,12 +15,14 @@ Greenland
 
 Alberta
 AB
+255,181,108
 2
 Ontario
 Western United States
 
 Ontario
 ON
+255,255,102
 4
 Western United States
 Eastern United States
@@ -27,26 +31,31 @@ Greenland
 
 Quebec
 QC
+102,255,102
 2
 Greenland
 Eastern United States
 
 Greenland
 GL
+255,61,61
 0
 
 Western United States
 WU
+102,255,164
 2
 Eastern United States
 Central America
 
 Eastern United States
 EU
+101,255,255
 1
 Central America
 
 Central America
 CA
+51,51,51
 1
 Venezuela

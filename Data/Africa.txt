@@ -1,5 +1,6 @@
 North Africa
 NA
+255,156,55
 3
 Egypt
 East Africa
@@ -7,26 +8,31 @@ Congo
 
 Egypt
 EG
+254,255,55
 1
 East Africa
 
 Congo
 CD
+56,255,136
 2
 East Africa
 South Africa
 
 East Africa
 EA
+57,255,56
 2
 South Africa
 Madagascar
 
 South Africa
 SA
+61,255,255
 1
 Madagascar
 
 Madagascar
 MD
+56,156,254
 0

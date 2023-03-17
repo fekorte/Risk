@@ -1,5 +1,6 @@
 package Common;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,18 +8,20 @@ public class Country {
     private String countryName;
     private String abbreviation;
     private String continentName;
+    private Color countryColor;
     private List<String> neighbourNames;
     private Army army;
 
-    public Country(String countryName, String abbreviation, String continentName){
+    public Country(String countryName, String abbreviation, String continentName, Color countryColor){
 
         this.countryName = countryName;
         this.abbreviation = abbreviation;
         this.continentName = continentName;
+        this.countryColor = countryColor;
         neighbourNames = new ArrayList<>();
     }
-    public String getContinentName(){ return continentName; }
     public String getCountryName(){ return countryName; }
+    public Color getCountryColor(){ return countryColor; }
 
     public Army getArmy(){ return army; }
 

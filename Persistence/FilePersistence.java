@@ -2,8 +2,10 @@ package Persistence;
 
 import Common.*;
 
+import java.awt.*;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
 public class FilePersistence implements IPersistence{
     private BufferedReader reader=null;
@@ -67,6 +69,13 @@ public class FilePersistence implements IPersistence{
                 String countryName = readLine();
                 String abbreviation = readLine();
 
+                String colorString = readLine();
+                String[] colorComponents = colorString.split(",");
+                int r = Integer.parseInt(colorComponents[0]);
+                int g = Integer.parseInt(colorComponents[1]);
+                int b = Integer.parseInt(colorComponents[2]);
+                Color color = new Color(r, g, b);
+
                 int numberNeighbours = Integer.parseInt(readLine());
                 List<String> neighbourList = new ArrayList<>();
                 while(numberNeighbours != 0){
@@ -78,7 +87,7 @@ public class FilePersistence implements IPersistence{
 
                 String gap = readLine();
 
-                Country country = new Country(countryName, abbreviation, continentName);
+                Country country = new Country(countryName, abbreviation, continentName, color);
                 countryMap.put(countryName, country);
             }
 
@@ -125,6 +134,7 @@ public class FilePersistence implements IPersistence{
         while(reader != null && reader.ready()){
             String playerName = readLine();
             String color = readLine();
+            Color color2 = Color.decode(readLine());
             int missionNumber = Integer.parseInt(readLine());
             String gap = readLine();
 
@@ -141,7 +151,7 @@ public class FilePersistence implements IPersistence{
         close();
         return playerOrder;
     }
-
+/*
     public boolean saveMissions(List<Player> playerList) throws IOException {
 
         openForWriting("Data/GameStateMissions.txt");
@@ -161,6 +171,8 @@ public class FilePersistence implements IPersistence{
 
         return null;
     }
+
+ */
 
 
     @Override

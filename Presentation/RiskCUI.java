@@ -2,6 +2,8 @@ package Presentation;
 
 import Business.*;
 import Common.Exceptions.*;
+import Persistence.FilePersistence;
+import Persistence.IPersistence;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +14,6 @@ public class RiskCUI {
 
     private final BufferedReader in;
     private final IPlayerManager playerManager;
-
     private final IWorldManager worldManager;
     private final GameManager gameManager;
     boolean gameStarted;
@@ -406,5 +407,23 @@ public class RiskCUI {
                 e.printStackTrace();
             }
         } while (!input.equals("q"));
+    }
+
+
+    public static void main(String[] args) throws IOException {
+
+        IPersistence persistence = new FilePersistence();
+
+        IWorldManager worldManager = new World(persistence);
+        IPlayerManager playerManager = new PlayerManager(worldManager, persistence);
+        GameManager gameManager = new Game(playerManager, worldManager, persistence);
+
+        RiskCUI cui;
+        try {
+            cui = new RiskCUI(worldManager, playerManager, gameManager);
+            cui.run();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

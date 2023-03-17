@@ -142,6 +142,26 @@ public class FilePersistence implements IPersistence{
         return playerOrder;
     }
 
+    public boolean saveMissions(List<Player> playerList) throws IOException {
+
+        openForWriting("Data/GameStateMissions.txt");
+        for(Player player : playerList){
+            int playerMission = player.getPlayerMission().getMissionNumber();
+            printLine(String.valueOf(playerMission));
+
+
+
+        }
+        return true;
+    }
+
+    public List<Player> fetchMissions() throws IOException {
+        List<Player> playerList = fetchGameStatePlayers();
+
+
+        return null;
+    }
+
 
     @Override
     public boolean saveGameStateArmies(Map<String, Country> countryMap) throws IOException {

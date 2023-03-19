@@ -106,7 +106,11 @@ public class Game implements GameManager {
     }
 
     @Override
-    public void distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits{
+    public void distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryNotRecognized {
+
+        if(selectedCountry == null || selectedCountry.isEmpty()){
+            throw new ExceptionCountryNotRecognized();
+        }
 
         if(!worldManager.getCountryOwner(selectedCountry).equals(playerManager.getCurrentPlayerName())){
             throw new ExceptionCountryNotOwned(selectedCountry, playerManager.getCurrentPlayerName());
@@ -119,7 +123,11 @@ public class Game implements GameManager {
     }
 
     @Override
-    public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits{
+    public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionCountryNotRecognized {
+
+        if(attackingCountry == null || attackedCountry == null || attackingCountry.isEmpty() || attackedCountry.isEmpty()){
+            throw new ExceptionCountryNotRecognized();
+        }
 
         if(!worldManager.getCountryOwner(attackingCountry).equals(playerManager.getCurrentPlayerName())){
             throw new ExceptionCountryNotOwned(attackingCountry, playerManager.getCurrentPlayerName());
@@ -193,7 +201,11 @@ public class Game implements GameManager {
      }
 
     @Override
-    public void moveUnits(String sourceCountry, String destinationCountry, int units, boolean afterConquering) throws ExceptionInvolvedCountrySelected, ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryIsNoNeighbour {
+    public void moveUnits(String sourceCountry, String destinationCountry, int units, boolean afterConquering) throws ExceptionInvolvedCountrySelected, ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryIsNoNeighbour, ExceptionCountryNotRecognized {
+
+        if(sourceCountry == null || destinationCountry == null || sourceCountry.isEmpty() || destinationCountry.isEmpty()){
+            throw new ExceptionCountryNotRecognized();
+        }
 
         if(!afterConquering){
             if(involvedCountries.contains(sourceCountry) || involvedCountries.contains(destinationCountry)){

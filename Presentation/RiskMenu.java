@@ -1,6 +1,4 @@
 package Presentation;
-
-import Business.GameManager;
 import Business.IPlayerManager;
 
 import javax.swing.*;
@@ -8,23 +6,40 @@ import java.awt.*;
 
 public class RiskMenu extends JMenuBar{
 
-    public RiskMenu(IPlayerManager playerManager, GameManager gameManager, RiskView.RiskMenuListener listener) {
+    IPlayerManager playerManager;
+    JLabel currentRound;
+    //JLabel currentPlayerName;
 
+    public RiskMenu(IPlayerManager playerManager, RiskView.RiskMenuListener listener) {
+
+        this.playerManager = playerManager;
         setLayout(new GridLayout(1, 8));
 
-        //JLabel currentPlayerName = new JLabel("Current player: " + playerManager.getCurrentPlayerName());
+        //JLabel currentPlayerName = new JLabel("Player: " + playerManager.getCurrentPlayerName());
         //add(currentPlayerName);
 
-        JLabel currentRound = new JLabel("Round: " + playerManager.getRound());
+        currentRound = new JLabel("Round: " + playerManager.getRound());
         add(currentRound);
 
-        String[] buttonLabels = {"Save game", "Start new game", "Show country infos", "Show my mission", "Done, continue"};
+        String[] buttonLabels = {"Show country infos", "Show my mission", "Distribute units", "Done, continue", "Start new game", "Save game"};
 
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
             button.addActionListener(listener);
             add(button);
         }
+    }
+
+    public void setButtonText(int buttonNumber, String buttonText){
+
+        JButton button = (JButton) getComponent(buttonNumber);
+        button.setText(buttonText);
+    }
+
+    public void nextRound(){
+
+        currentRound.setText("Round: " + playerManager.getRound());
+        //currentPlayerName.setText("Player: " + playerManager.getCurrentPlayerName());
     }
 }
 

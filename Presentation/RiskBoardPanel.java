@@ -15,8 +15,6 @@ import javax.swing.*;
 public class RiskBoardPanel extends JPanel {
 
     private BufferedImage paintedMap;
-    private JLabel riskBoard;
-    private RiskBoardListener listener;
 
     public interface RiskBoardListener {
         void onCountrySelected(String countryName);
@@ -24,7 +22,6 @@ public class RiskBoardPanel extends JPanel {
 
     public RiskBoardPanel(IWorldManager worldManager, RiskBoardListener listener){
 
-        this.listener = listener;
         BufferedImage boardImage = null;
         try {
             boardImage = ImageIO.read(new File("Data/RiskBoard.jpeg"));
@@ -33,7 +30,7 @@ public class RiskBoardPanel extends JPanel {
             e.printStackTrace();
         }
 
-        riskBoard = new JLabel(new ImageIcon(Objects.requireNonNull(boardImage)));
+        JLabel riskBoard = new JLabel(new ImageIcon(Objects.requireNonNull(boardImage)));
         add(riskBoard);
 
         riskBoard.addMouseListener(new MouseAdapter() {

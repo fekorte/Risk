@@ -60,7 +60,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
         RiskBoardPanel boardPanel = new RiskBoardPanel(worldManager, this);
         add(boardPanel, BorderLayout.CENTER);
-        RiskMenu riskMenu = new RiskMenu(playerManager, gameManager, new RiskMenuListener());
+        RiskMenu riskMenu = new RiskMenu(playerManager, new RiskMenuListener());
         add(riskMenu, BorderLayout.NORTH);
         setVisible(true);
     }

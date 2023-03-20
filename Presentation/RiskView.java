@@ -50,13 +50,12 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             riskVersionSelected = false;
             gameSetUp = false;
             gameStep = 0;
-            receiveUnits();
+            //receiveUnits();
         }
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 1000);
         setLayout(new BorderLayout());
-
 
         RiskBoardPanel boardPanel = new RiskBoardPanel(worldManager, this);
         add(boardPanel, BorderLayout.CENTER);

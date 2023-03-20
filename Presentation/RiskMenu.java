@@ -7,19 +7,15 @@ import java.awt.*;
 public class RiskMenu extends JMenuBar{
 
     IPlayerManager playerManager;
-    JLabel currentRound;
-    //JLabel currentPlayerName;
+    JLabel currentInfo;
 
     public RiskMenu(IPlayerManager playerManager, RiskView.RiskMenuListener listener) {
 
         this.playerManager = playerManager;
         setLayout(new GridLayout(1, 8));
-
-        //JLabel currentPlayerName = new JLabel("Player: " + playerManager.getCurrentPlayerName());
-        //add(currentPlayerName);
-
-        currentRound = new JLabel("Round: " + playerManager.getRound());
-        add(currentRound);
+        
+        currentInfo = new JLabel("Round: " + playerManager.getRound()); //+ ", Player: " + playerManager.getCurrentPlayerName())
+        add(currentInfo);
 
         String[] buttonLabels = {"Show country infos", "Show my mission", "Distribute units", "Done, continue", "Start new game", "Save game"};
 
@@ -36,10 +32,9 @@ public class RiskMenu extends JMenuBar{
         button.setText(buttonText);
     }
 
-    public void nextRound(){
+    public void updateInfoLabel(){
 
-        currentRound.setText("Round: " + playerManager.getRound());
-        //currentPlayerName.setText("Player: " + playerManager.getCurrentPlayerName());
+        currentInfo.setText("Round: " + playerManager.getRound()); //+ ", Player: " + playerManager.getCurrentPlayerName())
     }
 }
 

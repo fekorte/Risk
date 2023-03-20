@@ -13,7 +13,7 @@ public class RiskMenu extends JMenuBar{
 
         this.playerManager = playerManager;
         setLayout(new GridLayout(1, 8));
-        
+
         currentInfo = new JLabel("Round: " + playerManager.getRound()); //+ ", Player: " + playerManager.getCurrentPlayerName())
         add(currentInfo);
 

@@ -1,6 +1,6 @@
 package Presentation;
 
-import Business.GameManager;
+import Business.IGameManager;
 import Business.IPlayerManager;
 import Business.IWorldManager;
 import Common.Exceptions.*;
@@ -16,7 +16,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
     private final IPlayerManager playerManager;
     private final IWorldManager worldManager;
-    private final GameManager gameManager;
+    private final IGameManager gameManager;
     private final Object lock;
     private String selectedCountry;
     private int gameStep;
@@ -24,7 +24,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
     boolean riskVersionSelected;
     boolean gameSetUp;
 
-    public RiskView(IWorldManager worldManager, IPlayerManager playerManager, GameManager gameManager) throws IOException {
+    public RiskView(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager) throws IOException {
 
         this.worldManager = worldManager;
         this.playerManager = playerManager;

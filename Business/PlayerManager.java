@@ -13,7 +13,7 @@ import java.util.*;
 public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     IPersistence persistence;
     IWorldManager worldManager;
-    WorldFriend worldFriend;
+    WorldManagerFriend worldFriend;
     Map<String, Player> playerMap;
     List<Player> playerOrder;
     ArrayList<String> allowedColors;
@@ -26,7 +26,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
 
         this.persistence = persistence;
         this.worldManager = worldManager;
-        worldFriend = (WorldFriend) worldManager;
+        worldFriend = (WorldManagerFriend) worldManager;
         playerOrder = persistence.fetchGameStatePlayers();
         playerMap = new HashMap<>();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));

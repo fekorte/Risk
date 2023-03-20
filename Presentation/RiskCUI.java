@@ -15,7 +15,7 @@ public class RiskCUI {
     private final BufferedReader in;
     private final IPlayerManager playerManager;
     private final IWorldManager worldManager;
-    private final GameManager gameManager;
+    private final IGameManager gameManager;
     boolean gameStarted;
     boolean riskVersionSelected;
     boolean standardRisk;
@@ -24,7 +24,7 @@ public class RiskCUI {
     int gameStep;
 
 
-    public RiskCUI(IWorldManager worldManager, IPlayerManager playerManager, GameManager gameManager) throws IOException {
+    public RiskCUI(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager) throws IOException {
 
         in = new BufferedReader(new InputStreamReader(System.in));
         this.worldManager = worldManager;
@@ -411,9 +411,9 @@ public class RiskCUI {
 
         IPersistence persistence = new FilePersistence();
 
-        IWorldManager worldManager = new World(persistence);
+        IWorldManager worldManager = new WorldManager(persistence);
         IPlayerManager playerManager = new PlayerManager(worldManager, persistence);
-        GameManager gameManager = new Game(playerManager, worldManager, persistence);
+        IGameManager gameManager = new GameManager(playerManager, worldManager, persistence);
 
         RiskCUI cui;
         try {

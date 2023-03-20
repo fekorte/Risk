@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class RiskGUI {
 
-    public RiskGUI(IWorldManager worldManager, IPlayerManager playerManager, GameManager gameManager) throws IOException {
+    public RiskGUI(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager) throws IOException {
 
         RiskView rView = new RiskView(worldManager, playerManager, gameManager);
     }
@@ -17,9 +17,9 @@ public class RiskGUI {
 
         IPersistence persistence = new FilePersistence();
 
-        IWorldManager worldManager = new World(persistence);
+        IWorldManager worldManager = new WorldManager(persistence);
         IPlayerManager playerManager = new PlayerManager(worldManager, persistence);
-        GameManager gameManager = new Game(playerManager, worldManager, persistence);
+        IGameManager gameManager = new GameManager(playerManager, worldManager, persistence);
 
         new RiskGUI(worldManager, playerManager, gameManager);
     }

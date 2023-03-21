@@ -11,6 +11,7 @@ public class RiskPlayerPanel extends JPanel {
 
     private final IPlayerManager playerManager;
     private final Map<String, DefaultListModel<String>> listModels; //key is player name
+    private final JPanel listPanel;
     private final Map<String, Color> colorMap;
 
     public RiskPlayerPanel(IPlayerManager playerManager){
@@ -23,8 +24,13 @@ public class RiskPlayerPanel extends JPanel {
         colorMap.put("Red", Color.RED);
         colorMap.put("Green", Color.GREEN);
         colorMap.put("White", Color.WHITE);
-        colorMap.put("Black", Color.BLACK);
+        colorMap.put("Pink", Color.PINK);
         colorMap.put("Blue", Color.BLUE);
+
+        listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        listPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        add(listPanel);
     }
 
     public void addPlayerList(String playerName) {
@@ -34,6 +40,7 @@ public class RiskPlayerPanel extends JPanel {
             model.addElement(countryInfo);
         }
         JList<String> list = new JList<>(model);
+        list.setPreferredSize(new Dimension(200, 400));
 
         Color color = colorMap.get(playerManager.getPlayerColorCode(playerName));
         JLabel label = new JLabel(playerName);
@@ -41,8 +48,8 @@ public class RiskPlayerPanel extends JPanel {
         label.setBackground(color);
 
         JScrollPane scrollPane = new JScrollPane(list);
-        add(label);
-        add(scrollPane);
+        listPanel.add(label);
+        listPanel.add(scrollPane);
         listModels.put(playerName, model);
     }
 

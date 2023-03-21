@@ -83,9 +83,9 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
     private void setActionButton(){
 
         switch (gameStep){
-            case(1) -> riskMenu.setButtonText(2, "Attack");
-            case(2) -> riskMenu.setButtonText(2, "Move units");
-            case(3) -> riskMenu.setButtonText(2, "Distribute units");
+            case(1) -> riskMenu.setButtonText(3, "Distribute units");
+            case(2) -> riskMenu.setButtonText(3, "Attack");
+            case(3) -> riskMenu.setButtonText(3, "Move units");
         }
     }
 
@@ -241,8 +241,8 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 "Next step", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, JOptionPane.YES_OPTION);
 
         if (continueAction == JOptionPane.NO_OPTION){
-            setActionButton();
             gameStep++;
+            setActionButton();
         }
     }
 

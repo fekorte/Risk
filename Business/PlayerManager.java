@@ -26,7 +26,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         worldFriend = (WorldManagerFriend) worldManager;
         playerOrder = persistence.fetchGameStatePlayers();
         playerMap = new HashMap<>();
-        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
+        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
 
         initializeGameContinuation();
     }
@@ -59,7 +59,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
 
         playerMap.clear();
         playerOrder.clear();
-        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
+        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
     }
 
     @Override
@@ -167,7 +167,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     public int getRound(){ return round; }
 
     public List<String> getPlayerColors(){
-        List<String> allColors = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
+        List<String> allColors = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
         allColors.removeAll(allowedColors);
         return allColors;
     }

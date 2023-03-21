@@ -65,7 +65,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     @Override
     public void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists, ExceptionEmptyInput {
 
-        if(name.isEmpty() || color.isEmpty()){
+        if(name == null ||color == null || name.isEmpty() || color.isEmpty()){
             throw new ExceptionEmptyInput();
         }
 
@@ -88,7 +88,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     @Override
     public void removePlayer(String name) throws ExceptionObjectDoesntExist, ExceptionEmptyInput {
 
-        if(name.isEmpty()){
+        if(name == null || name.isEmpty()){
             throw new ExceptionEmptyInput();
         }
 
@@ -180,8 +180,9 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         for(Player player : playerOrder){
             if(standardRisk){
                player.setPlayerMission(factory.createMission(player.getPlayerColor(), 6)); //6 = mission for everyone => conquer the world
+            } else {
+                player.setPlayerMission(factory.createMission(player.getPlayerColor(), random.nextInt(5)));
             }
-            player.setPlayerMission(factory.createMission(player.getPlayerColor(), random.nextInt(5)));
         }
     }
 

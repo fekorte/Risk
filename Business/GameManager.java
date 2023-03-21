@@ -18,6 +18,7 @@ public class GameManager implements IGameManager {
     WorldManagerFriend worldFriend;
     Map<String, Country> countryMap; //key is country name
     List<String> involvedCountries; //String: country name
+    int receivedUnits;
 
 
     public GameManager(IPlayerManager playerManager, IWorldManager worldManager, IPersistence persistence){
@@ -102,11 +103,12 @@ public class GameManager implements IGameManager {
         List<String> playerCountries = playerManagerFriend.getCurrentPlayersCountries();
         int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;
 
-        return armySize + worldFriend.getPointsForConqueredContinents(playerCountries);
+        receivedUnits = armySize + worldFriend.getPointsForConqueredContinents(playerCountries);
+        return receivedUnits;
     }
 
     @Override
-    public void distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput {
+    public void distributeUnits(String selectedCountry, int selectedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput {
 
         if(selectedCountry == null){
             throw new ExceptionCountryNotRecognized();
@@ -124,8 +126,13 @@ public class GameManager implements IGameManager {
         if(receivedUnits - selectedUnits < 0){
             throw new ExceptionTooManyUnits(receivedUnits);
         }
+        receivedUnits -= selectedUnits;
         countryMap.get(selectedCountry).getArmy().addUnits(selectedUnits);
     }
+
+    public int getReceivedUnits(){ return receivedUnits; }
+
+    public boolean allUnitsDistributed(){ return receivedUnits == 0; }
 
     @Override
     public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput {

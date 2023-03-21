@@ -176,7 +176,7 @@ public class RiskCUI {
         //distribute units
         System.out.println("You can distribute your received units to your countries. You can inform yourself in this menu to plan better how to distribute your units.");
         playerChoice(false, false);
-        distributeUnits(receivedUnits);
+        distributeUnits();
     }
 
     //attack and defend
@@ -279,11 +279,11 @@ public class RiskCUI {
         }
     }
 
-    private void distributeUnits(int receivedUnits) throws IOException {
+    private void distributeUnits() throws IOException {
 
-        System.out.println("Now you have to distribute your units. " + "You received " + receivedUnits + ". Where do you want to place them? ");
+        System.out.println("Now you have to distribute your units. You received " + gameManager.getReceivedUnits() + ". Where do you want to place them? ");
 
-        while (receivedUnits != 0) {
+        while (!gameManager.allUnitsDistributed()) {
             System.out.println("This is the current unit contribution: " + playerManager.getAllCountriesInfoPlayer(playerManager.getCurrentPlayerName()));
 
             System.out.println("Country > ");
@@ -292,9 +292,8 @@ public class RiskCUI {
             int selectedUnits = Integer.parseInt(readInput());
 
             try {
-                gameManager.distributeUnits(selectedCountry, selectedUnits, receivedUnits);
-                receivedUnits -= selectedUnits;
-                System.out.println(selectedUnits + " have been moved to " + selectedCountry + ". You have " + receivedUnits + " left.");
+                gameManager.distributeUnits(selectedCountry, selectedUnits);
+                System.out.println(selectedUnits + " have been moved to " + selectedCountry + ". You have " + gameManager.getReceivedUnits()  + " left.");
             } catch (ExceptionEmptyInput | ExceptionCountryNotRecognized | ExceptionCountryNotOwned | ExceptionTooManyUnits e) {
                 System.out.println(e.getMessage());
             }

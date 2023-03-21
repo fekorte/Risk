@@ -29,7 +29,7 @@ public class RiskPlayerPanel extends JPanel {
 
         listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        listPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
         add(listPanel);
     }
 
@@ -40,7 +40,7 @@ public class RiskPlayerPanel extends JPanel {
             model.addElement(countryInfo);
         }
         JList<String> list = new JList<>(model);
-        list.setPreferredSize(new Dimension(200, 400));
+        list.setPreferredSize(new Dimension(150, 300));
 
         Color color = colorMap.get(playerManager.getPlayerColorCode(playerName));
         JLabel label = new JLabel(playerName);

@@ -14,10 +14,10 @@ public class RiskMenu extends JMenuBar{
         this.playerManager = playerManager;
         setLayout(new GridLayout(1, 8));
 
-        currentInfo = new JLabel("Round: " + playerManager.getRound()); //+ ", Player: " + playerManager.getCurrentPlayerName())
+        currentInfo = new JLabel("Round: " + playerManager.getRound() + ", Player: " + playerManager.getCurrentPlayerName());
         add(currentInfo);
 
-        String[] buttonLabels = {"Show country infos", "Show my mission", "Distribute units", "Done, continue", "Start new game", "Save game"};
+        String[] buttonLabels = {"Show country infos", "Show my mission", "Distribute units", "Start new game", "Save game"};
 
         for (String label : buttonLabels) {
             JButton button = new JButton(label);
@@ -34,7 +34,7 @@ public class RiskMenu extends JMenuBar{
 
     public void updateInfoLabel(){
 
-        currentInfo.setText("Round: " + playerManager.getRound()); //+ ", Player: " + playerManager.getCurrentPlayerName())
+        currentInfo.setText("Round: " + playerManager.getRound() + ", Player: " + playerManager.getCurrentPlayerName());
     }
 }
 

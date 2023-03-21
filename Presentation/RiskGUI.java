@@ -8,9 +8,9 @@ import java.io.IOException;
 
 public class RiskGUI {
 
-    public RiskGUI(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager) throws IOException {
+    public RiskGUI(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager){
 
-        RiskView rView = new RiskView(worldManager, playerManager, gameManager);
+        StartView sView = new StartView(worldManager, playerManager, gameManager);
     }
 
     public static void main(String[] args) throws IOException {

@@ -117,7 +117,7 @@ public class RiskCUI {
                 try{
                     playerManager.addPlayer(playerName, playerColor);
                     System.out.println( playerName + " has been added. ");
-                } catch (ExceptionPlayerAlreadyExists | ExceptionTooManyPlayer | ExceptionColorAlreadyExists e){
+                } catch (ExceptionEmptyInput | ExceptionPlayerAlreadyExists | ExceptionTooManyPlayer | ExceptionColorAlreadyExists e){
                     System.out.println(e.getMessage());
                 }
             }
@@ -128,7 +128,7 @@ public class RiskCUI {
                 try{
                     playerManager.removePlayer(playerToRemove);
                     System.out.println("Player " + playerToRemove + " has been removed successfully.");
-                } catch(ExceptionObjectDoesntExist e){
+                } catch(ExceptionEmptyInput | ExceptionObjectDoesntExist e){
                     System.out.println(e.getMessage());
                 }
             }
@@ -244,7 +244,7 @@ public class RiskCUI {
                     System.out.println(worldManager.getAllCountryInfos());
 
             case "c" -> //show players' country infos
-                    System.out.println(playerManager.getAllCountriesInfoPlayer());
+                    System.out.println(playerManager.getAllCountriesInfoPlayer(playerManager.getCurrentPlayerName()));
 
             case "d" -> { //get info about neighbouring countries
                 System.out.println("Country > ");
@@ -284,7 +284,7 @@ public class RiskCUI {
         System.out.println("Now you have to distribute your units. " + "You received " + receivedUnits + ". Where do you want to place them? ");
 
         while (receivedUnits != 0) {
-            System.out.println("This is the current unit contribution: " + playerManager.getAllCountriesInfoPlayer());
+            System.out.println("This is the current unit contribution: " + playerManager.getAllCountriesInfoPlayer(playerManager.getCurrentPlayerName()));
 
             System.out.println("Country > ");
             String selectedCountry = readInput();
@@ -295,7 +295,7 @@ public class RiskCUI {
                 gameManager.distributeUnits(selectedCountry, selectedUnits, receivedUnits);
                 receivedUnits -= selectedUnits;
                 System.out.println(selectedUnits + " have been moved to " + selectedCountry + ". You have " + receivedUnits + " left.");
-            } catch (ExceptionCountryNotRecognized | ExceptionCountryNotOwned | ExceptionTooManyUnits e) {
+            } catch (ExceptionEmptyInput | ExceptionCountryNotRecognized | ExceptionCountryNotOwned | ExceptionTooManyUnits e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -312,7 +312,7 @@ public class RiskCUI {
             List<Integer> attackerDiceResult = gameManager.attack(attackingCountry, attackedCountry, units);
             System.out.println(attackingCountry + " has attacked " + attackedCountry + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult);
             defend(attackingCountry, attackedCountry, units, attackerDiceResult);
-        } catch(ExceptionCountryNotRecognized | ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits e){
+        } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits e){
             System.out.println(e.getMessage());
         }
     }
@@ -343,7 +343,7 @@ public class RiskCUI {
             int unitsToMove = Integer.parseInt(readInput());
             try{
                 gameManager.moveUnits(attackingCountry, attackedCountry, unitsToMove, true);
-            } catch(ExceptionCountryNotRecognized | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e){
+            } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e){
                 System.out.println(e.getMessage());
             }
         }
@@ -355,7 +355,7 @@ public class RiskCUI {
         System.out.println(defenderName + " your last country has been conquered, the game has to continue without you.");
         try{
             playerManager.removePlayer(defenderName);
-        } catch (ExceptionObjectDoesntExist e){
+        } catch (ExceptionEmptyInput | ExceptionObjectDoesntExist e){
             e.printStackTrace();
         }
 
@@ -380,7 +380,7 @@ public class RiskCUI {
 
         try{
             gameManager.moveUnits(sourceCountry, destinationCountry, units, false);
-        } catch(ExceptionCountryNotRecognized | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
+        } catch(ExceptionEmptyInput | ExceptionCountryNotRecognized | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
             System.out.println(e.getMessage());
         }
     }

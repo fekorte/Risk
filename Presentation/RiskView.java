@@ -10,7 +10,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener {
 
@@ -18,11 +20,10 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
     private final IWorldManager worldManager;
     private final IGameManager gameManager;
     private final Object lock;
+    private final Map<String, RiskPlayerPanel> playerPanelMap;
+    private final RiskMenu riskMenu;
     private String selectedCountry;
     private int gameStep;
-    boolean gameStarted;
-    boolean riskVersionSelected;
-    boolean gameSetUp;
 
     public RiskView(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager) throws IOException {
 
@@ -30,28 +31,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         this.playerManager = playerManager;
         this.gameManager = gameManager;
         this.lock = new Object();
-
-        if(playerManager.continuePreviousGame()){
-            gameStarted = true;
-            riskVersionSelected = true;
-            gameSetUp = true;
-            gameStep = gameManager.getSavedGameStep();
-            switch(gameStep){
-                case(1) -> {
-                    receiveUnits();
-                }//action button and done,continue-button invisible,
-                case (2) -> {
-                    //set action button to "attack" name
-                }
-                case(3) -> {} //set action button to "move units"
-            }
-        } else {
-            gameStarted = false;
-            riskVersionSelected = false;
-            gameSetUp = false;
-            gameStep = 0;
-            //receiveUnits();
-        }
+        this.playerPanelMap = new HashMap<>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1200, 1000);
@@ -59,12 +39,58 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
         RiskBoardPanel boardPanel = new RiskBoardPanel(worldManager, this);
         add(boardPanel, BorderLayout.CENTER);
-        RiskMenu riskMenu = new RiskMenu(playerManager, new RiskMenuListener());
+        riskMenu = new RiskMenu(playerManager, new RiskMenuListener());
         add(riskMenu, BorderLayout.NORTH);
+
+        initializeRiskPlayerPanel();
         setVisible(true);
+
+        checkPreviousGameState();
+    }
+
+
+    private void initializeRiskPlayerPanel(){
+
+        RiskPlayerPanel leftPanel = new RiskPlayerPanel(playerManager);
+        RiskPlayerPanel rightPanel = new RiskPlayerPanel(playerManager);
+
+        List<String> playerNames = playerManager.getPlayerNames();
+        for (int i = 0; i < playerManager.getPlayerNumber(); i++) {
+            String playerName = playerNames.get(i);
+            if (i % 2 == 0){
+                leftPanel.addPlayerList(playerName);
+                playerPanelMap.put(playerName, leftPanel);
+            } else {
+                rightPanel.addPlayerList(playerName);
+                playerPanelMap.put(playerName, rightPanel);
+            }
+        }
+
+        add(leftPanel, BorderLayout.WEST);
+        add(rightPanel, BorderLayout.EAST);
+    }
+
+    private void checkPreviousGameState() throws IOException {
+
+        gameStep = (playerManager.continuePreviousGame()) ? gameManager.getSavedGameStep() : 1;
+        setActionButton();
+
+        if(gameStep == 1){
+            receiveUnits();
+        }
+    }
+
+    private void setActionButton(){
+
+        switch (gameStep){
+            case(1) -> riskMenu.setButtonText(2, "Attack");
+            case(2) -> riskMenu.setButtonText(2, "Move units");
+            case(3) -> riskMenu.setButtonText(2, "Distribute units");
+        }
     }
 
     private String waitForCountrySelection() {
+
         synchronized (lock) {
             while (selectedCountry == null) {
                 try {
@@ -80,6 +106,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
     }
 
     public void onCountrySelected(String countryName) {
+
         synchronized (lock) {
             this.selectedCountry = countryName;
             lock.notify();
@@ -96,7 +123,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             e.printStackTrace();
         }
 
-        JOptionPane.showMessageDialog(null, "New round! It's your turn " + playerManager.getCurrentPlayerName() + "You receive " + receivedUnits + " units." + "Click 'done, continue' in the menu to distribute your received units to your countries.", playerManager.getCurrentPlayerName() + "'s turn", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "It's your turn " + playerManager.getCurrentPlayerName() + ". \n You receive " + receivedUnits + " units. \n Click 'Distribute units' in the menu to distribute your received units to your countries.", playerManager.getCurrentPlayerName() + "'s turn", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void distributeUnits(int receivedUnits){
@@ -117,7 +144,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             JOptionPane.showMessageDialog(null, attackingCountry + " has attacked " + attackedCountry + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult, "Dice result" , JOptionPane.INFORMATION_MESSAGE);
 
             defend(attackingCountry, attackedCountry, Integer.parseInt(units), attackerDiceResult);
-        } catch(ExceptionCountryNotRecognized | ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour | NumberFormatException |
+        } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour | NumberFormatException |
                 ExceptionTooLessUnits | ExceptionTooManyUnits | IOException e){
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             attack();
@@ -133,9 +160,15 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         JOptionPane.showMessageDialog(null, defenderName + " rolled " + defenderDiceResult + " and " + playerManager.getCurrentPlayerName() + " rolled " + attackerDiceResult + ". ", "Dice results", JOptionPane.INFORMATION_MESSAGE);
 
 
+        playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
+        playerPanelMap.get(defenderName).updateList(defenderName);
+
         if (!worldManager.getCountryOwner(attackedCountry).equals(playerManager.getCurrentPlayerName())) {
+
             JOptionPane.showMessageDialog(null, defenderName + " was able to defend " + attackedCountry + ". " + worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                     + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry, attackedCountry + " defended", JOptionPane.INFORMATION_MESSAGE);
+
+            decisionNextStep("attack");
         }
 
         int moveUnitsDecision = JOptionPane.showOptionDialog(null,
@@ -151,7 +184,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 try {
                     gameManager.moveUnits(attackingCountry, attackedCountry, Integer.parseInt(units), true);
                     confirmed = true;
-                } catch (ExceptionCountryNotRecognized | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned |
+                } catch (ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned |
                          ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -161,23 +194,23 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         JOptionPane.showMessageDialog(null, worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                 + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry, "Result of fight", JOptionPane.INFORMATION_MESSAGE);
 
-        if (playerManager.playerDefeated(defenderName)) {
+        if (playerManager.playerDefeated(defenderName)){
             JOptionPane.showMessageDialog(null, defenderName + " your last country has been conquered, the game has to continue without you. ", defenderName + " lost", JOptionPane.INFORMATION_MESSAGE);
             try {
                 playerManager.removePlayer(defenderName);
-            } catch (ExceptionObjectDoesntExist e) {
+            } catch (ExceptionEmptyInput | ExceptionObjectDoesntExist e) {
                 e.printStackTrace();
             }
 
             if (playerManager.getPlayerNumber() == 1) {
                 System.out.println();
                 JOptionPane.showMessageDialog(null, playerManager.getCurrentPlayerName() + " congratulation, you've won!", playerManager.getCurrentPlayerName() + " won", JOptionPane.INFORMATION_MESSAGE);
-
-                gameStarted = false;
-                gameSetUp = false;
                 gameManager.quitGame();
+                return;
             }
         }
+
+        decisionNextStep("attack");
     }
 
 
@@ -193,12 +226,25 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
         try{
             gameManager.moveUnits(sourceCountry, destinationCountry, Integer.parseInt(units), false);
-        } catch(ExceptionCountryNotRecognized | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
+            playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
+
+            decisionNextStep("move units");
+        } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
             JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
         }
     }
 
+    public void decisionNextStep(String action){
 
+        int continueAction = JOptionPane.showOptionDialog(null,
+                "Do you want to continue to " + action + "? ",
+                "Next step", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, JOptionPane.YES_OPTION);
+
+        if (continueAction == JOptionPane.NO_OPTION){
+            setActionButton();
+            gameStep++;
+        }
+    }
 
     class RiskMenuListener implements ActionListener {
 
@@ -217,11 +263,10 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                         throw new RuntimeException(ex);
                     }
                 }
-                case "Distribute units" -> {} //distributeUnits();
-                case "Done, continue" -> gameStep++;
+                case "Distribute units" -> {
+                    //distributeUnits();
+                }
                 case "Start new game" -> {
-                    gameStarted = false;
-                    gameSetUp = false;
 
                     System.out.println(" Y/N > ");
                     int decisionDelete = JOptionPane.showOptionDialog(null,"Previously saved data will be deleted. Do you want to continue?",
@@ -230,6 +275,8 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                     if (decisionDelete == JOptionPane.YES_OPTION){
                         try {
                             gameManager.newGame();
+                            StartView sView = new StartView(worldManager, playerManager, gameManager);
+                            dispose();
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }

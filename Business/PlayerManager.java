@@ -1,9 +1,6 @@
 package Business;
 
-import Common.Exceptions.ExceptionColorAlreadyExists;
-import Common.Exceptions.ExceptionObjectDoesntExist;
-import Common.Exceptions.ExceptionPlayerAlreadyExists;
-import Common.Exceptions.ExceptionTooManyPlayer;
+import Common.Exceptions.*;
 import Common.Player;
 import Persistence.IPersistence;
 
@@ -31,6 +28,11 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         playerMap = new HashMap<>();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Black"));
 
+        initializeGameContinuation();
+    }
+
+    public void initializeGameContinuation() throws IOException {
+
         if(!playerOrder.isEmpty()){
             for (Player player : playerOrder) {
                 playerMap.put(player.getPlayerName(), player);
@@ -46,7 +48,6 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
             continuePreviousGame = false;
         }
     }
-
     public boolean save(int gameStep) throws IOException {
 
         persistence.saveGameRoundAndStep(round, playerTurns, gameStep);
@@ -62,7 +63,11 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     }
 
     @Override
-    public void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists {
+    public void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists, ExceptionEmptyInput {
+
+        if(name.isEmpty() || color.isEmpty()){
+            throw new ExceptionEmptyInput();
+        }
 
         if(playerMap.containsKey(name)){
             throw new ExceptionPlayerAlreadyExists(name);
@@ -81,7 +86,11 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     }
 
     @Override
-    public void removePlayer(String name) throws ExceptionObjectDoesntExist {
+    public void removePlayer(String name) throws ExceptionObjectDoesntExist, ExceptionEmptyInput {
+
+        if(name.isEmpty()){
+            throw new ExceptionEmptyInput();
+        }
 
         if (!playerMap.containsKey(name)){
             throw new ExceptionObjectDoesntExist(name);
@@ -116,28 +125,29 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         return true;
     }
     @Override
-    public String getAllowedColors(){ return allowedColors.toString(); }
-
+    public List<String> getAllowedColors(){ return allowedColors; }
+    @Override
+    public String getPlayerColorCode(String playerName){ return playerMap.get(playerName).getPlayerColor(); }
     @Override
     public Map<String, Player> getPlayerMap(){ return playerMap; }
-
     @Override
     public String getPlayersInfo(){
 
         StringBuilder playerInfo = new StringBuilder();
         for(Player player : playerMap.values()){
-            playerInfo.append("Name: ").append(player.getPlayerName()).append(", Color: ").append(player.getPlayerColor()).append("\n");
+            playerInfo.append("| ").append(player.getPlayerName()).append(": ").append(player.getPlayerColor()).append(" |");
         }
         return playerInfo.toString();
     }
+    public List<String> getPlayerNames(){ return new ArrayList<>(playerMap.keySet()); }
     @Override
-    public String getAllCountriesInfoPlayer(){
+    public List<String> getAllCountriesInfoPlayer(String playerName){
 
-        StringBuilder countryInfos = new StringBuilder();
-        for(String country : playerMap.get(currentPlayer.getPlayerName()).getConqueredCountryNames()){
-            countryInfos.append(country).append(": ").append(worldFriend.getCountryMap().get(country).getArmy().getUnits()).append("\n");
+        List<String> countryInfos = new ArrayList<>();
+        for(String country : playerMap.get(playerName).getConqueredCountryNames()){
+            countryInfos.add(country + ": " + worldManager.getUnitAmountOfCountry(country));
         }
-        return countryInfos.toString();
+        return countryInfos;
     }
     public boolean playerDefeated(String playerName){ return playerMap.get(playerName).getConqueredCountryNames().isEmpty(); }
     @Override

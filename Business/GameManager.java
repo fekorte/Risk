@@ -106,11 +106,16 @@ public class GameManager implements IGameManager {
     }
 
     @Override
-    public void distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryNotRecognized {
+    public void distributeUnits(String selectedCountry, int selectedUnits, int receivedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput {
 
-        if(selectedCountry == null || selectedCountry.isEmpty()){
+        if(selectedCountry == null){
             throw new ExceptionCountryNotRecognized();
         }
+
+        if(selectedCountry.isEmpty()){
+            throw new ExceptionEmptyInput();
+        }
+
 
         if(!worldManager.getCountryOwner(selectedCountry).equals(playerManager.getCurrentPlayerName())){
             throw new ExceptionCountryNotOwned(selectedCountry, playerManager.getCurrentPlayerName());
@@ -123,10 +128,14 @@ public class GameManager implements IGameManager {
     }
 
     @Override
-    public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionCountryNotRecognized {
+    public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput {
 
-        if(attackingCountry == null || attackedCountry == null || attackingCountry.isEmpty() || attackedCountry.isEmpty()){
+        if(attackingCountry == null || attackedCountry == null){
             throw new ExceptionCountryNotRecognized();
+        }
+
+        if(attackingCountry.isEmpty() || attackedCountry.isEmpty()){
+            throw new ExceptionEmptyInput();
         }
 
         if(!worldManager.getCountryOwner(attackingCountry).equals(playerManager.getCurrentPlayerName())){
@@ -201,10 +210,14 @@ public class GameManager implements IGameManager {
      }
 
     @Override
-    public void moveUnits(String sourceCountry, String destinationCountry, int units, boolean afterConquering) throws ExceptionInvolvedCountrySelected, ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryIsNoNeighbour, ExceptionCountryNotRecognized {
+    public void moveUnits(String sourceCountry, String destinationCountry, int units, boolean afterConquering) throws ExceptionInvolvedCountrySelected, ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryIsNoNeighbour, ExceptionCountryNotRecognized, ExceptionEmptyInput {
 
-        if(sourceCountry == null || destinationCountry == null || sourceCountry.isEmpty() || destinationCountry.isEmpty()){
+        if(sourceCountry == null || destinationCountry == null){
             throw new ExceptionCountryNotRecognized();
+        }
+
+        if(sourceCountry.isEmpty() || destinationCountry.isEmpty()){
+            throw new ExceptionEmptyInput();
         }
 
         if(!afterConquering){

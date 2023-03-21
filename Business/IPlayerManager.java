@@ -1,16 +1,17 @@
 package Business;
 
-import Common.Exceptions.ExceptionColorAlreadyExists;
-import Common.Exceptions.ExceptionObjectDoesntExist;
-import Common.Exceptions.ExceptionPlayerAlreadyExists;
-import Common.Exceptions.ExceptionTooManyPlayer;
+import Common.Exceptions.*;
+
+import java.util.List;
 
 public interface IPlayerManager {
-    void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists;
-    void removePlayer(String name) throws ExceptionObjectDoesntExist;
-    String getAllowedColors();
+    void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists, ExceptionEmptyInput;
+    void removePlayer(String name) throws ExceptionObjectDoesntExist, ExceptionEmptyInput;
+    List<String> getAllowedColors();
+    String getPlayerColorCode(String playerName);
     String getPlayersInfo();
-    String getAllCountriesInfoPlayer();
+    List<String> getPlayerNames();
+    List<String> getAllCountriesInfoPlayer(String playerName);
     boolean playerDefeated(String playerName);
     boolean nextPlayersTurn();
     boolean continuePreviousGame();

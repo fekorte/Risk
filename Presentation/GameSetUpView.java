@@ -14,6 +14,11 @@ public class GameSetUpView extends JFrame{
 
     public GameSetUpView(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager, boolean standardRisk){
 
+        try {
+            gameManager.newGame();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         JPanel setUpPanel = new JPanel(new GridLayout(5, 1));
 
@@ -98,7 +103,6 @@ public class GameSetUpView extends JFrame{
             }
         });
 
-
         startGameButton.addActionListener(a -> {
 
             try{
@@ -114,8 +118,13 @@ public class GameSetUpView extends JFrame{
 
         goBackButton.addActionListener(a -> {
 
-            StartView sView = new StartView(worldManager, playerManager, gameManager);
-            this.dispose();
+            try {
+                gameManager.newGame();
+                StartView sView = new StartView(worldManager, playerManager, gameManager);
+                this.dispose();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 }

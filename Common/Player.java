@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 public class Player {
-    private String playerName;
-    private String playerColor;
+    private final String playerName;
+    private final String playerColor;
     private Mission playerMission;
 
-    private List<String> conqueredCountryNames;
+    private final List<String> conqueredCountryNames;
 
     public Player(String name, String color){
 

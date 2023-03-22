@@ -308,15 +308,14 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 }
                 case "Start new game" -> {
 
-                    System.out.println(" Y/N > ");
                     int decisionDelete = JOptionPane.showOptionDialog(null,"Previously saved data will be deleted. Do you want to continue?",
                             "Start new game", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, JOptionPane.YES_OPTION);
 
                     if (decisionDelete == JOptionPane.YES_OPTION){
                         try {
                             gameManager.newGame();
-                            StartView sView = new StartView(worldManager, playerManager, gameManager);
                             dispose();
+                            StartView sView = new StartView(worldManager, playerManager, gameManager);
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }

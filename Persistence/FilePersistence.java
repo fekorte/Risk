@@ -131,7 +131,6 @@ public class FilePersistence implements IPersistence{
         while(reader != null && reader.ready()){
             String playerName = readLine();
             String color = readLine();
-            Color color2 = Color.decode(readLine());
             int missionNumber = Integer.parseInt(readLine());
             String gap = readLine();
 
@@ -148,29 +147,6 @@ public class FilePersistence implements IPersistence{
         close();
         return playerOrder;
     }
-/*
-    public boolean saveMissions(List<Player> playerList) throws IOException {
-
-        openForWriting("Data/GameStateMissions.txt");
-        for(Player player : playerList){
-            int playerMission = player.getPlayerMission().getMissionNumber();
-            printLine(String.valueOf(playerMission));
-
-
-
-        }
-        return true;
-    }
-
-    public List<Player> fetchMissions() throws IOException {
-        List<Player> playerList = fetchGameStatePlayers();
-
-
-        return null;
-    }
-
- */
-
 
     @Override
     public boolean saveGameStateArmies(Map<String, Country> countryMap) throws IOException {
@@ -229,9 +205,20 @@ public class FilePersistence implements IPersistence{
     @Override
     public void resetGameState() throws IOException {
 
-        openForWriting("Data/GameStatePlayers.txt");
-        printLine("");
-        close();
+        File filePlayers = new File("Data/GameStatePlayers.txt");
+        RandomAccessFile rafPlayers = new RandomAccessFile(filePlayers, "rw");
+        rafPlayers.setLength(0);
+        rafPlayers.close();
+
+        File fileArmies = new File("Data/GameStateArmies.txt");
+        RandomAccessFile rafArmies = new RandomAccessFile(fileArmies, "rw");
+        rafArmies.setLength(0);
+        rafArmies.close();
+
+        File fileGameRound = new File("Data/GameRoundAndStep.txt");
+        RandomAccessFile rafGameRound = new RandomAccessFile(fileGameRound, "rw");
+        rafGameRound.setLength(0);
+        rafGameRound.close();
     }
 
 

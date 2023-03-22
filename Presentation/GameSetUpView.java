@@ -15,7 +15,7 @@ public class GameSetUpView extends JFrame{
     public GameSetUpView(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager, boolean standardRisk){
 
 
-        JPanel setUpPanel = new JPanel(new GridLayout(4, 1));
+        JPanel setUpPanel = new JPanel(new GridLayout(5, 1));
 
         JLabel playerInfo = new JLabel();
         setUpPanel.add(playerInfo);
@@ -23,15 +23,17 @@ public class GameSetUpView extends JFrame{
         JButton addPlayerButton = new JButton("Add player");
         JButton removePlayerButton = new JButton("Remove player");
         JButton startGameButton = new JButton("Start game");
+        JButton goBackButton = new JButton("Go back");
         setUpPanel.add(addPlayerButton);
         setUpPanel.add(removePlayerButton);
         setUpPanel.add(startGameButton);
+        setUpPanel.add(goBackButton);
 
         this.add(setUpPanel);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
-        this.setSize(400, 300);
+        this.setSize(500, 400);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
@@ -108,6 +110,12 @@ public class GameSetUpView extends JFrame{
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        });
+
+        goBackButton.addActionListener(a -> {
+
+            StartView sView = new StartView(worldManager, playerManager, gameManager);
+            this.dispose();
         });
     }
 }

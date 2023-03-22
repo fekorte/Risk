@@ -292,15 +292,16 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 }
                 case "Distribute units" -> distributeUnits();
                 case "Done, continue" -> {
-                    
+
                     switch (gameStep){
                         case(1) -> JOptionPane.showMessageDialog(null, "Please distribute all units before you continue.", "Error", JOptionPane.INFORMATION_MESSAGE);
                         case(2) -> gameStep++;
                         case(3) -> {
-                            gameStep = 1;
                             if(!playerManager.nextPlayersTurn()){
                                 JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + playerManager.getCurrentPlayerName(), "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
                             }
+                            gameStep = 1;
+                            receiveUnits();
                         }
                     }
                     setActionButton();

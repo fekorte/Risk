@@ -25,7 +25,7 @@ public class RiskBoardPanel extends JPanel {
         BufferedImage boardImage = null;
         try {
             boardImage = ImageIO.read(new File("Data/RiskBoard.jpeg"));
-            paintedMap = ImageIO.read(new File("Data/PaintedMap.jpg"));
+            paintedMap = ImageIO.read(new File("Data/RiskMapPainted.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }

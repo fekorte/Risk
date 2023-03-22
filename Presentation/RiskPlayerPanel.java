@@ -1,12 +1,10 @@
 package Presentation;
 
 import Business.IPlayerManager;
-import Common.Country;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -29,7 +27,7 @@ public class RiskPlayerPanel extends JPanel {
         colorMap.put("Green", Color.GREEN);
         colorMap.put("White", Color.WHITE);
         colorMap.put("Pink", Color.PINK);
-        colorMap.put("Blue", Color.BLUE);
+        colorMap.put("Blue", Color.CYAN);
 
         listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));

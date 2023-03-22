@@ -8,21 +8,18 @@ import java.util.*;
 import java.util.List;
 
 public class FilePersistence implements IPersistence{
-    private BufferedReader reader=null;
-    private PrintWriter writer=null;
+    private BufferedReader reader = null;
+    private PrintWriter writer = null;
 
     @Override
-    public void openForReading(String file) throws IOException {
-        reader=new BufferedReader(new FileReader(file));
-    }
+    public void openForReading(String file) throws IOException { reader = new BufferedReader(new FileReader(file)); }
 
     @Override
-    public void openForWriting(String file) throws IOException {
-        writer=new PrintWriter(new BufferedWriter(new FileWriter(file)));
-    }
+    public void openForWriting(String file) throws IOException { writer = new PrintWriter(new BufferedWriter(new FileWriter(file))); }
 
     @Override
     public void close(){
+
         if(writer != null)
             writer.close();
         if(reader != null){

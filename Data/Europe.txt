@@ -16,7 +16,7 @@ Western Europe
 
 Scandinavia
 SE
-250,253,0
+255,255,255
 2
 Northern Europe
 Ukraine
@@ -40,7 +40,7 @@ Western Europe
 
 Southern Europe
 SP
-0,0,254
+0,0,0
 4
 Middle East
 Egypt

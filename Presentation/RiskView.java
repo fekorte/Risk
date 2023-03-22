@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -274,8 +275,17 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             String command = e.getActionCommand();
 
             switch (command) {
-                case "Show country infos" -> {} //create table to display country infos
-                case "Show my mission" -> JOptionPane.showMessageDialog(null, playerManager.getCurrentPlayerName() + "don't share your mission with anyone else! Your mission is: " + playerManager.getCurrentPlayerMission(), "Your mission", JOptionPane.INFORMATION_MESSAGE);
+                case "Show country infos" -> {
+
+                    CountryTable countryTable = new CountryTable(new ArrayList<>(worldManager.getCountryMap().values()));
+                    JFrame tableView = new JFrame("Country information");
+                    tableView.setSize(600, 400);
+                    JTable table = new JTable(countryTable);
+                    JScrollPane scrollPane = new JScrollPane(table);
+                    tableView.add(scrollPane);
+                    tableView.setVisible(true);
+                }
+                case "Show my mission" -> JOptionPane.showMessageDialog(null, playerManager.getCurrentPlayerName() + " don't share your mission with anyone else! Your mission is: " + playerManager.getCurrentPlayerMission(), "Your mission", JOptionPane.INFORMATION_MESSAGE);
                 case "Attack" -> {
                     try {
                         attack();

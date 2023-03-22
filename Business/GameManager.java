@@ -28,7 +28,7 @@ public class GameManager implements IGameManager {
         playerManagerFriend = (PlayerManagerFriend) playerManager;
         this.worldManager = worldManager;
         worldFriend = (WorldManagerFriend) worldManager;
-        countryMap = worldFriend.getCountryMap();
+        countryMap = worldManager.getCountryMap();
         involvedCountries = new ArrayList<>();
     }
 
@@ -50,7 +50,7 @@ public class GameManager implements IGameManager {
 
         persistence.resetGameState();
         quitGame();
-        countryMap = worldFriend.getCountryMap();
+        countryMap = worldManager.getCountryMap();
     }
 
     public int getSavedGameStep() throws IOException {

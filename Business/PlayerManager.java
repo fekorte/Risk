@@ -174,7 +174,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
 
     public void setPlayerMission(boolean standardRisk){
 
-        MissionFactory factory = new MissionFactory(worldFriend.getContinents(), worldFriend.getCountryMap(), getPlayerColors());
+        MissionFactory factory = new MissionFactory(worldFriend.getContinents(), worldManager.getCountryMap(), getPlayerColors());
 
         Random random = new Random();
         for(Player player : playerOrder){

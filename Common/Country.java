@@ -21,6 +21,8 @@ public class Country {
         neighbourNames = new ArrayList<>();
     }
     public String getCountryName(){ return countryName; }
+    public String getAbbreviation(){ return abbreviation; }
+    public String getContinentName(){ return continentName; }
     public Color getCountryColor(){ return countryColor; }
 
     public Army getArmy(){ return army; }

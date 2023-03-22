@@ -210,6 +210,7 @@ public class GameManager implements IGameManager {
         if(worldManager.getUnitAmountOfCountry(countryToDefend) == 0){
             String previousOwner = countryMap.get(countryToDefend).getArmy().getPlayerName();
             countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, playerManager.getCurrentPlayerName()));
+            countryMap.get(attackingCountry).getArmy().removeUnits(attackerUnits);
             playerManagerFriend.changeCountryOwner(playerManager.getCurrentPlayerName(), previousOwner, countryToDefend);
         }
 

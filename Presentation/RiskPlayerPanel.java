@@ -1,11 +1,15 @@
 package Presentation;
 
 import Business.IPlayerManager;
+import Common.Country;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class RiskPlayerPanel extends JPanel {
 
@@ -36,7 +40,9 @@ public class RiskPlayerPanel extends JPanel {
     public void addPlayerCountryList(String playerName) {
 
         DefaultListModel<String> model = new DefaultListModel<>();
-        for (String countryInfo : playerManager.getAllCountriesInfoPlayer(playerName)) {
+        List<String> countryInfos = playerManager.getAllCountriesInfoPlayer(playerName);
+        Collections.sort(countryInfos);
+        for (String countryInfo : countryInfos) {
             model.addElement(countryInfo);
         }
         JList<String> list = new JList<>(model);
@@ -59,7 +65,9 @@ public class RiskPlayerPanel extends JPanel {
         DefaultListModel<String> model = listModels.get(playerName);
 
         model.clear();
-        for (String countryInfo : playerManager.getAllCountriesInfoPlayer(playerName)) {
+        List<String> countryInfos = playerManager.getAllCountriesInfoPlayer(playerName);
+        Collections.sort(countryInfos);
+        for (String countryInfo : countryInfos) {
             model.addElement(countryInfo);
         }
     }

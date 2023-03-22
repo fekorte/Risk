@@ -127,7 +127,9 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                         gameManager.distributeUnits(selectedCountry, Integer.parseInt(units));
                         JOptionPane.showMessageDialog(null,  Integer.parseInt(units) + " have been moved to " + selectedCountry + ". You have " + gameManager.getReceivedUnits()  + " left.", "Distribute units", JOptionPane.INFORMATION_MESSAGE);
                         playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
-                    } catch (ExceptionEmptyInput | ExceptionCountryNotRecognized | NumberFormatException | ExceptionCountryNotOwned | ExceptionTooManyUnits e) {
+                    } catch (NumberFormatException f) {
+                        JOptionPane.showMessageDialog(null, "Invalid unit amount selected.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (ExceptionEmptyInput | ExceptionCountryNotRecognized | ExceptionCountryNotOwned | ExceptionTooManyUnits e) {
                         JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
@@ -159,12 +161,14 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
                 String units = JOptionPane.showInputDialog(null, "Enter unit amount (select max. 3 and keep in mind that one unit has to remain in your country)", "Select units", JOptionPane.INFORMATION_MESSAGE);
 
-                try{
+                try {
                     List<Integer> attackerDiceResult = gameManager.attack(attackingCountry, attackedCountry, Integer.parseInt(units));
-                    JOptionPane.showMessageDialog(null, attackingCountry + " has attacked " + attackedCountry + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult, "Dice result" , JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null, attackingCountry + " has attacked " + attackedCountry + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult, "Dice result", JOptionPane.INFORMATION_MESSAGE);
 
                     defend(attackingCountry, attackedCountry, Integer.parseInt(units), attackerDiceResult);
-                } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour | NumberFormatException |
+                } catch (NumberFormatException f) {
+                    JOptionPane.showMessageDialog(null, "Invalid unit amount selected.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour |
                         ExceptionTooLessUnits | ExceptionTooManyUnits | IOException e){
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
                     attack();
@@ -189,16 +193,16 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
         if (!worldManager.getCountryOwner(attackedCountry).equals(playerManager.getCurrentPlayerName())) {
 
-            JOptionPane.showMessageDialog(null, defenderName + " was able to defend " + attackedCountry + ". " + worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
+            JOptionPane.showMessageDialog(null, defenderName + " was able to defend " + attackedCountry + ".\n" + worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                     + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry, attackedCountry + " defended", JOptionPane.INFORMATION_MESSAGE);
 
             decisionNextStep("attack");
+            return;
         }
 
         int moveUnitsDecision = JOptionPane.showOptionDialog(null,
-                playerManager.getCurrentPlayerName() + " was able to conquer " + attackedCountry + ". " + attackingCountry + " unit amount: " + worldManager.getUnitAmountOfCountry(attackingCountry) +
-                        ". Current unit amount in " + attackedCountry + ": " + worldManager.getUnitAmountOfCountry(attackedCountry) + "." + playerManager.getCurrentPlayerName() + " do you want to move additional units to " + attackedCountry + "?",
-
+                playerManager.getCurrentPlayerName() + " was able to conquer " + attackedCountry + ".\n" + attackingCountry + " unit amount: " + worldManager.getUnitAmountOfCountry(attackingCountry) +
+                        ". Current unit amount in " + attackedCountry + ": " + worldManager.getUnitAmountOfCountry(attackedCountry) + ". \n" + playerManager.getCurrentPlayerName() + " do you want to move additional units to " + attackedCountry + "?",
                 attackedCountry + " conquered", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, JOptionPane.YES_OPTION);
 
         boolean confirmed = false;
@@ -245,11 +249,11 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 String sourceCountry = countrySelectedFuture.get();
                 countrySelectedFuture = new CompletableFuture<>();
 
-                JOptionPane.showMessageDialog(null, "Country successfully selected. Please click on the country to whom you want to move your units. Keep in mind that you cannot move units to a country which has already been involved in this round.", "Select country", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please click on the country to whom you want to move your units. Keep in mind that you cannot move units to a country which has already been involved in this round.", "Select country", JOptionPane.INFORMATION_MESSAGE);
                 String destinationCountry = countrySelectedFuture.get();
                 countrySelectedFuture = new CompletableFuture<>();
 
-                String units = JOptionPane.showInputDialog(null, "Country successfully selected. Enter unit amount (at least one unit has to remain in each country)", "Select units", JOptionPane.INFORMATION_MESSAGE);
+                String units = JOptionPane.showInputDialog(null, "Enter unit amount (at least one unit has to remain in each country)", "Select units", JOptionPane.INFORMATION_MESSAGE);
 
                 try{
                     gameManager.moveUnits(sourceCountry, destinationCountry, Integer.parseInt(units), false);

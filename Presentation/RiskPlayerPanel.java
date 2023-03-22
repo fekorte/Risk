@@ -33,14 +33,14 @@ public class RiskPlayerPanel extends JPanel {
         add(listPanel);
     }
 
-    public void addPlayerList(String playerName) {
+    public void addPlayerCountryList(String playerName) {
 
         DefaultListModel<String> model = new DefaultListModel<>();
         for (String countryInfo : playerManager.getAllCountriesInfoPlayer(playerName)) {
             model.addElement(countryInfo);
         }
         JList<String> list = new JList<>(model);
-        list.setPreferredSize(new Dimension(150, 300));
+        list.setPreferredSize(new Dimension(150, 600));
 
         Color color = colorMap.get(playerManager.getPlayerColorCode(playerName));
         JLabel label = new JLabel(playerName);

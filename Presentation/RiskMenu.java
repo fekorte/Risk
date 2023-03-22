@@ -17,7 +17,7 @@ public class RiskMenu extends JMenuBar{
         currentInfo = new JLabel("Round: " + playerManager.getRound() + ", Player: " + playerManager.getCurrentPlayerName());
         add(currentInfo);
 
-        String[] buttonLabels = {"Show country infos", "Show my mission", "Distribute units", "Start new game", "Save game"};
+        String[] buttonLabels = {"Show country infos", "Show my mission", "Distribute units", "Done, continue", "Start new game", "Save game"};
 
         for (String label : buttonLabels) {
             JButton button = new JButton(label);

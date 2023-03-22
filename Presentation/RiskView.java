@@ -138,11 +138,6 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             }
             gameStep++;
             setActionButton();
-            try {
-                decisionNextStep("attack");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
         }).start();
     }
     private void attack() throws InterruptedException, ExecutionException{
@@ -195,8 +190,6 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
             JOptionPane.showMessageDialog(null, defenderName + " was able to defend " + attackedCountry + ".\n" + worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                     + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry, attackedCountry + " defended", JOptionPane.INFORMATION_MESSAGE);
-
-            decisionNextStep("attack");
             return;
         }
 
@@ -232,10 +225,8 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 System.out.println();
                 JOptionPane.showMessageDialog(null, playerManager.getCurrentPlayerName() + " congratulation, you've won!", playerManager.getCurrentPlayerName() + " won", JOptionPane.INFORMATION_MESSAGE);
                 gameManager.quitGame();
-                return;
             }
         }
-        decisionNextStep("attack");
     }
 
 
@@ -258,39 +249,13 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 try{
                     gameManager.moveUnits(sourceCountry, destinationCountry, Integer.parseInt(units), false);
                     playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
-
-                    decisionNextStep("move units");
                 } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
         }).start();
-    }
-
-    public void decisionNextStep(String action) throws IOException {
-
-        int continueAction = JOptionPane.showOptionDialog(null,
-                "Do you want to do the action: " + action + "? Click no to continue with the next step.",
-                "Next step", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, JOptionPane.YES_OPTION);
-
-        if (continueAction == JOptionPane.NO_OPTION){
-            if(action.equals("attack")) {
-                gameStep++;
-                setActionButton();
-                decisionNextStep("move units");
-            }
-
-            if(playerManager.nextPlayersTurn()){
-                gameStep = 1;
-            } else {
-                JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + playerManager.getCurrentPlayerName(), "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
-                gameManager.quitGame();
-            }
-        }
     }
 
     class RiskMenuListener implements ActionListener {
@@ -326,6 +291,20 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                     }
                 }
                 case "Distribute units" -> distributeUnits();
+                case "Done, continue" -> {
+                    
+                    switch (gameStep){
+                        case(1) -> JOptionPane.showMessageDialog(null, "Please distribute all units before you continue.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                        case(2) -> gameStep++;
+                        case(3) -> {
+                            gameStep = 1;
+                            if(!playerManager.nextPlayersTurn()){
+                                JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + playerManager.getCurrentPlayerName(), "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        }
+                    }
+                    setActionButton();
+                }
                 case "Start new game" -> {
 
                     System.out.println(" Y/N > ");

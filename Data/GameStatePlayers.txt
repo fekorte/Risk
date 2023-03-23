@@ -1,0 +1,52 @@
+B
+Blue
+5
+ 
+41
+Siam
+Western Australia
+Yakutsk
+Quebec
+East Africa
+Greenland
+Eastern United States
+North Africa
+Brazil
+China
+Ontario
+Iceland
+Peru
+Egypt
+Ural
+Central America
+Venezuela
+Irkutsk
+Southern Europe
+Japan
+Argentina
+Madagascar
+Alberta
+Great Britain
+Siberia
+Alaska
+North West Territory
+Eastern Australia
+Western United States
+Indonesia
+Kamchatka
+Congo
+India
+South Africa
+New Guinea
+Northern Europe
+Western Europe
+Middle East
+Afghanistan
+Ukraine
+Mongolia
+A
+Red
+5
+ 
+1
+Scandinavia

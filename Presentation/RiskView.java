@@ -93,11 +93,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         }
     }
 
-    public void onCountrySelected(String countryName) {
-
-        System.out.println("Selected country: " + countryName);
-        this.countrySelectedFuture.complete(countryName);
-    }
+    public void onCountrySelected(String countryName) { this.countrySelectedFuture.complete(countryName); }
 
     private void receiveUnits(){
 

@@ -1,6 +1,6 @@
 B
 Blue
-5
+6
  
 41
 Siam
@@ -46,7 +46,7 @@ Ukraine
 Mongolia
 A
 Red
-5
+6
  
 1
 Scandinavia

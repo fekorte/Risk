@@ -45,8 +45,12 @@ public class StartView extends JFrame{
         continueSavedRiskGameButton.addActionListener(a -> {
 
             try {
-                RiskView rView = new RiskView(worldManager, playerManager, gameManager);
-                this.dispose();
+                if(playerManager.continuePreviousGame()){
+                    RiskView rView = new RiskView(worldManager, playerManager, gameManager);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(null, "No previous game state available.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

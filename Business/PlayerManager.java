@@ -60,6 +60,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         playerMap.clear();
         playerOrder.clear();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
+        continuePreviousGame = false;
     }
 
     @Override

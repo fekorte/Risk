@@ -265,16 +265,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             String command = e.getActionCommand();
 
             switch (command) {
-                case "Show country infos" -> {
-
-                    CountryTable countryTable = new CountryTable(new ArrayList<>(worldManager.getCountryMap().values()));
-                    JFrame tableView = new JFrame("Country information");
-                    tableView.setSize(600, 400);
-                    JTable table = new JTable(countryTable);
-                    JScrollPane scrollPane = new JScrollPane(table);
-                    tableView.add(scrollPane);
-                    tableView.setVisible(true);
-                }
+                case "Show country infos" -> { AllCountryInfoView infoView = new AllCountryInfoView(worldManager); }
                 case "Show my mission" -> JOptionPane.showMessageDialog(null, playerManager.getCurrentPlayerName() + " don't share your mission with anyone else! Your mission is: " + playerManager.getCurrentPlayerMission(), "Your mission", JOptionPane.INFORMATION_MESSAGE);
                 case "Attack" -> {
                     try {
@@ -299,6 +290,9 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                         case(3) -> {
                             if(!playerManager.nextPlayersTurn()){
                                 JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + playerManager.getCurrentPlayerName(), "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
+                                AllCountryInfoView infoView = new AllCountryInfoView(worldManager);
+                                dispose();
+                                return;
                             }
                             gameStep = 1;
                             receiveUnits();

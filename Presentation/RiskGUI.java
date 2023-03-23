@@ -7,7 +7,6 @@ import Persistence.IPersistence;
 import java.io.IOException;
 
 public class RiskGUI {
-
     public static void main(String[] args) throws IOException {
 
         IPersistence persistence = new FilePersistence();

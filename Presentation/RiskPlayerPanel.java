@@ -22,17 +22,22 @@ public class RiskPlayerPanel extends JPanel {
         listModels = new HashMap<>();
 
         colorMap = new HashMap<>();
+        addColorsToMap();
+
+        listPanel = new JPanel();
+        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+        listPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
+        add(listPanel);
+    }
+
+    private void addColorsToMap(){
+
         colorMap.put("Yellow", Color.YELLOW);
         colorMap.put("Red", Color.RED);
         colorMap.put("Green", Color.GREEN);
         colorMap.put("White", Color.WHITE);
         colorMap.put("Pink", Color.PINK);
         colorMap.put("Blue", Color.CYAN);
-
-        listPanel = new JPanel();
-        listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-        listPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
-        add(listPanel);
     }
 
     public void addPlayerCountryList(String playerName) {
@@ -46,7 +51,7 @@ public class RiskPlayerPanel extends JPanel {
         JList<String> list = new JList<>(model);
         list.setPreferredSize(new Dimension(150, 600));
 
-        Color color = colorMap.get(playerManager.getPlayerColorCode(playerName));
+        Color color = colorMap.get(playerManager.getPlayerColor(playerName));
         JLabel label = new JLabel(playerName);
         label.setOpaque(true);
         label.setBackground(color);

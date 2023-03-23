@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +31,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         this.worldManager = worldManager;
         this.playerManager = playerManager;
         this.gameManager = gameManager;
-        countrySelectedFuture = new CompletableFuture<>();
+        this.countrySelectedFuture = new CompletableFuture<>();
         this.playerPanelMap = new HashMap<>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -57,7 +56,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         RiskPlayerPanel rightPanel = new RiskPlayerPanel(playerManager);
 
         List<String> playerNames = playerManager.getPlayerNames();
-        for (int i = 0; i < playerManager.getPlayerNumber(); i++) {
+        for (int i = 0; i < playerManager.getPlayerAmount(); i++) {
             String playerName = playerNames.get(i);
             if (i % 2 == 0){
                 leftPanel.addPlayerCountryList(playerName);
@@ -136,6 +135,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
+            checkForWinner();
             gameStep++;
             setActionButton();
         }).start();
@@ -190,6 +190,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
             JOptionPane.showMessageDialog(null, defenderName + " was able to defend " + attackedCountry + ".\n" + worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                     + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry, attackedCountry + " defended", JOptionPane.INFORMATION_MESSAGE);
+            checkForWinner();
             return;
         }
 
@@ -214,21 +215,16 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         JOptionPane.showMessageDialog(null, worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                 + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry, "Result of fight", JOptionPane.INFORMATION_MESSAGE);
 
-        if (playerManager.playerDefeated(defenderName)){
+        if (playerManager.isPlayerDefeated(defenderName)){
             JOptionPane.showMessageDialog(null, defenderName + " your last country has been conquered, the game has to continue without you. ", defenderName + " lost", JOptionPane.INFORMATION_MESSAGE);
             try {
                 playerManager.removePlayer(defenderName);
             } catch (ExceptionEmptyInput | ExceptionObjectDoesntExist e) {
                 e.printStackTrace();
             }
-            if (playerManager.getPlayerNumber() == 1) {
-                System.out.println();
-                JOptionPane.showMessageDialog(null, playerManager.getCurrentPlayerName() + " congratulation, you've won!", playerManager.getCurrentPlayerName() + " won", JOptionPane.INFORMATION_MESSAGE);
-                gameManager.quitGame();
-            }
         }
+        checkForWinner();
     }
-
 
     private void moveUnits() throws IOException, InterruptedException, ExecutionException {
 
@@ -249,6 +245,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 try{
                     gameManager.moveUnits(sourceCountry, destinationCountry, Integer.parseInt(units), false);
                     playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
+                    checkForWinner();
                 } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -256,6 +253,19 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 e.printStackTrace();
             }
         }).start();
+    }
+
+    private boolean checkForWinner(){
+
+        String winner = playerManager.isAnyMissionCompleted();
+        if(winner != null) {
+            JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + winner, "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
+            AllCountryInfoView infoView = new AllCountryInfoView(worldManager);
+            dispose();
+            return true;
+        }
+
+        return false;
     }
 
     class RiskMenuListener implements ActionListener {
@@ -288,12 +298,10 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                         case(1) -> JOptionPane.showMessageDialog(null, "Please distribute all units before you continue.", "Error", JOptionPane.INFORMATION_MESSAGE);
                         case(2) -> gameStep++;
                         case(3) -> {
-                            if(!playerManager.nextPlayersTurn()){
-                                JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + playerManager.getCurrentPlayerName(), "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
-                                AllCountryInfoView infoView = new AllCountryInfoView(worldManager);
-                                dispose();
+                            if(checkForWinner()){
                                 return;
                             }
+                            playerManager.nextPlayersTurn();
                             gameStep = 1;
                             receiveUnits();
                         }

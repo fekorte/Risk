@@ -7,26 +7,26 @@ import java.util.*;
 public class MissionFactory {
     private final Map<String, Continent> continentMap;
     private final Map<String, Country> countryMap;
+    private List<String> availableColors;
+    private final Random random;
 
-    List<String> availableColors;
-
-    public MissionFactory(Map<String, Continent> continentMap, Map<String, Country> countryMap, List<String> availableColors){
+    public MissionFactory(Map<String, Continent> continentMap, Map<String, Country> countryMap){
 
         this.continentMap = continentMap;
         this.countryMap = countryMap;
-        this.availableColors = availableColors;
+        random = new Random();
     }
 
-    public Mission createMission(String playerColor, int missionNumber){
+    public void setAvailableColors(List<String> availableColors){ this.availableColors = availableColors; }
+
+    public Mission createMission(int missionNumber){
 
         switch(missionNumber){
             case(1) -> { //missionConquerContinents (two continents)
-                Random random = new Random();
                 String[] continentNames = continentMap.keySet().toArray(new String[0]);
                 return new MissionConquerContinents(continentMap, continentNames[random.nextInt(continentNames.length)], continentNames[random.nextInt(continentNames.length)], false);
             }
             case(2) -> { //missionConquerContinents (two continents plus one chosen by player)
-                Random random = new Random();
                 String[] continentNames = continentMap.keySet().toArray(new String[0]);
                 return new MissionConquerContinents(continentMap, continentNames[random.nextInt(continentNames.length)], continentNames[random.nextInt(continentNames.length)], true);
             }
@@ -34,15 +34,9 @@ public class MissionFactory {
 
             case(4) -> { return new MissionConquerCountries(countryMap); }
 
-            case(5) -> {
-                Random random = new Random();
+            case(5) -> { //missionDefeatOpponent
                 String[] colors = availableColors.toArray(new String[0]);
-                String selectedColor;
-                do{
-                    selectedColor = colors[random.nextInt(colors.length)];
-                } while (selectedColor.equals(playerColor));
-
-                return new MissionDefeatOpponent(selectedColor);
+                return new MissionDefeatOpponent(colors[random.nextInt(colors.length)]);
             }
             case(6) -> { return new MissionConquerWorld(new ArrayList<>(countryMap.keySet())); }
         }

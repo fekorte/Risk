@@ -11,27 +11,27 @@ import java.util.*;
 
 public class GameManager implements IGameManager {
 
-    IPersistence persistence;
-    IPlayerManager playerManager;
-    PlayerManagerFriend playerManagerFriend;
-    IWorldManager worldManager;
-    WorldManagerFriend worldFriend;
-    Map<String, Country> countryMap; //key is country name
-    List<String> involvedCountries; //String: country name
-    int receivedUnits;
+    private final IPersistence persistence;
+    private final IPlayerManager playerManager;
+    private final PlayerManager playerManagerFriend;
+    private final IWorldManager worldManager;
+    private final WorldManager worldManagerFriend;
+    private Map<String, Country> countryMap; //key is country name
+    private final List<String> involvedCountries; //String: country name
+    private int receivedUnits;
 
 
     public GameManager(IPlayerManager playerManager, IWorldManager worldManager, IPersistence persistence){
 
         this.persistence = persistence;
         this.playerManager = playerManager;
-        playerManagerFriend = (PlayerManagerFriend) playerManager;
+        playerManagerFriend = (PlayerManager) playerManager;
         this.worldManager = worldManager;
-        worldFriend = (WorldManagerFriend) worldManager;
+        worldManagerFriend = (WorldManager) worldManager;
         countryMap = worldManager.getCountryMap();
         involvedCountries = new ArrayList<>();
     }
-
+    @Override
     public boolean saveGame(int gameStep) throws IOException {
 
         return persistence.saveGameStateArmies(countryMap) && playerManagerFriend.save(gameStep);
@@ -41,7 +41,7 @@ public class GameManager implements IGameManager {
     public void quitGame() throws IOException {
 
         playerManagerFriend.clearPlayers();
-        worldFriend.clearWorld();
+        worldManagerFriend.clearWorld();
         countryMap.clear();
     }
 
@@ -52,7 +52,7 @@ public class GameManager implements IGameManager {
         quitGame();
         countryMap = worldManager.getCountryMap();
     }
-
+    @Override
     public int getSavedGameStep() throws IOException {
 
         int[] roundAndStep = persistence.fetchGameRoundAndStep();
@@ -103,7 +103,7 @@ public class GameManager implements IGameManager {
         List<String> playerCountries = playerManagerFriend.getCurrentPlayersCountries();
         int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;
 
-        receivedUnits = armySize + worldFriend.getPointsForConqueredContinents(playerCountries);
+        receivedUnits = armySize + worldManagerFriend.getPointsForConqueredContinents(playerCountries);
         return receivedUnits;
     }
 
@@ -129,9 +129,9 @@ public class GameManager implements IGameManager {
         receivedUnits -= selectedUnits;
         countryMap.get(selectedCountry).getArmy().addUnits(selectedUnits);
     }
-
+    @Override
     public int getReceivedUnits(){ return receivedUnits; }
-
+    @Override
     public boolean allUnitsDistributed(){ return receivedUnits != 0; }
 
     @Override
@@ -250,7 +250,7 @@ public class GameManager implements IGameManager {
         countryMap.get(destinationCountry).getArmy().addUnits(units);
     }
 
-    public static int rollDice(){
+    private static int rollDice(){
 
         Random random = new Random();
         return random.nextInt(6) + 1;

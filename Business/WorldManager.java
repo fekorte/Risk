@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
-public class WorldManager implements IWorldManager, WorldManagerFriend {
+public class WorldManager implements IWorldManager{
 
-    IPersistence persistence;
+    private final IPersistence persistence;
     private Map<String, Country> countryMap; //Key is the country name
     private final Map<String, Continent> continents; //Key is continent name
     private final Map<Color, String> colorCountryNameMap;
@@ -28,11 +28,11 @@ public class WorldManager implements IWorldManager, WorldManagerFriend {
         }
     }
 
-    public void initialize() throws IOException {
+    private void initialize() throws IOException {
 
         countryMap = (persistence.fetchGameStateArmies().isEmpty()) ? persistence.fetchCountries() : persistence.fetchGameStateArmies();
     }
-    @Override
+
     public void clearWorld() throws IOException {
 
         countryMap.clear();
@@ -64,7 +64,7 @@ public class WorldManager implements IWorldManager, WorldManagerFriend {
     public Map<String, Country> getCountryMap(){ return countryMap; }
     public Map<String, Continent> getContinents(){ return continents; }
 
-    public List<String> getConqueredContinents(List<String> playersCountries){
+    private List<String> getConqueredContinents(List<String> playersCountries){
 
         List<String> conqueredContinents = new ArrayList<>();
         for(Continent continent : continents.values()){

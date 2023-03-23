@@ -108,7 +108,27 @@ public class FilePersistence implements IPersistence{
         for(Player player : playerOrder){
             printLine(player.getPlayerName());
             printLine(player.getPlayerColor());
-            printLine(String.valueOf(player.getPlayerMission().getMissionNumber()));
+
+            int missionNumber = player.getPlayerMission().getMissionNumber();
+            printLine(String.valueOf(missionNumber));
+
+            switch(missionNumber){
+                case(1), (2) -> {
+                    MissionConquerContinents missionConquerContinents = (MissionConquerContinents) player.getPlayerMission();
+                    printLine(missionConquerContinents.getFirstContinentName());
+                    printLine(missionConquerContinents.getSecondContinentName());
+                    printLine(String.valueOf(missionConquerContinents.getOneMore()));
+                }
+                case(3), (4) -> {
+                    MissionConquerCountries missionConquerCountries = (MissionConquerCountries) player.getPlayerMission();
+                    printLine(String.valueOf(missionConquerCountries.getTwoArmies()));
+                }
+                case(5) -> {
+                    MissionDefeatOpponent missionDefeatOpponent = (MissionDefeatOpponent) player.getPlayerMission();
+                    printLine(missionDefeatOpponent.getOpponentName());
+                }
+            }
+
             printLine(" ");
 
             printLine(String.valueOf(player.getConqueredCountryNames().size()));
@@ -125,17 +145,36 @@ public class FilePersistence implements IPersistence{
     public List<Player> fetchGameStatePlayers() throws IOException {
 
         List<Player> playerOrder = new ArrayList<>();
-        List<String> countryNames = new ArrayList<>(fetchCountries().keySet());
+        Map<String, Country> countries = fetchCountries();
+        Map<String, Continent> continentMap = new HashMap<>(fetchContinents());
         openForReading("Data/GameStatePlayers.txt");
 
         while(reader != null && reader.ready()){
             String playerName = readLine();
             String color = readLine();
+            Player newPlayer = new Player(playerName, color);
+
             int missionNumber = Integer.parseInt(readLine());
+            switch(missionNumber){
+                case(1), (2) -> {
+                    String firstContinentName = readLine();
+                    String secondContinentName = readLine();
+                    boolean oneMore = Boolean.parseBoolean(readLine());
+                    newPlayer.setPlayerMission(new MissionConquerContinents(continentMap, firstContinentName, secondContinentName, oneMore));
+                }
+                case(3), (4) -> {
+                    boolean twoArmies = Boolean.parseBoolean(readLine());
+                    newPlayer.setPlayerMission((twoArmies) ? new MissionConquerCountries(countries) : new MissionConquerCountries());
+                }
+                case(5) -> {
+                    String opponentColor = readLine();
+                    newPlayer.setPlayerMission(new MissionDefeatOpponent(opponentColor));
+                }
+                case(6) -> newPlayer.setPlayerMission(new MissionConquerWorld(new ArrayList<>(countries.keySet())));
+            }
+
             String gap = readLine();
 
-            Player newPlayer = new Player(playerName, color);
-            newPlayer.setPlayerMission(new MissionConquerWorld(countryNames));
             int numberOfCountries = Integer.parseInt(readLine());
             while(numberOfCountries != 0){
                 String countryName = readLine();

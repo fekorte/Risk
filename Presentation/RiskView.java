@@ -199,19 +199,17 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                         ". Current unit amount in " + attackedCountry + ": " + worldManager.getUnitAmountOfCountry(attackedCountry) + ". \n" + playerManager.getCurrentPlayerName() + " do you want to move additional units to " + attackedCountry + "?",
                 attackedCountry + " conquered", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, JOptionPane.YES_OPTION);
 
-        boolean confirmed = false;
-        while (!confirmed) {
-            if (moveUnitsDecision == JOptionPane.YES_OPTION){
-                String units = JOptionPane.showInputDialog(null, "Please note that at least one unit has to remain in " + attackingCountry, "Select units", JOptionPane.INFORMATION_MESSAGE);
-                try {
-                    gameManager.moveUnits(attackingCountry, attackedCountry, Integer.parseInt(units), true);
-                    confirmed = true;
-                } catch (ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned |
-                         ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
-                    JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
-                }
+
+        if (moveUnitsDecision == JOptionPane.YES_OPTION){
+            String units = JOptionPane.showInputDialog(null, "Please note that at least one unit has to remain in " + attackingCountry, "Select units", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                gameManager.moveUnits(attackingCountry, attackedCountry, Integer.parseInt(units), true);
+            } catch (ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned |
+                     ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
             }
         }
+
         JOptionPane.showMessageDialog(null, worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                 + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry, "Result of fight", JOptionPane.INFORMATION_MESSAGE);
 
@@ -262,10 +260,8 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + winner, "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
             AllCountryInfoView infoView = new AllCountryInfoView(worldManager);
             dispose();
-            return true;
         }
-
-        return false;
+        return winner != null;
     }
 
     class RiskMenuListener implements ActionListener {

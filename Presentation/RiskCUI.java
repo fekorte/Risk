@@ -320,7 +320,7 @@ public class RiskCUI {
             List<Integer> attackerDiceResult = gameManager.attack(attackingCountry, attackedCountry, units);
             System.out.println(attackingCountry + " has attacked " + attackedCountry + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult);
             defend(attackingCountry, attackedCountry, units, attackerDiceResult);
-        } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits e){
+        } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionCountryNotOwned | ExceptionOwnCountryAttacked | ExceptionCountryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits e){
             System.out.println(e.getMessage());
         }
     }

@@ -1,56 +1,52 @@
-dvfbg
+cvfgh
 Blue
-4
-true
+6
  
-21
-Irkutsk
-Ural
-North Africa
-Ontario
+20
+Peru
+Scandinavia
+China
+Mongolia
+East Africa
+Afghanistan
 New Guinea
-India
-Alaska
-Northern Europe
-North West Territory
-Quebec
+Madagascar
 South Africa
+Ural
+Siberia
+Eastern Australia
+Brazil
+Western United States
+Great Britain
+Middle East
+Congo
+Indonesia
+Northern Europe
+India
+dgf
+Red
+6
+ 
+22
+Kamchatka
+Alberta
+Western Europe
+Western Australia
+Egypt
+Yakutsk
 Venezuela
 Argentina
+Quebec
+Irkutsk
+Ontario
+North Africa
 Iceland
-Western Europe
-Southern Europe
-Western Australia
-Kamchatka
-Eastern United States
-Madagascar
-Indonesia
-xcvbn
-White
-1
-South America
-Africa
-false
- 
-21
-Yakutsk
-Western United States
-Middle East
-Great Britain
 Siam
-East Africa
-Central America
-Scandinavia
-Mongolia
-Brazil
-Ukraine
+Alaska
 Japan
+Southern Europe
+Ukraine
+Eastern United States
+Central America
+North West Territory
 Greenland
-Alberta
-Siberia
-Egypt
-China
-Eastern Australia
-Congo
-Afghanistan
-Peru

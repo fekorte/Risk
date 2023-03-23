@@ -131,6 +131,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
+            JOptionPane.showMessageDialog(null, "All units have been distributed. \nClick on 'attack' to attack or 'done, continue' to continue.", "Error", JOptionPane.INFORMATION_MESSAGE);
             checkForWinner();
             gameStep++;
             setActionButton();
@@ -154,12 +155,14 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
                 try {
                     List<Integer> attackerDiceResult = gameManager.attack(attackingCountry, attackedCountry, Integer.parseInt(units));
+
+                    displayDiceResult(attackerDiceResult, true);
                     JOptionPane.showMessageDialog(null, attackingCountry + " has attacked " + attackedCountry + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult, "Dice result", JOptionPane.INFORMATION_MESSAGE);
 
                     defend(attackingCountry, attackedCountry, Integer.parseInt(units), attackerDiceResult);
                 } catch (NumberFormatException f) {
                     JOptionPane.showMessageDialog(null, "Invalid unit amount selected.", "Error", JOptionPane.INFORMATION_MESSAGE);
-                } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour |
+                } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionCountryNotOwned | ExceptionOwnCountryAttacked | ExceptionCountryIsNoNeighbour |
                         ExceptionTooLessUnits | ExceptionTooManyUnits | IOException e){
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
                     attack();
@@ -170,12 +173,13 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         }).start();
     }
 
-    private void defend(String attackingCountry, String attackedCountry, int unitsFromAttacker, List<Integer> attackerDiceResult) throws IOException {
+    private void defend(String attackingCountry, String attackedCountry, int unitsFromAttacker, List<Integer> attackerDiceResult) throws IOException, InterruptedException {
 
         String defenderName = worldManager.getCountryOwner(attackedCountry);
         JOptionPane.showMessageDialog(null, "Your country has been attacked " + defenderName + "! You have to defend it!", "Defend country", JOptionPane.INFORMATION_MESSAGE);
-        List<Integer> defenderDiceResult = gameManager.defend(attackedCountry, attackingCountry, attackerDiceResult, unitsFromAttacker);
 
+        List<Integer> defenderDiceResult = gameManager.defend(attackedCountry, attackingCountry, attackerDiceResult, unitsFromAttacker);
+        displayDiceResult(defenderDiceResult, false);
         JOptionPane.showMessageDialog(null, defenderName + " rolled " + defenderDiceResult + " and " + playerManager.getCurrentPlayerName() + " rolled " + attackerDiceResult + ". ", "Dice results", JOptionPane.INFORMATION_MESSAGE);
 
 
@@ -200,6 +204,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             String units = JOptionPane.showInputDialog(null, "Please note that at least one unit has to remain in " + attackingCountry, "Select units", JOptionPane.INFORMATION_MESSAGE);
             try {
                 gameManager.moveUnits(attackingCountry, attackedCountry, Integer.parseInt(units), true);
+                playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
             } catch (ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned |
                      ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
@@ -220,17 +225,40 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         checkForWinner();
     }
 
+    private void displayDiceResult(List<Integer> diceResult, boolean attack) throws InterruptedException {
+
+        Frame diceRollFrame = new Frame("");
+        DiceImageComponent diceImageComponent = new DiceImageComponent();
+        diceRollFrame.add(diceImageComponent);
+
+
+        int index = 0;
+        int numDices = diceResult.size();
+        while(numDices != 0){
+            Image diceImage = (attack) ? Toolkit.getDefaultToolkit().getImage("Data/r" + diceResult.get(index) + ".jpg") : Toolkit.getDefaultToolkit().getImage("Data/b" + diceResult.get(index) + ".jpg");
+            diceImageComponent.setDiceImage(diceImage);
+            diceRollFrame.setSize(diceImage.getWidth(null), diceImage.getHeight(null));
+            diceRollFrame.setSize(200, 235);
+            diceRollFrame.setLocationRelativeTo(null);
+            diceRollFrame.setVisible(true);
+            index++;
+            numDices--;
+            Thread.sleep(3200);
+        }
+        diceRollFrame.dispose();
+    }
+
     private void moveUnits() throws IOException, InterruptedException, ExecutionException {
 
         countrySelectedFuture = new CompletableFuture<>();
 
         new Thread(() -> {
             try {
-                JOptionPane.showMessageDialog(null, "Please click on the country from whom you want to select units. Keep in mind that you cannot move units from a country which has already been involved in this round.", "Select country", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please click on the source country. \nKeep in mind that you cannot move units from a country which has already been involved in this round.", "Select country", JOptionPane.INFORMATION_MESSAGE);
                 String sourceCountry = countrySelectedFuture.get();
                 countrySelectedFuture = new CompletableFuture<>();
 
-                JOptionPane.showMessageDialog(null, "Please click on the country to whom you want to move your units. Keep in mind that you cannot move units to a country which has already been involved in this round.", "Select country", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Please click on the destination country.\n Keep in mind that you cannot move units to a country which has already been involved in this round.", "Select country", JOptionPane.INFORMATION_MESSAGE);
                 String destinationCountry = countrySelectedFuture.get();
                 countrySelectedFuture = new CompletableFuture<>();
 
@@ -239,6 +267,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 try{
                     gameManager.moveUnits(sourceCountry, destinationCountry, Integer.parseInt(units), false);
                     playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
+                    JOptionPane.showMessageDialog(null, Integer.parseInt(units) + " have been moved from " + sourceCountry + " to " + destinationCountry + ".\n You can continue to move units or finish your turn by clicking 'done, continue'.", "Select units", JOptionPane.INFORMATION_MESSAGE);
                     checkForWinner();
                 } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);

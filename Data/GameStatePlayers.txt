@@ -1,0 +1,56 @@
+dvfbg
+Blue
+4
+true
+ 
+21
+Irkutsk
+Ural
+North Africa
+Ontario
+New Guinea
+India
+Alaska
+Northern Europe
+North West Territory
+Quebec
+South Africa
+Venezuela
+Argentina
+Iceland
+Western Europe
+Southern Europe
+Western Australia
+Kamchatka
+Eastern United States
+Madagascar
+Indonesia
+xcvbn
+White
+1
+South America
+Africa
+false
+ 
+21
+Yakutsk
+Western United States
+Middle East
+Great Britain
+Siam
+East Africa
+Central America
+Scandinavia
+Mongolia
+Brazil
+Ukraine
+Japan
+Greenland
+Alberta
+Siberia
+Egypt
+China
+Eastern Australia
+Congo
+Afghanistan
+Peru

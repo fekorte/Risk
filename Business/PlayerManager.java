@@ -1,6 +1,7 @@
 package Business;
 
 import Common.Exceptions.*;
+import Common.MissionDefeatOpponent;
 import Common.Player;
 import Persistence.IPersistence;
 
@@ -106,11 +107,7 @@ public class PlayerManager implements IPlayerManager{
     }
 
     @Override
-    public boolean nextPlayersTurn(){
-
-        if(currentPlayer.getPlayerMission().isMissionCompleted(currentPlayer.getConqueredCountryNames())){
-            return false;
-        }
+    public void nextPlayersTurn(){
 
         int currentIndex = playerOrder.indexOf(playerMap.get(currentPlayer.getPlayerName()));
         int nextIndex = (currentIndex + 1) % playerOrder.size();
@@ -122,7 +119,24 @@ public class PlayerManager implements IPlayerManager{
              round++;
              playerTurns = 0;
         }
-        return true;
+    }
+    @Override
+    public String isAnyMissionCompleted(){
+
+        for(Player player : playerOrder){
+            if(player.getPlayerMission().getMissionNumber() != 5){
+                if(player.getPlayerMission().isMissionCompleted(player.getConqueredCountryNames())){
+                    return player.getPlayerName();
+                }
+            } else {
+                MissionDefeatOpponent missionDefeatOpponent = (MissionDefeatOpponent) player.getPlayerMission();
+                String opponentName = missionDefeatOpponent.getOpponentName();
+                if(player.getPlayerMission().isMissionCompleted(playerMap.get(opponentName).getConqueredCountryNames())){
+                    return player.getPlayerName();
+                }
+            }
+        }
+        return null;
     }
     @Override
     public List<String> getAllowedColors(){ return allowedColors; }

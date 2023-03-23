@@ -125,7 +125,7 @@ public class FilePersistence implements IPersistence{
                 }
                 case(5) -> {
                     MissionDefeatOpponent missionDefeatOpponent = (MissionDefeatOpponent) player.getPlayerMission();
-                    printLine(missionDefeatOpponent.getOpponentColor());
+                    printLine(missionDefeatOpponent.getOpponentName());
                 }
             }
 
@@ -145,7 +145,8 @@ public class FilePersistence implements IPersistence{
     public List<Player> fetchGameStatePlayers() throws IOException {
 
         List<Player> playerOrder = new ArrayList<>();
-        List<String> countryNames = new ArrayList<>(fetchCountries().keySet());
+        Map<String, Country> countries = fetchCountries();
+        Map<String, Continent> continentMap = new HashMap<>(fetchContinents());
         openForReading("Data/GameStatePlayers.txt");
 
         while(reader != null && reader.ready()){
@@ -159,17 +160,17 @@ public class FilePersistence implements IPersistence{
                     String firstContinentName = readLine();
                     String secondContinentName = readLine();
                     boolean oneMore = Boolean.parseBoolean(readLine());
-                    newPlayer.setPlayerMission(new MissionConquerContinents(new HashMap<>(fetchContinents()), firstContinentName, secondContinentName, oneMore));
+                    newPlayer.setPlayerMission(new MissionConquerContinents(continentMap, firstContinentName, secondContinentName, oneMore));
                 }
                 case(3), (4) -> {
                     boolean twoArmies = Boolean.parseBoolean(readLine());
-                    newPlayer.setPlayerMission((twoArmies) ? new MissionConquerCountries(fetchCountries()) : new MissionConquerCountries());
+                    newPlayer.setPlayerMission((twoArmies) ? new MissionConquerCountries(countries) : new MissionConquerCountries());
                 }
                 case(5) -> {
                     String opponentColor = readLine();
                     newPlayer.setPlayerMission(new MissionDefeatOpponent(opponentColor));
                 }
-                case(6) -> newPlayer.setPlayerMission(new MissionConquerWorld(countryNames));
+                case(6) -> newPlayer.setPlayerMission(new MissionConquerWorld(new ArrayList<>(countries.keySet())));
             }
 
             String gap = readLine();

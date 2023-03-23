@@ -190,7 +190,9 @@ public class RiskCUI {
         System.out.println("Move your units to neighbouring countries which belong to you.");
         playerChoice(false, true);
 
-        if(playerManager.nextPlayersTurn()){
+        String winner = playerManager.isAnyMissionCompleted();
+        if(winner == null){
+            playerManager.nextPlayersTurn();
             riskTurn();
         } else {
             System.out.println("Congratulations!! You've won " + playerManager.getCurrentPlayerName());

@@ -13,7 +13,8 @@ public interface IPlayerManager {
     List<String> getPlayerNames();
     List<String> getAllCountriesInfoPlayer(String playerName);
     boolean isPlayerDefeated(String playerName);
-    boolean nextPlayersTurn();
+    void nextPlayersTurn();
+    String isAnyMissionCompleted();
     boolean continuePreviousGame();
     String getCurrentPlayerName();
     String getCurrentPlayerMission();

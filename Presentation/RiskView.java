@@ -31,7 +31,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         this.worldManager = worldManager;
         this.playerManager = playerManager;
         this.gameManager = gameManager;
-        countrySelectedFuture = new CompletableFuture<>();
+        this.countrySelectedFuture = new CompletableFuture<>();
         this.playerPanelMap = new HashMap<>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,7 +56,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         RiskPlayerPanel rightPanel = new RiskPlayerPanel(playerManager);
 
         List<String> playerNames = playerManager.getPlayerNames();
-        for (int i = 0; i < playerManager.getPlayerNumber(); i++) {
+        for (int i = 0; i < playerManager.getPlayerAmount(); i++) {
             String playerName = playerNames.get(i);
             if (i % 2 == 0){
                 leftPanel.addPlayerCountryList(playerName);
@@ -213,14 +213,14 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         JOptionPane.showMessageDialog(null, worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                 + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry, "Result of fight", JOptionPane.INFORMATION_MESSAGE);
 
-        if (playerManager.playerDefeated(defenderName)){
+        if (playerManager.isPlayerDefeated(defenderName)){
             JOptionPane.showMessageDialog(null, defenderName + " your last country has been conquered, the game has to continue without you. ", defenderName + " lost", JOptionPane.INFORMATION_MESSAGE);
             try {
                 playerManager.removePlayer(defenderName);
             } catch (ExceptionEmptyInput | ExceptionObjectDoesntExist e) {
                 e.printStackTrace();
             }
-            if (playerManager.getPlayerNumber() == 1) {
+            if (playerManager.getPlayerAmount() == 1) {
                 System.out.println();
                 JOptionPane.showMessageDialog(null, playerManager.getCurrentPlayerName() + " congratulation, you've won!", playerManager.getCurrentPlayerName() + " won", JOptionPane.INFORMATION_MESSAGE);
                 gameManager.quitGame();

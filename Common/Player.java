@@ -8,7 +8,6 @@ public class Player {
     private final String playerName;
     private final String playerColor;
     private Mission playerMission;
-
     private final List<String> conqueredCountryNames;
 
     public Player(String name, String color){

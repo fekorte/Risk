@@ -5,9 +5,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class RiskMenu extends JMenuBar{
-
-    IPlayerManager playerManager;
-    JLabel currentInfo;
+    private final IPlayerManager playerManager;
+    private final JLabel currentInfo;
 
     public RiskMenu(IPlayerManager playerManager, RiskView.RiskMenuListener listener) {
 
@@ -25,13 +24,11 @@ public class RiskMenu extends JMenuBar{
             add(button);
         }
     }
-
     public void setButtonText(int buttonNumber, String buttonText){
 
         JButton button = (JButton) getComponent(buttonNumber);
         button.setText(buttonText);
     }
-
     public void updateInfoLabel(){
 
         currentInfo.setText("Round: " + playerManager.getRound() + ", Player: " + playerManager.getCurrentPlayerName());

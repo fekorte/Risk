@@ -7,23 +7,23 @@ import Persistence.IPersistence;
 import java.io.IOException;
 import java.util.*;
 
-public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
-    IPersistence persistence;
-    IWorldManager worldManager;
-    WorldManagerFriend worldFriend;
-    Map<String, Player> playerMap;
-    List<Player> playerOrder;
-    ArrayList<String> allowedColors;
-    Player currentPlayer;
-    boolean continuePreviousGame;
-    int playerTurns;
-    int round;
+public class PlayerManager implements IPlayerManager{
+    private final IPersistence persistence;
+    private final IWorldManager worldManager;
+    private final WorldManager worldManagerFriend;
+    private final Map<String, Player> playerMap;
+    private final List<Player> playerOrder;
+    private ArrayList<String> allowedColors;
+    private Player currentPlayer;
+    private boolean continuePreviousGame;
+    private int playerTurns;
+    private int round;
 
     public PlayerManager(IWorldManager worldManager, IPersistence persistence) throws IOException {
 
         this.persistence = persistence;
         this.worldManager = worldManager;
-        worldFriend = (WorldManagerFriend) worldManager;
+        worldManagerFriend = (WorldManager) worldManager;
         playerOrder = persistence.fetchGameStatePlayers();
         playerMap = new HashMap<>();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
@@ -31,7 +31,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         initializeGameContinuation();
     }
 
-    public void initializeGameContinuation() throws IOException {
+    private void initializeGameContinuation() throws IOException {
 
         if(!playerOrder.isEmpty()){
             for (Player player : playerOrder) {
@@ -54,7 +54,6 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         return persistence.saveGameStatePlayers(playerOrder);
     }
 
-    @Override
     public void clearPlayers() throws IOException {
 
         playerMap.clear();
@@ -128,8 +127,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     @Override
     public List<String> getAllowedColors(){ return allowedColors; }
     @Override
-    public String getPlayerColorCode(String playerName){ return playerMap.get(playerName).getPlayerColor(); }
-    @Override
+    public String getPlayerColor(String playerName){ return playerMap.get(playerName).getPlayerColor(); }
     public Map<String, Player> getPlayerMap(){ return playerMap; }
     @Override
     public String getPlayersInfo(){
@@ -140,6 +138,7 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         }
         return playerInfo.toString();
     }
+    @Override
     public List<String> getPlayerNames(){ return new ArrayList<>(playerMap.keySet()); }
     @Override
     public List<String> getAllCountriesInfoPlayer(String playerName){
@@ -150,10 +149,10 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
         }
         return countryInfos;
     }
-    public boolean playerDefeated(String playerName){ return playerMap.get(playerName).getConqueredCountryNames().isEmpty(); }
+    @Override
+    public boolean isPlayerDefeated(String playerName){ return playerMap.get(playerName).getConqueredCountryNames().isEmpty(); }
     @Override
     public boolean continuePreviousGame(){ return continuePreviousGame; }
-    @Override
     public void setCurrentPlayer(String currentPlayerName){
 
         this.currentPlayer = playerMap.get(currentPlayerName);
@@ -163,11 +162,11 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     @Override
     public String getCurrentPlayerName() { return currentPlayer.getPlayerName(); }
     @Override
-    public int getPlayerNumber() { return playerMap.size(); }
+    public int getPlayerAmount() { return playerMap.size(); }
     @Override
     public int getRound(){ return round; }
 
-    public List<String> getPlayerColors(){
+    private List<String> getPlayerColors(){
         List<String> allColors = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
         allColors.removeAll(allowedColors);
         return allColors;
@@ -175,22 +174,27 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
 
     public void setPlayerMission(boolean standardRisk){
 
-        MissionFactory factory = new MissionFactory(worldFriend.getContinents(), worldManager.getCountryMap(), getPlayerColors());
+        MissionFactory factory = new MissionFactory(worldManagerFriend.getContinents(), worldManager.getCountryMap());
 
         Random random = new Random();
         for(Player player : playerOrder){
             if(standardRisk){
-               player.setPlayerMission(factory.createMission(player.getPlayerColor(), 6)); //6 = mission for everyone => conquer the world
+               player.setPlayerMission(factory.createMission(6)); //6 = mission for everyone => conquer the world
             } else {
-                player.setPlayerMission(factory.createMission(player.getPlayerColor(), random.nextInt(5)));
+                List<String> opponentColors = getPlayerColors();
+                opponentColors.remove(player.getPlayerColor());
+                factory.setAvailableColors(opponentColors);
+                player.setPlayerMission(factory.createMission(random.nextInt(5)));
             }
         }
     }
 
+
+    @Override
     public String getCurrentPlayerMission(){ return playerMap.get(currentPlayer.getPlayerName()).getPlayerMission().getMissionText(); }
-    @Override
+
     public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayer.getPlayerName()).getConqueredCountryNames(); }
-    @Override
+
     public void changeCountryOwner(String newOwnerName, String previousOwnerName, String countryName){
 
         playerMap.get(newOwnerName).addConqueredCountry(countryName);

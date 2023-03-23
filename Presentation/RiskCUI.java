@@ -16,13 +16,12 @@ public class RiskCUI {
     private final IPlayerManager playerManager;
     private final IWorldManager worldManager;
     private final IGameManager gameManager;
-    boolean gameStarted;
-    boolean riskVersionSelected;
-    boolean standardRisk;
-    boolean gameSetUp;
-    boolean doneWithStep;
-    int gameStep;
-
+    private boolean gameStarted;
+    private boolean riskVersionSelected;
+    private boolean standardRisk;
+    private boolean gameSetUp;
+    private boolean doneWithStep;
+    private int gameStep;
 
     public RiskCUI(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager) throws IOException {
 
@@ -350,7 +349,7 @@ public class RiskCUI {
         System.out.println(worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
             + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry + "\n");
 
-        if(playerManager.playerDefeated(defenderName)){
+        if(playerManager.isPlayerDefeated(defenderName)){
         System.out.println(defenderName + " your last country has been conquered, the game has to continue without you.");
         try{
             playerManager.removePlayer(defenderName);
@@ -358,7 +357,7 @@ public class RiskCUI {
             e.printStackTrace();
         }
 
-        if(playerManager.getPlayerNumber() == 1){
+        if(playerManager.getPlayerAmount() == 1){
             System.out.println(playerManager.getCurrentPlayerName() + " congratulation, you've won!");
             gameStarted = false;
             gameSetUp = false;

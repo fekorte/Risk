@@ -4,16 +4,14 @@ import java.util.List;
 
 public class MissionDefeatOpponent extends Mission{
 
-    String opponentColor;
-
+    private final String opponentColor;
     public MissionDefeatOpponent(String opponentColor){
 
         this.opponentColor = opponentColor;
         this.missionText = "Destroy all " + opponentColor + " troops.";
-        this.missionNumber = 6;
+        this.missionNumber = 5;
     }
-
-    public String getOpponent(){ return opponentColor; }
+    public String getOpponentColor(){ return opponentColor; }
     @Override
     public boolean isMissionCompleted(List<String> opponentsCountries) {
 

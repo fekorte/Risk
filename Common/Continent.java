@@ -14,7 +14,6 @@ public class Continent {
         this.pointsForConquering = pointsForConquering;
         countryNames = new ArrayList<>();
     }
-
     public String getContinentName(){ return continentName; }
     public int getPointsForConquering(){ return pointsForConquering; }
     public void addCountry(String countryName){ countryNames.add(countryName); }

@@ -190,16 +190,10 @@ public class RiskCUI {
         System.out.println("Move your units to neighbouring countries which belong to you.");
         playerChoice(false, true);
 
-        String winner = playerManager.isAnyMissionCompleted();
-        if(winner == null){
+
+        if(!checkForWinner()){
             playerManager.nextPlayersTurn();
             riskTurn();
-        } else {
-            System.out.println("Congratulations!! You've won " + playerManager.getCurrentPlayerName());
-            System.out.println(worldManager.getAllCountryInfos());
-            gameManager.quitGame();
-            gameStarted = false;
-            gameSetUp = false;
         }
     }
 
@@ -212,6 +206,19 @@ public class RiskCUI {
             processGameInput(selectedAction, attack, moveUnits);
         }
         doneWithStep = false;
+    }
+
+    private boolean checkForWinner() throws IOException {
+
+        String winner = playerManager.isAnyMissionCompleted();
+        if(winner != null){
+            System.out.println("Congratulations!! You've won " + winner);
+            System.out.println(worldManager.getAllCountryInfos());
+            gameStarted = false;
+            gameSetUp = false;
+            gameManager.quitGame();
+        }
+        return winner != null;
     }
 
     private void gameOverviewMenu(boolean attack, boolean moveUnits){
@@ -299,6 +306,7 @@ public class RiskCUI {
                 System.out.println(e.getMessage());
             }
         }
+        checkForWinner();
     }
     private void attack() throws IOException {
 
@@ -312,7 +320,7 @@ public class RiskCUI {
             List<Integer> attackerDiceResult = gameManager.attack(attackingCountry, attackedCountry, units);
             System.out.println(attackingCountry + " has attacked " + attackedCountry + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult);
             defend(attackingCountry, attackedCountry, units, attackerDiceResult);
-        } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionCountryNotOwned | ExceptionCountryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits e){
+        } catch(ExceptionCountryNotRecognized | ExceptionEmptyInput | ExceptionCountryNotOwned | ExceptionOwnCountryAttacked | ExceptionCountryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits e){
             System.out.println(e.getMessage());
         }
     }
@@ -358,13 +366,7 @@ public class RiskCUI {
         } catch (ExceptionEmptyInput | ExceptionObjectDoesntExist e){
             e.printStackTrace();
         }
-
-        if(playerManager.getPlayerAmount() == 1){
-            System.out.println(playerManager.getCurrentPlayerName() + " congratulation, you've won!");
-            gameStarted = false;
-            gameSetUp = false;
-            gameManager.quitGame();
-        }
+        checkForWinner();
     }
     }
 
@@ -380,15 +382,13 @@ public class RiskCUI {
 
         try{
             gameManager.moveUnits(sourceCountry, destinationCountry, units, false);
+            checkForWinner();
         } catch(ExceptionEmptyInput | ExceptionCountryNotRecognized | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private String readInput() throws IOException {
-
-        return in.readLine();
-    }
+    private String readInput() throws IOException { return in.readLine(); }
 
 
     public void run() {

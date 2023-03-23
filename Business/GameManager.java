@@ -135,7 +135,7 @@ public class GameManager implements IGameManager {
     public boolean allUnitsDistributed(){ return receivedUnits != 0; }
 
     @Override
-    public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput {
+    public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput, ExceptionOwnCountryAttacked {
 
         if(attackingCountry == null || attackedCountry == null){
             throw new ExceptionCountryNotRecognized();
@@ -145,8 +145,12 @@ public class GameManager implements IGameManager {
             throw new ExceptionEmptyInput();
         }
 
-        if(!worldManager.getCountryOwner(attackingCountry).equals(playerManager.getCurrentPlayerName())){
+        if(!worldManager.getCountryOwner(attackingCountry).equals(playerManager.getCurrentPlayerName())) {
             throw new ExceptionCountryNotOwned(attackingCountry, playerManager.getCurrentPlayerName());
+        }
+
+        if(worldManager.getCountryOwner(attackedCountry).equals(playerManager.getCurrentPlayerName())){
+            throw new ExceptionOwnCountryAttacked();
         }
 
 

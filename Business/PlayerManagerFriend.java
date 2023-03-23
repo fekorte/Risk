@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface PlayerManagerFriend {
     boolean save(int gameStep)  throws IOException;
-    void clearPlayers();
+    void clearPlayers() throws IOException;
     Map<String, Player> getPlayerMap();
     void setCurrentPlayer(String currentPlayerName);
     List<String> getCurrentPlayersCountries();

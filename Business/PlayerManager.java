@@ -55,12 +55,12 @@ public class PlayerManager implements IPlayerManager, PlayerManagerFriend{
     }
 
     @Override
-    public void clearPlayers(){
+    public void clearPlayers() throws IOException {
 
         playerMap.clear();
         playerOrder.clear();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
-        continuePreviousGame = false;
+        initializeGameContinuation();
     }
 
     @Override

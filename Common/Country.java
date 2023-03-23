@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Country {
-    private String countryName;
-    private String abbreviation;
-    private String continentName;
-    private Color countryColor;
-    private List<String> neighbourNames;
+    private final String countryName;
+    private final String abbreviation;
+    private final String continentName;
+    private final Color countryColor;
+    private final List<String> neighbourNames;
     private Army army;
 
     public Country(String countryName, String abbreviation, String continentName, Color countryColor){

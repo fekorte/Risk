@@ -118,7 +118,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
         new Thread(() -> {
             try {
-                while(!gameManager.allUnitsDistributed()){
+                while(gameManager.allUnitsDistributed()){
                     String selectedCountry = countrySelectedFuture.get();
                     countrySelectedFuture = new CompletableFuture<>();
                     String units = JOptionPane.showInputDialog(null, "Enter unit amount", "Select unit amount", JOptionPane.INFORMATION_MESSAGE);

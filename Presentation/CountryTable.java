@@ -3,21 +3,20 @@ package Presentation;
 import Common.Country;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 
 public class CountryTable extends AbstractTableModel {
 
-    private List<Country> countries;
+    private final List<Country> countries;
 
-    private String[] columnNames={"Country name", "Abbreviation", "Continent", "Owner", "Unit amount"};
+    private final String[] columnNames={"Country name", "Abbreviation", "Continent", "Owner", "Unit amount"};
 
     public CountryTable(List<Country> currentCountries){
 
         this.countries = currentCountries;
-        Collections.sort(countries, Comparator.comparing(Country::getCountryName));
+        countries.sort(Comparator.comparing(Country::getCountryName));
     }
 
     @Override
@@ -34,20 +33,14 @@ public class CountryTable extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex){
 
         Country selectedCountry = countries.get(rowIndex);
-        switch(columnIndex){
-            case 0:
-                return selectedCountry.getCountryName();
-            case 1:
-                return selectedCountry.getAbbreviation();
-            case 2:
-                return selectedCountry.getContinentName();
-            case 3:
-                return selectedCountry.getArmy().getPlayerName();
-            case 4:
-                return selectedCountry.getArmy().getUnits();
-            default:
-                return null;
-        }
+        return switch (columnIndex) {
+            case 0 -> selectedCountry.getCountryName();
+            case 1 -> selectedCountry.getAbbreviation();
+            case 2 -> selectedCountry.getContinentName();
+            case 3 -> selectedCountry.getArmy().getPlayerName();
+            case 4 -> selectedCountry.getArmy().getUnits();
+            default -> null;
+        };
     }
     @Override
     public String getColumnName(int column){

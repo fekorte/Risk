@@ -5,9 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Continent {
-    private String continentName;
-    private int pointsForConquering;
-    private List<String> countryNames;
+    private final String continentName;
+    private final int pointsForConquering;
+    private final List<String> countryNames;
     public Continent(String continentName, int pointsForConquering){
 
         this.continentName = continentName;
@@ -17,8 +17,6 @@ public class Continent {
 
     public String getContinentName(){ return continentName; }
     public int getPointsForConquering(){ return pointsForConquering; }
-
-    public List<String> getCountryNames(){ return countryNames; }
     public void addCountry(String countryName){ countryNames.add(countryName); }
     public boolean isContinentConquered(List<String> playersCountries){
 

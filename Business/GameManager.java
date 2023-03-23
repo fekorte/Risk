@@ -132,7 +132,7 @@ public class GameManager implements IGameManager {
 
     public int getReceivedUnits(){ return receivedUnits; }
 
-    public boolean allUnitsDistributed(){ return receivedUnits == 0; }
+    public boolean allUnitsDistributed(){ return receivedUnits != 0; }
 
     @Override
     public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput {

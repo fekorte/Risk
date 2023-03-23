@@ -165,7 +165,7 @@ public class RiskCUI {
         System.out.println("New round! It's your turn " + playerManager.getCurrentPlayerName());
 
         //receiveUnits
-        int receivedUnits = 0;
+        int receivedUnits;
         try{
             receivedUnits = gameManager.receiveUnits();
             System.out.println("You receive " + receivedUnits + " units.");
@@ -283,7 +283,7 @@ public class RiskCUI {
 
         System.out.println("Now you have to distribute your units. You received " + gameManager.getReceivedUnits() + ". Where do you want to place them? ");
 
-        while (!gameManager.allUnitsDistributed()) {
+        while (gameManager.allUnitsDistributed()) {
             System.out.println("This is the current unit contribution: " + playerManager.getAllCountriesInfoPlayer(playerManager.getCurrentPlayerName()));
 
             System.out.println("Country > ");

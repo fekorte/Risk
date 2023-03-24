@@ -1,0 +1,56 @@
+A
+Red
+4
+true
+ 
+21
+Ural
+Siberia
+South Africa
+Great Britain
+Yakutsk
+Afghanistan
+Mongolia
+Brazil
+Middle East
+Northern Europe
+North Africa
+China
+Western United States
+Irkutsk
+Eastern Australia
+North West Territory
+Western Europe
+Indonesia
+Alberta
+Congo
+Southern Europe
+B
+Blue
+1
+North America
+Africa
+false
+ 
+21
+Eastern United States
+Western Australia
+Iceland
+Peru
+Central America
+East Africa
+New Guinea
+Argentina
+Alaska
+Ukraine
+Siam
+India
+Venezuela
+Madagascar
+Greenland
+Egypt
+Kamchatka
+Scandinavia
+Ontario
+Japan
+Quebec

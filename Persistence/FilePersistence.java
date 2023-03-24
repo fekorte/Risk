@@ -162,9 +162,15 @@ public class FilePersistence implements IPersistence{
                     boolean oneMore = Boolean.parseBoolean(readLine());
                     newPlayer.setPlayerMission(new MissionConquerContinents(continentMap, firstContinentName, secondContinentName, oneMore));
                 }
-                case(3), (4) -> {
+                case(3) -> {
                     boolean twoArmies = Boolean.parseBoolean(readLine());
-                    newPlayer.setPlayerMission((twoArmies) ? new MissionConquerCountries(countries) : new MissionConquerCountries());
+                    MissionConquerCountries missionConquerCountries = new MissionConquerCountries(twoArmies);
+                    missionConquerCountries.setCountryMap(countries);
+                    newPlayer.setPlayerMission(missionConquerCountries);
+                }
+                case(4) -> {
+                    boolean twoArmies = Boolean.parseBoolean(readLine());
+                    newPlayer.setPlayerMission(new MissionConquerCountries(twoArmies));
                 }
                 case(5) -> {
                     String opponentColor = readLine();

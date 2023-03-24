@@ -7,20 +7,15 @@ public class MissionConquerCountries extends Mission{
 
     private final boolean twoArmies;
     private Map<String, Country> countryMap;
-    public MissionConquerCountries(){
 
-        this.twoArmies = false;
-        this.missionNumber = 3;
-        this.missionText = "Conquer 24 territories of your choice.";
-    }
-    public MissionConquerCountries(Map<String, Country> countryMap){
+    public MissionConquerCountries(boolean twoArmies){
 
-        this.twoArmies = true;
-        this.countryMap = countryMap;
-        this.missionNumber = 4;
-        this.missionText = "Conquer 18 territories of your choice and occupy each with at least 2 armies.";
+        this.twoArmies = twoArmies;
+        this.missionNumber = (twoArmies) ? 4 : 3;
+        this.missionText = (twoArmies) ? "Conquer 18 territories of your choice and occupy each with at least 2 armies." : "Conquer 24 territories of your choice.";
     }
 
+    public void setCountryMap(Map<String, Country> countryMap){ this.countryMap = countryMap; }
     public boolean getTwoArmies(){ return twoArmies; }
     @Override
     public boolean isMissionCompleted(List<String> playersCountries) {

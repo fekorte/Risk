@@ -1,6 +1,7 @@
 package Business;
 
 import Common.Exceptions.*;
+import Common.MissionConquerCountries;
 import Common.MissionDefeatOpponent;
 import Common.Player;
 import Persistence.IPersistence;
@@ -37,7 +38,13 @@ public class PlayerManager implements IPlayerManager{
         if(!playerOrder.isEmpty()){
             for (Player player : playerOrder) {
                 playerMap.put(player.getPlayerName(), player);
+
+                if(player.getPlayerMission().getMissionNumber() == 4){
+                    MissionConquerCountries missionConquerCountries = (MissionConquerCountries) player.getPlayerMission();
+                    missionConquerCountries.setCountryMap(worldManager.getCountryMap());
+                }
             }
+
             this.currentPlayer = playerOrder.get(0);
             int[] roundAndStep = persistence.fetchGameRoundAndStep();
             this.round = roundAndStep[0];

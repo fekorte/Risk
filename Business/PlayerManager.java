@@ -198,7 +198,7 @@ public class PlayerManager implements IPlayerManager{
                 List<String> opponentColors = getPlayerColors();
                 opponentColors.remove(player.getPlayerColor());
                 factory.setAvailableColors(opponentColors);
-                player.setPlayerMission(factory.createMission(random.nextInt(5)));
+                player.setPlayerMission(factory.createMission(random.nextInt(5) + 1));
             }
         }
     }

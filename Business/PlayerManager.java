@@ -212,7 +212,7 @@ public class PlayerManager implements IPlayerManager{
 
 
     @Override
-    public String getCurrentPlayerMission(){ return playerMap.get(currentPlayer.getPlayerName()).getPlayerMission().getMissionText(); }
+    public String getPlayerMission(String playerName){ return playerMap.get(playerName).getPlayerMission().getMissionText(); }
 
     public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayer.getPlayerName()).getConqueredCountryNames(); }
 

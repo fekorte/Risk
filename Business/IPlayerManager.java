@@ -17,7 +17,7 @@ public interface IPlayerManager {
     String isAnyMissionCompleted();
     boolean continuePreviousGame();
     String getCurrentPlayerName();
-    String getCurrentPlayerMission();
+    String getPlayerMission(String playerName);
     int getPlayerAmount();
     int getRound();
 }

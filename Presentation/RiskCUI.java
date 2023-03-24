@@ -260,7 +260,7 @@ public class RiskCUI {
                 System.out.println(worldManager.getCountryNeighbours(selectedCountry));
             }
 
-            case "e" -> System.out.println(playerManager.getCurrentPlayerMission());
+            case "e" -> System.out.println(playerManager.getPlayerMission(playerManager.getCurrentPlayerName()));
             case "f" -> { //done, continue with next step
                 doneWithStep = true;
                 gameStep++;

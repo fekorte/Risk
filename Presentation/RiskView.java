@@ -214,6 +214,11 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         JOptionPane.showMessageDialog(null, worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                 + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry, "Result of fight", JOptionPane.INFORMATION_MESSAGE);
 
+
+        if(checkForWinner()){
+            return;
+        }
+
         if (playerManager.isPlayerDefeated(defenderName)){
             JOptionPane.showMessageDialog(null, defenderName + " your last country has been conquered, the game has to continue without you. ", defenderName + " lost", JOptionPane.INFORMATION_MESSAGE);
             try {
@@ -222,7 +227,6 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 e.printStackTrace();
             }
         }
-        checkForWinner();
     }
 
     private void displayDiceResult(List<Integer> diceResult, boolean attack) throws InterruptedException {

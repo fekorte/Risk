@@ -1,57 +1,68 @@
-c
-Blue
-1
-North America
-Africa
-false
+D
+White
+5
+A
  
-26
-North Africa
-Egypt
+20
+Eastern Australia
 East Africa
-South Africa
-Madagascar
-Alaska
 North West Territory
-Alberta
-Ontario
-Quebec
-Greenland
-Western United States
-Eastern United States
-Central America
-Greenland
-Kamchatka
-New Guinea
-Scandinavia
-Argentina
-Peru
+Madagascar
+Mongolia
 Venezuela
-Middle East
-Great Britain
-China
+Afghanistan
+Northern Europe
 Yakutsk
-Egypt
-cv
-Green
+Siberia
+Quebec
+Central America
+Western United States
+Ontario
+Eastern United States
+New Guinea
+Middle East
+Congo
+Kamchatka
+Irkutsk
+A
+Red
 3
 false
  
-17
-Congo
-Ural
-Southern Europe
-Iceland
-Eastern Australia
-Japan
-Mongolia
-Afghanistan
-India
-Western Europe
-Indonesia
+1
 Brazil
+B
+Blue
+1
+North America
+Australia
+false
+ 
+10
+China
+India
+Egypt
+Iceland
+Greenland
+Argentina
 Ukraine
-Irkutsk
-Western Australia
+Southern Europe
 Siam
-Northern Europe
+Japan
+C
+Green
+5
+D
+ 
+11
+Scandinavia
+Ural
+Western Europe
+Peru
+Indonesia
+North Africa
+Alberta
+South Africa
+Western Australia
+Alaska
+Great Britain

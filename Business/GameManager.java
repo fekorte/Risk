@@ -94,11 +94,12 @@ public class GameManager implements IGameManager {
     @Override
     public int receiveUnits() throws ExceptionObjectDoesntExist{
 
+        involvedCountries.clear();
+
         String playerName = playerManager.getCurrentPlayerName();
         if(!playerManagerFriend.getPlayerMap().containsKey(playerName)){
            throw new ExceptionObjectDoesntExist(playerName);
         }
-        involvedCountries.clear();
 
         List<String> playerCountries = playerManagerFriend.getCurrentPlayersCountries();
         int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;

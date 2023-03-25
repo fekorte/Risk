@@ -1,0 +1,60 @@
+v
+Red
+3
+false
+
+23
+Indonesia
+Congo
+Kamchatka
+Irkutsk
+India
+Southern Europe
+Western United States
+South Africa
+Ontario
+Argentina
+Japan
+Eastern United States
+Siberia
+Greenland
+East Africa
+New Guinea
+Afghanistan
+Great Britain
+China
+Ukraine
+Madagascar
+North Africa
+Scandinavia
+a
+Green
+4
+true
+ 
+5
+Eastern Australia
+Iceland
+Northern Europe
+Central America
+Venezuela
+m
+Blue
+4
+true
+ 
+14
+Siam
+Alberta
+Ural
+Brazil
+Egypt
+North West Territory
+Yakutsk
+Western Australia
+Western Europe
+Peru
+Quebec
+Alaska
+Middle East
+Mongolia

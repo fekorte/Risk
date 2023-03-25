@@ -12,9 +12,7 @@ import java.util.*;
 public class GameManager implements IGameManager {
 
     private final IPersistence persistence;
-    private final IPlayerManager playerManager;
     private final PlayerManager playerManagerFriend;
-    private final IWorldManager worldManager;
     private final WorldManager worldManagerFriend;
     private Map<String, Country> countryMap; //key is country name
     private final List<String> involvedCountries; //String: country name
@@ -24,9 +22,7 @@ public class GameManager implements IGameManager {
     public GameManager(IPlayerManager playerManager, IWorldManager worldManager, IPersistence persistence){
 
         this.persistence = persistence;
-        this.playerManager = playerManager;
         playerManagerFriend = (PlayerManager) playerManager;
-        this.worldManager = worldManager;
         worldManagerFriend = (WorldManager) worldManager;
         countryMap = worldManager.getCountryMap();
         involvedCountries = new ArrayList<>();
@@ -50,7 +46,7 @@ public class GameManager implements IGameManager {
 
         persistence.resetGameState();
         quitGame();
-        countryMap = worldManager.getCountryMap();
+        countryMap = worldManagerFriend.getCountryMap();
     }
     @Override
     public int getSavedGameStep() throws IOException {
@@ -96,7 +92,7 @@ public class GameManager implements IGameManager {
 
         involvedCountries.clear();
 
-        String playerName = playerManager.getCurrentPlayerName();
+        String playerName = playerManagerFriend.getCurrentPlayerName();
         if(!playerManagerFriend.getPlayerMap().containsKey(playerName)){
            throw new ExceptionObjectDoesntExist(playerName);
         }
@@ -120,8 +116,8 @@ public class GameManager implements IGameManager {
         }
 
 
-        if(!worldManager.getCountryOwner(selectedCountry).equals(playerManager.getCurrentPlayerName())){
-            throw new ExceptionCountryNotOwned(selectedCountry, playerManager.getCurrentPlayerName());
+        if(!worldManagerFriend.getCountryOwner(selectedCountry).equals(playerManagerFriend.getCurrentPlayerName())){
+            throw new ExceptionCountryNotOwned(selectedCountry, playerManagerFriend.getCurrentPlayerName());
         }
 
         if(receivedUnits - selectedUnits < 0){
@@ -146,16 +142,16 @@ public class GameManager implements IGameManager {
             throw new ExceptionEmptyInput();
         }
 
-        if(!worldManager.getCountryOwner(attackingCountry).equals(playerManager.getCurrentPlayerName())) {
-            throw new ExceptionCountryNotOwned(attackingCountry, playerManager.getCurrentPlayerName());
+        if(!worldManagerFriend.getCountryOwner(attackingCountry).equals(playerManagerFriend.getCurrentPlayerName())) {
+            throw new ExceptionCountryNotOwned(attackingCountry, playerManagerFriend.getCurrentPlayerName());
         }
 
-        if(worldManager.getCountryOwner(attackedCountry).equals(playerManager.getCurrentPlayerName())){
+        if(worldManagerFriend.getCountryOwner(attackedCountry).equals(playerManagerFriend.getCurrentPlayerName())){
             throw new ExceptionOwnCountryAttacked();
         }
 
 
-        if(!worldManager.getCountryNeighbours(attackingCountry).contains(attackedCountry)){
+        if(!worldManagerFriend.getCountryNeighbours(attackingCountry).contains(attackedCountry)){
             throw new ExceptionCountryIsNoNeighbour(attackingCountry, attackedCountry);
         }
 
@@ -191,7 +187,7 @@ public class GameManager implements IGameManager {
     public List<Integer> defend(String countryToDefend, String attackingCountry, List<Integer> attackerDiceResult, int attackerUnits) {
 
         List<Integer> defenderDiceResult = new ArrayList<>();
-        int unitsDefender = worldManager.getUnitAmountOfCountry(countryToDefend);
+        int unitsDefender = worldManagerFriend.getUnitAmountOfCountry(countryToDefend);
         if (unitsDefender != 1) {
             defenderDiceResult.add(rollDice());
         }
@@ -212,11 +208,11 @@ public class GameManager implements IGameManager {
             }
         }
 
-        if(worldManager.getUnitAmountOfCountry(countryToDefend) == 0){
+        if(worldManagerFriend.getUnitAmountOfCountry(countryToDefend) == 0){
             String previousOwner = countryMap.get(countryToDefend).getArmy().getPlayerName();
-            countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, playerManager.getCurrentPlayerName()));
+            countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, playerManagerFriend.getCurrentPlayerName()));
             countryMap.get(attackingCountry).getArmy().removeUnits(attackerUnits);
-            playerManagerFriend.changeCountryOwner(playerManager.getCurrentPlayerName(), previousOwner, countryToDefend);
+            playerManagerFriend.changeCountryOwner(playerManagerFriend.getCurrentPlayerName(), previousOwner, countryToDefend);
         }
 
         return defenderDiceResult;
@@ -239,15 +235,15 @@ public class GameManager implements IGameManager {
             }
         }
 
-        if(!worldManager.getCountryOwner(sourceCountry).equals(playerManager.getCurrentPlayerName())){
-            throw new ExceptionCountryNotOwned(sourceCountry, playerManager.getCurrentPlayerName());
+        if(!worldManagerFriend.getCountryOwner(sourceCountry).equals(playerManagerFriend.getCurrentPlayerName())){
+            throw new ExceptionCountryNotOwned(sourceCountry, playerManagerFriend.getCurrentPlayerName());
         }
 
-        if(worldManager.getUnitAmountOfCountry(sourceCountry) - units < 1){
+        if(worldManagerFriend.getUnitAmountOfCountry(sourceCountry) - units < 1){
             throw new ExceptionTooManyUnits(countryMap.get(sourceCountry).getArmy().getUnits() - 1);
         }
 
-        if(!worldManager.getCountryNeighbours(sourceCountry).contains(destinationCountry)){
+        if(!worldManagerFriend.getCountryNeighbours(sourceCountry).contains(destinationCountry)){
             throw new ExceptionCountryIsNoNeighbour(sourceCountry, destinationCountry);
         }
 

@@ -1,0 +1,54 @@
+B
+White
+4
+true
+ 
+21
+Peru
+Middle East
+Iceland
+Alaska
+South Africa
+North West Territory
+Siam
+Madagascar
+New Guinea
+Southern Europe
+Western United States
+India
+Afghanistan
+Japan
+North Africa
+Quebec
+Indonesia
+Central America
+Yakutsk
+Siberia
+Mongolia
+A
+Green
+4
+true
+ 
+21
+Brazil
+Egypt
+Ontario
+Alberta
+Congo
+East Africa
+China
+Northern Europe
+Eastern United States
+Ukraine
+Eastern Australia
+Ural
+Western Europe
+Scandinavia
+Kamchatka
+Argentina
+Irkutsk
+Greenland
+Venezuela
+Western Australia
+Great Britain

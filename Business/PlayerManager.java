@@ -11,7 +11,6 @@ import java.util.*;
 
 public class PlayerManager implements IPlayerManager{
     private final IPersistence persistence;
-    private final IWorldManager worldManager;
     private final WorldManager worldManagerFriend;
     private final Map<String, Player> playerMap;
     private final List<Player> playerOrder;
@@ -24,7 +23,6 @@ public class PlayerManager implements IPlayerManager{
     public PlayerManager(IWorldManager worldManager, IPersistence persistence) throws IOException {
 
         this.persistence = persistence;
-        this.worldManager = worldManager;
         worldManagerFriend = (WorldManager) worldManager;
         playerOrder = persistence.fetchGameStatePlayers();
         playerMap = new HashMap<>();
@@ -41,7 +39,7 @@ public class PlayerManager implements IPlayerManager{
 
                 if(player.getPlayerMission().getMissionNumber() == 4){
                     MissionConquerCountries missionConquerCountries = (MissionConquerCountries) player.getPlayerMission();
-                    missionConquerCountries.setCountryMap(worldManager.getCountryMap());
+                    missionConquerCountries.setCountryMap(worldManagerFriend.getCountryMap());
                 }
             }
 
@@ -166,7 +164,7 @@ public class PlayerManager implements IPlayerManager{
 
         List<String> countryInfos = new ArrayList<>();
         for(String country : playerMap.get(playerName).getConqueredCountryNames()){
-            countryInfos.add(country + ": " + worldManager.getUnitAmountOfCountry(country));
+            countryInfos.add(country + ": " + worldManagerFriend.getUnitAmountOfCountry(country));
         }
         return countryInfos;
     }
@@ -188,7 +186,7 @@ public class PlayerManager implements IPlayerManager{
     public int getRound(){ return round; }
     public void setPlayerMission(boolean standardRisk){
 
-        MissionFactory factory = new MissionFactory(worldManagerFriend.getContinents(), worldManager.getCountryMap());
+        MissionFactory factory = new MissionFactory(worldManagerFriend.getContinents(), worldManagerFriend.getCountryMap());
 
         Random random = new Random();
         for(Player player : playerOrder){

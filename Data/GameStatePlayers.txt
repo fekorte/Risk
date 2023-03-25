@@ -1,0 +1,57 @@
+c
+Blue
+1
+North America
+Africa
+false
+ 
+26
+North Africa
+Egypt
+East Africa
+South Africa
+Madagascar
+Alaska
+North West Territory
+Alberta
+Ontario
+Quebec
+Greenland
+Western United States
+Eastern United States
+Central America
+Greenland
+Kamchatka
+New Guinea
+Scandinavia
+Argentina
+Peru
+Venezuela
+Middle East
+Great Britain
+China
+Yakutsk
+Egypt
+cv
+Green
+3
+false
+ 
+17
+Congo
+Ural
+Southern Europe
+Iceland
+Eastern Australia
+Japan
+Mongolia
+Afghanistan
+India
+Western Europe
+Indonesia
+Brazil
+Ukraine
+Irkutsk
+Western Australia
+Siam
+Northern Europe

@@ -5,12 +5,12 @@ import Common.*;
 import java.util.*;
 
 public class MissionFactory {
-    private final LinkedHashMap<String, Continent> continentMap;
+    private final Map<String, Continent> continentMap;
     private final Map<String, Country> countryMap;
     private List<String> opponents;
     private final Random random;
 
-    public MissionFactory(LinkedHashMap<String, Continent> continentMap, Map<String, Country> countryMap){
+    public MissionFactory(Map<String, Continent> continentMap, Map<String, Country> countryMap){
 
         this.continentMap = continentMap;
         this.countryMap = countryMap;
@@ -25,11 +25,11 @@ public class MissionFactory {
             case(1) -> { //missionConquerContinents (two continents)
 
                 List<String> continentNames = new ArrayList<>(continentMap.keySet());
+                Collections.sort(continentNames);
                 List<List<String>> continentPairs = new ArrayList<>();
-
-                //depends on the order in which the continents are written in the Continents.txt file
-                continentPairs.add(Arrays.asList(continentNames.get(3), continentNames.get(0)));
-                continentPairs.add(Arrays.asList(continentNames.get(3), continentNames.get(1)));
+                continentPairs.add(Arrays.asList(continentNames.get(4), continentNames.get(0)));
+                continentPairs.add(Arrays.asList(continentNames.get(1), continentNames.get(5)));
+                continentPairs.add(Arrays.asList(continentNames.get(4), continentNames.get(2)));
 
                 List<String> selectedPair = continentPairs.get(random.nextInt(continentPairs.size()));
                 return new MissionConquerContinents(continentMap, selectedPair.get(0), selectedPair.get(1), false);
@@ -37,12 +37,10 @@ public class MissionFactory {
             case(2) -> { //missionConquerContinents (two continents plus one chosen by player)
 
                 List<String> continentNames = new ArrayList<>(continentMap.keySet());
+                Collections.sort(continentNames);
                 List<List<String>> continentPairs = new ArrayList<>();
-
-                //depends on the order in which the continents are written in the Continents.txt file
-                continentPairs.add(Arrays.asList(continentNames.get(4), continentNames.get(2)));
-                continentPairs.add(Arrays.asList(continentNames.get(5), continentNames.get(1)));
-                continentPairs.add(Arrays.asList(continentNames.get(4), continentNames.get(0)));
+                continentPairs.add(Arrays.asList(continentNames.get(3), continentNames.get(2)));
+                continentPairs.add(Arrays.asList(continentNames.get(3), continentNames.get(5)));
 
                 List<String> selectedPair = continentPairs.get(random.nextInt(continentPairs.size()));
                 return new MissionConquerContinents(continentMap, selectedPair.get(0), selectedPair.get(1), true);

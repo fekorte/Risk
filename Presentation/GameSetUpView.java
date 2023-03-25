@@ -97,6 +97,7 @@ public class GameSetUpView extends JFrame{
             String playerToRemove = JOptionPane.showInputDialog(null, "Player name: ", "Remove player", JOptionPane.INFORMATION_MESSAGE);
             try{
                 playerManager.removePlayer(playerToRemove);
+                playerInfo.setText(playerManager.getPlayersInfo());
                 JOptionPane.showMessageDialog(null, playerToRemove + " has been removed successfully.", "Player added", JOptionPane.INFORMATION_MESSAGE);
             } catch(ExceptionEmptyInput | ExceptionObjectDoesntExist e){
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);

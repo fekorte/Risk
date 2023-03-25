@@ -13,7 +13,7 @@ public interface IPersistence {
     void openForReading(String dataSource) throws IOException;
     void openForWriting(String dataSource) throws IOException;
     void close();
-    LinkedHashMap<String, Continent> fetchContinents() throws IOException;
+    Map<String, Continent> fetchContinents() throws IOException;
     Map<String, Country> fetchCountries() throws IOException;
     boolean saveGameStatePlayers(List<Player> playerOrder) throws IOException;
     List<Player> fetchGameStatePlayers() throws IOException;

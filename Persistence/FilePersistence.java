@@ -32,10 +32,10 @@ public class FilePersistence implements IPersistence{
     }
 
     @Override
-    public LinkedHashMap<String, Continent> fetchContinents() throws IOException {
+    public Map<String, Continent> fetchContinents() throws IOException {
 
         openForReading("Data/Continents.txt");
-        LinkedHashMap<String, Continent> continents = new LinkedHashMap<>();
+        Map<String, Continent> continents = new LinkedHashMap<>();
         while(reader != null && reader.ready()){
             String continentName = readLine();
             int pointsForConquering = Integer.parseInt(readLine());
@@ -55,7 +55,7 @@ public class FilePersistence implements IPersistence{
     @Override
     public Map<String, Country> fetchCountries() throws IOException {
 
-        LinkedHashMap<String, Continent> continents = fetchContinents();
+        Map<String, Continent> continents = fetchContinents();
         Map<String, List<String>> neighbours = new HashMap<>();
         Map<String, Country> countryMap = new HashMap<>();
 
@@ -146,7 +146,7 @@ public class FilePersistence implements IPersistence{
 
         List<Player> playerOrder = new ArrayList<>();
         Map<String, Country> countries = fetchCountries();
-        LinkedHashMap<String, Continent> continentMap = new LinkedHashMap<>(fetchContinents());
+        Map<String, Continent> continentMap = new LinkedHashMap<>(fetchContinents());
         openForReading("Data/GameStatePlayers.txt");
 
         while(reader != null && reader.ready()){

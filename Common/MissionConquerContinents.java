@@ -1,17 +1,17 @@
 package Common;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MissionConquerContinents extends Mission{
 
-    private final LinkedHashMap<String, Continent> continentMap;
+    private final Map<String, Continent> continentMap;
     private final String firstContinentName;
     private final String secondContinentName;
     private final boolean oneMoreContinent;
 
-    public MissionConquerContinents(LinkedHashMap<String, Continent> continentMap, String firstContinentName, String secondContinentName, boolean oneMoreContinent){
+    public MissionConquerContinents(Map<String, Continent> continentMap, String firstContinentName, String secondContinentName, boolean oneMoreContinent){
 
         this.missionNumber = (!oneMoreContinent) ? 1 : 2;
         this.missionText = (!oneMoreContinent) ? "Conquer " + firstContinentName + " and " + secondContinentName + "." : "Conquer " + firstContinentName + ", " + secondContinentName + " and one other continent.";

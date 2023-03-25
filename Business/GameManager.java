@@ -19,17 +19,20 @@ public class GameManager implements IGameManager {
     private int receivedUnits;
 
 
-    public GameManager(IPlayerManager playerManager, IWorldManager worldManager, IPersistence persistence){
+    public GameManager(IPlayerManager playerManager, IWorldManager worldManager, IPersistence persistence) throws IOException {
 
         this.persistence = persistence;
         playerManagerFriend = (PlayerManager) playerManager;
         worldManagerFriend = (WorldManager) worldManager;
         countryMap = worldManager.getCountryMap();
-        involvedCountries = new ArrayList<>();
+        involvedCountries = persistence.fetchGameStateInvolvedCountries();
     }
     @Override
     public boolean saveGame(int gameStep) throws IOException {
 
+        if(gameStep == 2){
+            persistence.saveInvolvedCountries(involvedCountries);
+        }
         return persistence.saveGameStateArmies(countryMap) && playerManagerFriend.save(gameStep);
     }
 

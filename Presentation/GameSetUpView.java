@@ -83,7 +83,7 @@ public class GameSetUpView extends JFrame{
                     playerInfo.setText(playerManager.getPlayersInfo());
                     JOptionPane.showMessageDialog(null, playerName + " has been added.", "Player added", JOptionPane.INFORMATION_MESSAGE);
 
-                } catch (ExceptionEmptyInput | ExceptionPlayerAlreadyExists | ExceptionTooManyPlayer |
+                } catch (ExceptionEmptyInput | ExceptionPlayerAlreadyExists | ExceptionTooManyPlayers |
                          ExceptionColorAlreadyExists c){
                     JOptionPane.showMessageDialog(null, c.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
 

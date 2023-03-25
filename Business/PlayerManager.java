@@ -69,7 +69,7 @@ public class PlayerManager implements IPlayerManager{
     }
 
     @Override
-    public void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists, ExceptionEmptyInput {
+    public void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayers, ExceptionColorAlreadyExists, ExceptionEmptyInput {
 
         if(name == null ||color == null || name.isEmpty() || color.isEmpty()){
             throw new ExceptionEmptyInput();
@@ -79,7 +79,7 @@ public class PlayerManager implements IPlayerManager{
             throw new ExceptionPlayerAlreadyExists(name);
         }
         if(playerMap.size() == 6){
-            throw new ExceptionTooManyPlayer();
+            throw new ExceptionTooManyPlayers();
         }
         if(!allowedColors.contains(color)){
             throw new ExceptionColorAlreadyExists(color);

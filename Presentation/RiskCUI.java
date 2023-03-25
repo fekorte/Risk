@@ -116,7 +116,7 @@ public class RiskCUI {
                 try{
                     playerManager.addPlayer(playerName, playerColor);
                     System.out.println( playerName + " has been added. ");
-                } catch (ExceptionEmptyInput | ExceptionPlayerAlreadyExists | ExceptionTooManyPlayer | ExceptionColorAlreadyExists e){
+                } catch (ExceptionEmptyInput | ExceptionPlayerAlreadyExists | ExceptionTooManyPlayers | ExceptionColorAlreadyExists e){
                     System.out.println(e.getMessage());
                 }
             }

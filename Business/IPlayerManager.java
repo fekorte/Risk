@@ -5,7 +5,7 @@ import Common.Exceptions.*;
 import java.util.List;
 
 public interface IPlayerManager {
-    void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayer, ExceptionColorAlreadyExists, ExceptionEmptyInput;
+    void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayers, ExceptionColorAlreadyExists, ExceptionEmptyInput;
     void removePlayer(String name) throws ExceptionObjectDoesntExist, ExceptionEmptyInput;
     List<String> getAllowedColors();
     String getPlayerColor(String playerName);

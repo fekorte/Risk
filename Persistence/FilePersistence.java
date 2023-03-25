@@ -192,6 +192,36 @@ public class FilePersistence implements IPersistence{
         close();
         return playerOrder;
     }
+    @Override
+    public List<String> fetchGameStateInvolvedCountries() throws IOException {
+
+        List<String> involvedCountries = new ArrayList<>();
+
+        openForReading("Data/GameStateInvolvedCountries.txt");
+        while(reader != null && reader.ready()){
+            String involvedCountry = readLine();
+            involvedCountries.add(involvedCountry);
+        }
+        close();
+
+        return involvedCountries;
+    }
+    @Override
+    public void saveInvolvedCountries(List<String> involvedCountries) throws IOException {
+
+        //delete previous data
+        File filePlayers = new File("Data/GameStateInvolvedCountries.txt");
+        RandomAccessFile rafPlayers = new RandomAccessFile(filePlayers, "rw");
+        rafPlayers.setLength(0);
+        rafPlayers.close();
+
+        openForWriting("Data/GameStateInvolvedCountries.txt");
+        for(String involvedCountry : involvedCountries){
+            printLine(involvedCountry);
+        }
+        close();
+    }
+
 
     @Override
     public boolean saveGameStateArmies(Map<String, Country> countryMap) throws IOException {

@@ -1,0 +1,52 @@
+A
+Red
+6
+ 
+20
+Eastern United States
+Yakutsk
+North Africa
+Greenland
+Japan
+Central America
+Irkutsk
+Western Europe
+Kamchatka
+New Guinea
+Ontario
+Siam
+India
+Northern Europe
+Venezuela
+Western Australia
+Great Britain
+Congo
+Western United States
+South Africa
+B
+Blue
+6
+ 
+22
+Brazil
+Peru
+Middle East
+Egypt
+Eastern Australia
+Alberta
+Iceland
+Mongolia
+Siberia
+East Africa
+China
+Quebec
+Southern Europe
+Indonesia
+Scandinavia
+Madagascar
+Afghanistan
+Alaska
+Argentina
+North West Territory
+Ukraine
+Ural

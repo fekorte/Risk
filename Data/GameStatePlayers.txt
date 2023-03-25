@@ -1,0 +1,56 @@
+W
+Red
+2
+Europe
+Australia
+true
+
+27
+Ukraine
+Scandinavia
+Great Britain
+Eastern Australia
+Western Australia
+New Guinea
+Indonesia
+Alaska
+Eastern United States
+Japan
+Northern Europe
+India
+Southern Europe
+Venezuela
+Ontario
+Brazil
+Quebec
+Kamchatka
+Peru
+Egypt
+Western Europe
+China
+North Africa
+Congo
+Iceland
+Yakutsk
+Siberia
+A
+White
+4
+true
+
+15
+Alberta
+Argentina
+Siam
+Afghanistan
+Madagascar
+North West Territory
+East Africa
+Irkutsk
+South Africa
+Middle East
+Central America
+Ural
+Greenland
+Western United States
+Mongolia

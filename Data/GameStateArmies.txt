@@ -1,0 +1,126 @@
+Ural
+A
+1
+Western Australia
+W
+1
+Central America
+A
+1
+Afghanistan
+A
+1
+Alberta
+A
+1
+Siam
+A
+1
+Egypt
+W
+1
+North Africa
+W
+1
+Madagascar
+A
+1
+Scandinavia
+W
+1
+Iceland
+W
+1
+Middle East
+A
+1
+Yakutsk
+W
+1
+Great Britain
+W
+1
+Mongolia
+A
+1
+China
+W
+1
+North West Territory
+A
+1
+Siberia
+W
+1
+Brazil
+W
+1
+Alaska
+W
+1
+Kamchatka
+W
+1
+Eastern Australia
+W
+1
+Argentina
+A
+1
+Northern Europe
+W
+1
+Eastern United States
+W
+1
+Japan
+W
+1
+Ukraine
+W
+1
+Quebec
+W
+1
+Congo
+W
+1
+Western Europe
+W
+1
+India
+W
+1
+Venezuela
+W
+1
+New Guinea
+W
+1
+Irkutsk
+A
+1
+South Africa
+A
+1
+Southern Europe
+W
+1
+Western United States
+A
+1
+Peru
+W
+1
+Ontario
+W
+1
+East Africa
+A
+1
+Greenland
+W
+1
+Indonesia
+W
+1

@@ -359,15 +359,19 @@ public class RiskCUI {
         System.out.println(worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
             + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry + "\n");
 
-        if(playerManager.isPlayerDefeated(defenderName)){
-        System.out.println(defenderName + " your last country has been conquered, the game has to continue without you.");
-        try{
-            playerManager.removePlayer(defenderName);
-        } catch (ExceptionEmptyInput | ExceptionObjectDoesntExist e){
-            e.printStackTrace();
+
+        if(checkForWinner()){
+            return;
         }
-        checkForWinner();
-    }
+
+        if(playerManager.isPlayerDefeated(defenderName)) {
+            System.out.println(defenderName + " your last country has been conquered, the game has to continue without you.");
+            try {
+                playerManager.removePlayer(defenderName);
+            } catch (ExceptionEmptyInput | ExceptionObjectDoesntExist e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void moveUnits() throws IOException {

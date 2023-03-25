@@ -214,6 +214,10 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         JOptionPane.showMessageDialog(null, worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
                 + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry, "Result of fight", JOptionPane.INFORMATION_MESSAGE);
 
+        if(checkForWinner()){
+            return;
+        }
+
         if (playerManager.isPlayerDefeated(defenderName)){
             JOptionPane.showMessageDialog(null, defenderName + " your last country has been conquered, the game has to continue without you. ", defenderName + " lost", JOptionPane.INFORMATION_MESSAGE);
             try {
@@ -222,19 +226,17 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 e.printStackTrace();
             }
         }
-        checkForWinner();
     }
 
     private void displayDiceResult(List<Integer> diceResult, boolean attack) throws InterruptedException {
-
-        Frame diceRollFrame = new Frame("");
-        DiceImageComponent diceImageComponent = new DiceImageComponent();
-        diceRollFrame.add(diceImageComponent);
-
-
         int index = 0;
         int numDices = diceResult.size();
-        while(numDices != 0){
+        Frame diceRollFrame = new Frame("");
+        DiceImageComponent diceImageComponent = new DiceImageComponent();
+
+        while (numDices != 0) {
+            diceRollFrame.add(diceImageComponent);
+
             Image diceImage = (attack) ? Toolkit.getDefaultToolkit().getImage("Data/r" + diceResult.get(index) + ".jpg") : Toolkit.getDefaultToolkit().getImage("Data/b" + diceResult.get(index) + ".jpg");
             diceImageComponent.setDiceImage(diceImage);
             diceRollFrame.setSize(diceImage.getWidth(null), diceImage.getHeight(null));

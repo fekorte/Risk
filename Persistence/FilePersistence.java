@@ -210,10 +210,10 @@ public class FilePersistence implements IPersistence{
     public void saveInvolvedCountries(List<String> involvedCountries) throws IOException {
 
         //delete previous data
-        File filePlayers = new File("Data/GameStateInvolvedCountries.txt");
-        RandomAccessFile rafPlayers = new RandomAccessFile(filePlayers, "rw");
-        rafPlayers.setLength(0);
-        rafPlayers.close();
+        File fileInvolvedCountries = new File("Data/GameStateInvolvedCountries.txt");
+        RandomAccessFile rafInvolvedCountries = new RandomAccessFile(fileInvolvedCountries , "rw");
+        rafInvolvedCountries.setLength(0);
+        rafInvolvedCountries.close();
 
         openForWriting("Data/GameStateInvolvedCountries.txt");
         for(String involvedCountry : involvedCountries){
@@ -294,6 +294,11 @@ public class FilePersistence implements IPersistence{
         RandomAccessFile rafGameRound = new RandomAccessFile(fileGameRound, "rw");
         rafGameRound.setLength(0);
         rafGameRound.close();
+
+        File fileInvolvedCountries = new File("Data/GameStateInvolvedCountries.txt");
+        RandomAccessFile rafInvolvedCountries = new RandomAccessFile(fileInvolvedCountries , "rw");
+        rafInvolvedCountries.setLength(0);
+        rafInvolvedCountries.close();
     }
 
 

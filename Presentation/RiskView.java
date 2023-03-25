@@ -237,7 +237,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         while (numDices != 0) {
             diceRollFrame.add(diceImageComponent);
 
-            Image diceImage = (attack) ? Toolkit.getDefaultToolkit().getImage("Data/r" + diceResult.get(index) + ".jpg") : Toolkit.getDefaultToolkit().getImage("Data/b" + diceResult.get(index) + ".jpg");
+            Image diceImage = (attack) ? Toolkit.getDefaultToolkit().getImage("Images/r" + diceResult.get(index) + ".jpg") : Toolkit.getDefaultToolkit().getImage("Images/b" + diceResult.get(index) + ".jpg");
             diceImageComponent.setDiceImage(diceImage);
             diceRollFrame.setSize(diceImage.getWidth(null), diceImage.getHeight(null));
             diceRollFrame.setSize(200, 235);

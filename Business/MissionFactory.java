@@ -5,30 +5,47 @@ import Common.*;
 import java.util.*;
 
 public class MissionFactory {
-    private final Map<String, Continent> continentMap;
+    private final LinkedHashMap<String, Continent> continentMap;
     private final Map<String, Country> countryMap;
-    private List<String> availableColors;
+    private List<String> opponents;
     private final Random random;
 
-    public MissionFactory(Map<String, Continent> continentMap, Map<String, Country> countryMap){
+    public MissionFactory(LinkedHashMap<String, Continent> continentMap, Map<String, Country> countryMap){
 
         this.continentMap = continentMap;
         this.countryMap = countryMap;
         random = new Random();
     }
 
-    public void setAvailableColors(List<String> availableColors){ this.availableColors = availableColors; }
+    public void setOpponents(List<String> opponents){ this.opponents = opponents; }
 
     public Mission createMission(int missionNumber){
 
         switch(missionNumber){
             case(1) -> { //missionConquerContinents (two continents)
-                String[] continentNames = continentMap.keySet().toArray(new String[0]);
-                return new MissionConquerContinents(continentMap, continentNames[random.nextInt(continentNames.length)], continentNames[random.nextInt(continentNames.length)], false);
+
+                List<String> continentNames = new ArrayList<>(continentMap.keySet());
+                List<List<String>> continentPairs = new ArrayList<>();
+
+                //depends on the order in which the continents are written in the Continents.txt file
+                continentPairs.add(Arrays.asList(continentNames.get(3), continentNames.get(0)));
+                continentPairs.add(Arrays.asList(continentNames.get(3), continentNames.get(1)));
+
+                List<String> selectedPair = continentPairs.get(random.nextInt(continentPairs.size()));
+                return new MissionConquerContinents(continentMap, selectedPair.get(0), selectedPair.get(1), false);
             }
             case(2) -> { //missionConquerContinents (two continents plus one chosen by player)
-                String[] continentNames = continentMap.keySet().toArray(new String[0]);
-                return new MissionConquerContinents(continentMap, continentNames[random.nextInt(continentNames.length)], continentNames[random.nextInt(continentNames.length)], true);
+
+                List<String> continentNames = new ArrayList<>(continentMap.keySet());
+                List<List<String>> continentPairs = new ArrayList<>();
+
+                //depends on the order in which the continents are written in the Continents.txt file
+                continentPairs.add(Arrays.asList(continentNames.get(4), continentNames.get(2)));
+                continentPairs.add(Arrays.asList(continentNames.get(5), continentNames.get(1)));
+                continentPairs.add(Arrays.asList(continentNames.get(4), continentNames.get(0)));
+
+                List<String> selectedPair = continentPairs.get(random.nextInt(continentPairs.size()));
+                return new MissionConquerContinents(continentMap, selectedPair.get(0), selectedPair.get(1), true);
             }
             case (3), (4) -> { //missionConquerCountries, case 3 = 24 territories, case 4 = 18 territories, each at least 2 armies
                 MissionConquerCountries missionConquerCountries = (missionNumber == 3) ? new MissionConquerCountries(false) : new MissionConquerCountries(true);
@@ -37,8 +54,8 @@ public class MissionFactory {
             }
 
             case(5) -> { //missionDefeatOpponent
-                String[] colors = availableColors.toArray(new String[0]);
-                return new MissionDefeatOpponent(colors[random.nextInt(colors.length)]);
+                String[] possibleOpponents = opponents.toArray(new String[0]);
+                return new MissionDefeatOpponent(possibleOpponents[random.nextInt(possibleOpponents.length)]);
             }
             case(6) -> { return new MissionConquerWorld(new ArrayList<>(countryMap.keySet())); }
         }

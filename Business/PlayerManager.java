@@ -186,13 +186,6 @@ public class PlayerManager implements IPlayerManager{
     public int getPlayerAmount() { return playerMap.size(); }
     @Override
     public int getRound(){ return round; }
-
-    private List<String> getPlayerColors(){
-        List<String> allColors = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
-        allColors.removeAll(allowedColors);
-        return allColors;
-    }
-
     public void setPlayerMission(boolean standardRisk){
 
         MissionFactory factory = new MissionFactory(worldManagerFriend.getContinents(), worldManager.getCountryMap());
@@ -202,14 +195,13 @@ public class PlayerManager implements IPlayerManager{
             if(standardRisk){
                player.setPlayerMission(factory.createMission(6)); //6 = mission for everyone => conquer the world
             } else {
-                List<String> opponentColors = getPlayerColors();
-                opponentColors.remove(player.getPlayerColor());
-                factory.setAvailableColors(opponentColors);
+                List<String> opponentNames = new ArrayList<>(getPlayerMap().keySet());
+                opponentNames.remove(player.getPlayerName());
+                factory.setOpponents(opponentNames);
                 player.setPlayerMission(factory.createMission(random.nextInt(5) + 1));
             }
         }
     }
-
 
     @Override
     public String getPlayerMission(String playerName){ return playerMap.get(playerName).getPlayerMission().getMissionText(); }

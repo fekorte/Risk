@@ -13,7 +13,7 @@ public class WorldManager implements IWorldManager{
 
     private final IPersistence persistence;
     private Map<String, Country> countryMap; //Key is the country name
-    private final Map<String, Continent> continents; //Key is continent name
+    private final LinkedHashMap<String, Continent> continents; //Key is continent name
     private final Map<Color, String> colorCountryNameMap;
 
     public WorldManager(IPersistence persistence) throws IOException {
@@ -62,7 +62,7 @@ public class WorldManager implements IWorldManager{
     public int getUnitAmountOfCountry(String countryName) { return getCountryMap().get(countryName).getArmy().getUnits(); }
     @Override
     public Map<String, Country> getCountryMap(){ return countryMap; }
-    public Map<String, Continent> getContinents(){ return continents; }
+    public LinkedHashMap<String, Continent> getContinents(){ return continents; }
 
     private List<String> getConqueredContinents(List<String> playersCountries){
 

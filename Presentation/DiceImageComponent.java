@@ -5,7 +5,6 @@ import java.awt.*;
 public class DiceImageComponent extends Component {
 
     private Image diceImage;
-
     public DiceImageComponent() {}
 
     public void setDiceImage(Image diceImage) {

@@ -5,9 +5,9 @@ import Business.IWorldManager;
 import javax.swing.*;
 import java.util.ArrayList;
 
-public class AllCountryInfoView extends JFrame {
+public class CountryTableView extends JFrame {
 
-    public AllCountryInfoView(IWorldManager worldManager){
+    public CountryTableView(IWorldManager worldManager){
 
         super("Country information");
         CountryTable countryTable = new CountryTable(new ArrayList<>(worldManager.getCountryMap().values()));

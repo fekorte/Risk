@@ -15,7 +15,6 @@ public class RiskPlayerPanel extends JPanel {
     private final Map<String, DefaultListModel<String>> listModels; //key is player name
     private final JPanel listPanel;
     private final Map<String, Color> colorMap;
-
     public RiskPlayerPanel(IPlayerManager playerManager){
 
         this.playerManager = playerManager;

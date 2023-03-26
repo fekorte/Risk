@@ -8,9 +8,7 @@ import java.util.List;
 
 
 public class CountryTable extends AbstractTableModel {
-
     private final List<Country> countries;
-
     private final String[] columnNames={"Country name", "Abbreviation", "Continent", "Owner", "Unit amount"};
 
     public CountryTable(List<Country> currentCountries){
@@ -23,12 +21,10 @@ public class CountryTable extends AbstractTableModel {
     public int getRowCount(){
         return countries.size();
     }
-
     @Override
     public int getColumnCount(){
         return columnNames.length;
     }
-
     @Override
     public Object getValueAt(int rowIndex, int columnIndex){
 

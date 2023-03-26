@@ -149,79 +149,7 @@ public class RiskCUI {
         }
     }
 
-    private void riskTurn() throws IOException {
-
-        gameStep = 1;
-        stepOne();
-        stepTwo();
-        stepThree();
-    }
-
-
-    //receive and distribute units
-    private void stepOne() throws IOException {
-
-        System.out.println("New round! It's your turn " + playerManager.getCurrentPlayerName());
-
-        //receiveUnits
-        int receivedUnits;
-        try{
-            receivedUnits = gameManager.receiveUnits();
-            System.out.println("You receive " + receivedUnits + " units.");
-        } catch(ExceptionObjectDoesntExist e){
-            e.printStackTrace();
-        }
-
-        //distribute units
-        System.out.println("You can distribute your received units to your countries. You can inform yourself in this menu to plan better how to distribute your units.");
-        playerChoice(false, false);
-        distributeUnits();
-    }
-
-    //attack and defend
-    private void stepTwo() throws IOException {
-
-        System.out.println("All your units have been distributed. Now it is time to attack.");
-        playerChoice(true, false);
-    }
-    //moveUnits
-    private void stepThree() throws IOException {
-
-        System.out.println("Move your units to neighbouring countries which belong to you.");
-        playerChoice(false, true);
-
-
-        if(!checkForWinner()){
-            playerManager.nextPlayersTurn();
-            riskTurn();
-        }
-    }
-
-    private void playerChoice(boolean attack, boolean moveUnits) throws IOException {
-
-        while(!doneWithStep){
-            System.out.println("Please select what you want to do: ");
-            gameOverviewMenu(attack, moveUnits);
-            String selectedAction = readInput();
-            processGameInput(selectedAction, attack, moveUnits);
-        }
-        doneWithStep = false;
-    }
-
-    private boolean checkForWinner() throws IOException {
-
-        String winner = playerManager.isAnyMissionCompleted();
-        if(winner != null){
-            System.out.println("Congratulations!! You've won " + winner);
-            System.out.println(worldManager.getAllCountryInfos());
-            gameStarted = false;
-            gameSetUp = false;
-            gameManager.quitGame();
-        }
-        return winner != null;
-    }
-
-    private void gameOverviewMenu(boolean attack, boolean moveUnits){
+    private void showGameOverviewMenu(){
 
         System.out.print("Current player: " + playerManager.getCurrentPlayerName() + ", Round: " + playerManager.getRound() + "\n");
         System.out.print("Commands: \n  Show all players:  'a'");
@@ -230,9 +158,9 @@ public class RiskCUI {
         System.out.print("         \n  Get info about neighbouring countries:  'd'");
         System.out.print("         \n  Show my mission:  'e'");
         System.out.println("         \n  Done, continue with next step:  'f'");
-        if(attack){
+        if(gameStep == 2){
             System.out.println("         \n  Attack:  'g'");
-        } else if(moveUnits){
+        } else if(gameStep == 3){
             System.out.println("         \n  Move units:  'g'");
         }
         System.out.print("         \n  ---------------------");
@@ -243,7 +171,7 @@ public class RiskCUI {
         System.out.flush();
     }
 
-    private void processGameInput(String line, boolean attack, boolean moveUnits) throws IOException {
+    private void processGameInput(String line) throws IOException {
 
         switch(line) {
             case "a" -> System.out.println(playerManager.getPlayersInfo());
@@ -280,11 +208,51 @@ public class RiskCUI {
             }
             case "q" -> System.exit(0);
         }
-        if("g".equals(line) && attack){
+        if("g".equals(line) && gameStep == 2){
             attack();
-        } else if("g".equals(line) && moveUnits) {
+        } else if("g".equals(line) && gameStep == 3) {
             moveUnits();
         }
+    }
+
+    private void riskTurn() throws IOException {
+
+        gameStep = 1;
+        stepOne();
+        stepTwo();
+        stepThree();
+    }
+
+    private void playerChoice() throws IOException {
+
+        while(!doneWithStep){
+            System.out.println("Please select what you want to do: ");
+            showGameOverviewMenu();
+            String selectedAction = readInput();
+            processGameInput(selectedAction);
+        }
+        doneWithStep = false;
+    }
+
+
+    //receive and distribute units
+    private void stepOne() throws IOException {
+
+        System.out.println("New round! It's your turn " + playerManager.getCurrentPlayerName());
+
+        //receiveUnits
+        int receivedUnits;
+        try{
+            receivedUnits = gameManager.receiveUnits();
+            System.out.println("You receive " + receivedUnits + " units.");
+        } catch(ExceptionObjectDoesntExist e){
+            e.printStackTrace();
+        }
+
+        //distribute units
+        System.out.println("You can distribute your received units to your countries. You can inform yourself in this menu to plan better how to distribute your units.");
+        playerChoice();
+        distributeUnits();
     }
 
     private void distributeUnits() throws IOException {
@@ -308,6 +276,14 @@ public class RiskCUI {
         }
         checkForWinner();
     }
+
+    //attack and defend
+    private void stepTwo() throws IOException {
+
+        System.out.println("All your units have been distributed. Now it is time to attack.");
+        playerChoice();
+    }
+
     private void attack() throws IOException {
 
         System.out.println("Country to attack from > ");
@@ -357,7 +333,7 @@ public class RiskCUI {
         }
 
         System.out.println(worldManager.getUnitAmountOfCountry(attackedCountry) + " units remain in " + attackedCountry + " and "
-            + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry + "\n");
+                + worldManager.getUnitAmountOfCountry(attackingCountry) + " units remain in " + attackingCountry + "\n");
 
 
         if(checkForWinner()){
@@ -374,6 +350,18 @@ public class RiskCUI {
         }
     }
 
+    //moveUnits
+    private void stepThree() throws IOException {
+
+        System.out.println("Move your units to neighbouring countries which belong to you.");
+        playerChoice();
+
+
+        if(!checkForWinner()){
+            playerManager.nextPlayersTurn();
+            riskTurn();
+        }
+    }
     private void moveUnits() throws IOException {
 
         System.out.println("Keep in mind that you cannot move units from a country which has been involved in this round.");
@@ -390,6 +378,19 @@ public class RiskCUI {
         } catch(ExceptionEmptyInput | ExceptionCountryNotRecognized | ExceptionInvolvedCountrySelected | ExceptionCountryNotOwned | ExceptionTooManyUnits | ExceptionCountryIsNoNeighbour e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private boolean checkForWinner() throws IOException {
+
+        String winner = playerManager.isAnyMissionCompleted();
+        if(winner != null){
+            System.out.println("Congratulations!! You've won " + winner);
+            System.out.println(worldManager.getAllCountryInfos());
+            gameStarted = false;
+            gameSetUp = false;
+            gameManager.quitGame();
+        }
+        return winner != null;
     }
 
     private String readInput() throws IOException { return in.readLine(); }

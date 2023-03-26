@@ -287,7 +287,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + winner, "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
             JOptionPane.showMessageDialog(null, "Your mission was: " + playerManager.getPlayerMission(winner), "Mission accomplished", JOptionPane.INFORMATION_MESSAGE);
 
-            AllCountryInfoView infoView = new AllCountryInfoView(worldManager);
+            CountryTableView infoView = new CountryTableView(worldManager);
             dispose();
         }
         return winner != null;
@@ -300,7 +300,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             String command = e.getActionCommand();
 
             switch (command) {
-                case "Show country infos" -> { AllCountryInfoView infoView = new AllCountryInfoView(worldManager); }
+                case "Show country infos" -> { CountryTableView infoView = new CountryTableView(worldManager); }
                 case "Show my mission" -> {
                     JOptionPane.showMessageDialog(null, playerManager.getCurrentPlayerName() + " don't share your mission with anyone else!", "Your mission", JOptionPane.INFORMATION_MESSAGE);
                     JOptionPane.showMessageDialog(null, "Your mission is: " + playerManager.getPlayerMission(playerManager.getCurrentPlayerName()), "Your mission", JOptionPane.INFORMATION_MESSAGE);

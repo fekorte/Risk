@@ -9,7 +9,6 @@ import java.awt.*;
 import java.io.IOException;
 
 public class StartView extends JFrame{
-
     public StartView(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager){
 
         JPanel startPanel = new JPanel(new GridLayout(3, 1));

@@ -13,9 +13,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class RiskBoardPanel extends JPanel {
-
     private BufferedImage paintedMap;
-
     public interface RiskBoardListener {
         void onCountrySelected(String countryName);
     }

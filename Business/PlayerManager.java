@@ -196,7 +196,8 @@ public class PlayerManager implements IPlayerManager{
                 List<String> opponentNames = new ArrayList<>(getPlayerMap().keySet());
                 opponentNames.remove(player.getPlayerName());
                 factory.setOpponents(opponentNames);
-                player.setPlayerMission(factory.createMission(random.nextInt(5) + 1));
+                int bound = (playerOrder.size() > 2) ?  5 : 4;
+                player.setPlayerMission(factory.createMission(random.nextInt(bound) + 1));
             }
         }
     }

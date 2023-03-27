@@ -6,15 +6,15 @@ import java.awt.*;
 
 public class RiskMenu extends JMenuBar{
     private final IPlayerManager playerManager;
-    private final JLabel currentInfo;
+    private final JLabel currentGameInfo;
 
     public RiskMenu(IPlayerManager playerManager, RiskView.RiskMenuListener listener) {
 
         this.playerManager = playerManager;
         setLayout(new GridLayout(1, 8));
 
-        currentInfo = new JLabel("Round: " + playerManager.getRound() + ", Player: " + playerManager.getCurrentPlayerName());
-        add(currentInfo);
+        currentGameInfo = new JLabel("Round: " + playerManager.getRound() + ", Player: " + playerManager.getCurrentPlayerName());
+        add(currentGameInfo);
 
         String[] buttonLabels = {"Show country infos", "Show my mission", "Distribute units", "Done, continue", "Start new game", "Save game"};
 
@@ -31,7 +31,7 @@ public class RiskMenu extends JMenuBar{
     }
     public void updateInfoLabel(){
 
-        currentInfo.setText("Round: " + playerManager.getRound() + ", Player: " + playerManager.getCurrentPlayerName());
+        currentGameInfo.setText("Round: " + playerManager.getRound() + ", Player: " + playerManager.getCurrentPlayerName());
     }
 }
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CountryTable extends AbstractTableModel {
     private final List<Country> countries;
-    private final String[] columnNames={"Country name", "Abbreviation", "Continent", "Owner", "Unit amount"};
+    private final String[] columnNames = {"Country name", "Abbreviation", "Continent", "Owner", "Unit amount"};
 
     public CountryTable(List<Country> currentCountries){
 

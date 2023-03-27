@@ -12,9 +12,8 @@ public interface IGameManager {
     void startFirstRound(boolean missionRisk) throws ExceptionNotEnoughPlayer;
     int getSavedGameStep() throws IOException;
 
-    int receiveUnits() throws ExceptionObjectDoesntExist;
+    void receiveUnits() throws ExceptionObjectDoesntExist;
     int getReceivedUnits();
-    boolean allUnitsDistributed();
     void distributeUnits(String selectedCountry, int selectedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput;
     List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput, ExceptionOwnCountryAttacked;
     List<Integer> defend(String countryToDefend, String attackingCountry, List<Integer> attackerDiceResult, int attackerUnits);

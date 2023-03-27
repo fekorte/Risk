@@ -1,6 +1,5 @@
 package Business;
 
-import Common.Army;
 import Common.Country;
 import Common.Exceptions.*;
 import Common.Player;
@@ -14,7 +13,6 @@ public class GameManager implements IGameManager {
     private final IPersistence persistence;
     private final PlayerManager playerManagerFriend;
     private final WorldManager worldManagerFriend;
-    private Map<String, Country> countryMap; //key is country name
     private final List<String> involvedCountries; //String: country name
     private int receivedUnits;
 
@@ -24,7 +22,6 @@ public class GameManager implements IGameManager {
         this.persistence = persistence;
         playerManagerFriend = (PlayerManager) playerManager;
         worldManagerFriend = (WorldManager) worldManager;
-        countryMap = worldManager.getCountryMap();
         involvedCountries = persistence.fetchGameStateInvolvedCountries();
     }
     @Override
@@ -33,7 +30,7 @@ public class GameManager implements IGameManager {
         if(gameStep == 2){
             persistence.saveInvolvedCountries(involvedCountries);
         }
-        return persistence.saveGameStateArmies(countryMap) && playerManagerFriend.save(gameStep);
+        return persistence.saveGameStateArmies(worldManagerFriend.getCountryMap()) && playerManagerFriend.save(gameStep);
     }
 
     @Override
@@ -41,7 +38,6 @@ public class GameManager implements IGameManager {
 
         playerManagerFriend.clearPlayers();
         worldManagerFriend.clearWorld();
-        countryMap.clear();
     }
 
     @Override
@@ -49,7 +45,6 @@ public class GameManager implements IGameManager {
 
         persistence.resetGameState();
         quitGame();
-        countryMap = worldManagerFriend.getCountryMap();
     }
     @Override
     public int getSavedGameStep() throws IOException {
@@ -61,7 +56,7 @@ public class GameManager implements IGameManager {
     @Override
     public void startFirstRound(boolean missionRisk) throws ExceptionNotEnoughPlayer {
 
-        List<Country> countryList = new ArrayList<>(countryMap.values());
+        List<Country> countryList = new ArrayList<>(worldManagerFriend.getCountryMap().values());
         List<Player> playerList = new ArrayList<>((playerManagerFriend.getPlayerMap().values()));
 
         if(playerList.isEmpty() || playerList.size() == 1){
@@ -76,7 +71,7 @@ public class GameManager implements IGameManager {
             Country country = countryList.get(i);
             Player player = playerList.get(i % playerList.size());
 
-            country.setArmy(new Army(1, player.getPlayerName()));
+            worldManagerFriend.setCountryArmy(country.getCountryName(), 1, player.getPlayerName());
 
             player.addConqueredCountry(country.getCountryName());
             lastPlayer = player;
@@ -85,13 +80,13 @@ public class GameManager implements IGameManager {
             playerManagerFriend.setCurrentPlayer(lastPlayer.getPlayerName());
         }
 
-        playerManagerFriend.setPlayerMission(missionRisk);
+        playerManagerFriend.setAllPlayerMissions(missionRisk);
     }
 
 
 
     @Override
-    public int receiveUnits() throws ExceptionObjectDoesntExist{
+    public void receiveUnits() throws ExceptionObjectDoesntExist{
 
         involvedCountries.clear();
 
@@ -103,10 +98,10 @@ public class GameManager implements IGameManager {
         List<String> playerCountries = playerManagerFriend.getCurrentPlayersCountries();
         int armySize = (playerCountries.size() < 9) ? 3 : playerCountries.size() / 3;
 
-        receivedUnits = armySize + worldManagerFriend.getPointsForConqueredContinents(playerCountries);
-        return receivedUnits;
+        this.receivedUnits = armySize + worldManagerFriend.getPointsForConqueredContinents(playerCountries);
     }
-
+    @Override
+    public int getReceivedUnits(){ return receivedUnits; }
     @Override
     public void distributeUnits(String selectedCountry, int selectedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput {
 
@@ -127,13 +122,8 @@ public class GameManager implements IGameManager {
             throw new ExceptionTooManyUnits(receivedUnits);
         }
         receivedUnits -= selectedUnits;
-        countryMap.get(selectedCountry).getArmy().addUnits(selectedUnits);
+        worldManagerFriend.addUnitsToCountry(selectedCountry, selectedUnits);
     }
-    @Override
-    public int getReceivedUnits(){ return receivedUnits; }
-    @Override
-    public boolean allUnitsDistributed(){ return receivedUnits != 0; }
-
     @Override
     public List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput, ExceptionOwnCountryAttacked {
 
@@ -158,7 +148,7 @@ public class GameManager implements IGameManager {
             throw new ExceptionCountryIsNoNeighbour(attackingCountry, attackedCountry);
         }
 
-        int unitsAttacker = countryMap.get(attackingCountry).getArmy().getUnits();
+        int unitsAttacker = worldManagerFriend.getUnitAmountOfCountry(attackingCountry);
         if(unitsAttacker < 2){
             throw new ExceptionTooLessUnits(2);
         }
@@ -204,17 +194,17 @@ public class GameManager implements IGameManager {
 
         for (int i = 0; i < comparisonSize; i++){
             if ((attackerDiceResult.get(i) > defenderDiceResult.get(i))) {
-                countryMap.get(countryToDefend).getArmy().removeUnits(1);
+                worldManagerFriend.removeUnitsFromCountry(countryToDefend, 1);
             } else {
-                countryMap.get(attackingCountry).getArmy().removeUnits(1);
+                worldManagerFriend.removeUnitsFromCountry(attackingCountry, 1);
                 lostPointsAttacker++;
             }
         }
 
         if(worldManagerFriend.getUnitAmountOfCountry(countryToDefend) == 0){
-            String previousOwner = countryMap.get(countryToDefend).getArmy().getPlayerName();
-            countryMap.get(countryToDefend).setArmy(new Army(attackerUnits - lostPointsAttacker, playerManagerFriend.getCurrentPlayerName()));
-            countryMap.get(attackingCountry).getArmy().removeUnits(attackerUnits);
+            String previousOwner = worldManagerFriend.getCountryOwner(countryToDefend);
+            worldManagerFriend.setCountryArmy(countryToDefend,attackerUnits - lostPointsAttacker , playerManagerFriend.getCurrentPlayerName());
+            worldManagerFriend.removeUnitsFromCountry(attackingCountry, attackerUnits);
             playerManagerFriend.changeCountryOwner(playerManagerFriend.getCurrentPlayerName(), previousOwner, countryToDefend);
         }
 
@@ -243,15 +233,15 @@ public class GameManager implements IGameManager {
         }
 
         if(worldManagerFriend.getUnitAmountOfCountry(sourceCountry) - units < 1){
-            throw new ExceptionTooManyUnits(countryMap.get(sourceCountry).getArmy().getUnits() - 1);
+            throw new ExceptionTooManyUnits(worldManagerFriend.getUnitAmountOfCountry(sourceCountry) - 1);
         }
 
         if(!worldManagerFriend.getCountryNeighbours(sourceCountry).contains(destinationCountry)){
             throw new ExceptionCountryIsNoNeighbour(sourceCountry, destinationCountry);
         }
 
-        countryMap.get(sourceCountry).getArmy().removeUnits(units);
-        countryMap.get(destinationCountry).getArmy().addUnits(units);
+        worldManagerFriend.removeUnitsFromCountry(sourceCountry, units);
+        worldManagerFriend.addUnitsToCountry(destinationCountry, units);
     }
 
     private static int rollDice(){

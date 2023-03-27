@@ -31,7 +31,7 @@ public class RiskCUI {
         this.gameManager = gameManager;
 
         doneWithStep = false;
-        if(playerManager.continuePreviousGame()){
+        if(playerManager.getContinuePreviousGame()){
             gameStarted = true;
             riskVersionSelected = true;
             gameSetUp = true;
@@ -243,7 +243,8 @@ public class RiskCUI {
         //receiveUnits
         int receivedUnits;
         try{
-            receivedUnits = gameManager.receiveUnits();
+            gameManager.receiveUnits();
+            receivedUnits = gameManager.getReceivedUnits();
             System.out.println("You receive " + receivedUnits + " units.");
         } catch(ExceptionObjectDoesntExist e){
             e.printStackTrace();
@@ -259,7 +260,7 @@ public class RiskCUI {
 
         System.out.println("Now you have to distribute your units. You received " + gameManager.getReceivedUnits() + ". Where do you want to place them? ");
 
-        while (gameManager.allUnitsDistributed()) {
+        while (gameManager.getReceivedUnits() != 0) {
             System.out.println("This is the current unit contribution: " + playerManager.getAllCountriesInfoPlayer(playerManager.getCurrentPlayerName()));
 
             System.out.println("Country > ");

@@ -12,4 +12,7 @@ public interface IWorldManager {
     int getUnitAmountOfCountry(String countryName);
     String getCountryOwner(String country);
     String getCountryNameByColor(Color color);
+    void addUnitsToCountry(String countryName, int units);
+    void removeUnitsFromCountry(String countryName, int units);
+
 }

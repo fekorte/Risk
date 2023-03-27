@@ -15,7 +15,7 @@ public class PlayerManager implements IPlayerManager{
     private final Map<String, Player> playerMap;
     private final List<Player> playerOrder;
     private ArrayList<String> allowedColors;
-    private Player currentPlayer;
+    private String currentPlayerName;
     private boolean continuePreviousGame;
     private int playerTurns;
     private int round;
@@ -43,7 +43,7 @@ public class PlayerManager implements IPlayerManager{
                 }
             }
 
-            this.currentPlayer = playerOrder.get(0);
+            this.currentPlayerName = playerOrder.get(0).getPlayerName();
             int[] roundAndStep = persistence.fetchGameRoundAndStep();
             this.round = roundAndStep[0];
             this.playerTurns = roundAndStep[1];
@@ -54,6 +54,87 @@ public class PlayerManager implements IPlayerManager{
             continuePreviousGame = false;
         }
     }
+    @Override
+    public boolean getContinuePreviousGame(){ return continuePreviousGame; }
+    public Map<String, Player> getPlayerMap(){ return playerMap; }
+    @Override
+    public String getPlayerColor(String playerName){ return playerMap.get(playerName).getPlayerColor(); }
+    @Override
+    public List<String> getAllowedColors(){ return allowedColors; }
+    @Override
+    public String getCurrentPlayerName() { return currentPlayerName; }
+    @Override
+    public List<String> getPlayerNames(){ return new ArrayList<>(playerMap.keySet()); }
+    @Override
+    public int getPlayerAmount() { return playerMap.size(); }
+    @Override
+    public int getRound(){ return round; }
+    @Override
+    public String getPlayerMission(String playerName){ return playerMap.get(playerName).getPlayerMission().getMissionText(); }
+    public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayerName).getConqueredCountryNames(); }
+    @Override
+    public List<String> getAllCountriesInfoPlayer(String playerName){
+
+        List<String> countryInfos = new ArrayList<>();
+        for(String country : playerMap.get(playerName).getConqueredCountryNames()){
+            countryInfos.add(country + ": " + worldManagerFriend.getUnitAmountOfCountry(country));
+        }
+        return countryInfos;
+    }
+    @Override
+    public String getPlayersInfo(){
+
+        StringBuilder playerInfo = new StringBuilder();
+        for(Player player : playerMap.values()){
+            playerInfo.append("| ").append(player.getPlayerName()).append(": ").append(player.getPlayerColor()).append(" |");
+        }
+        return playerInfo.toString();
+    }
+    public void setCurrentPlayer(String currentPlayerName){
+
+        Collections.rotate(playerOrder, playerOrder.indexOf(playerMap.get(currentPlayerName)));
+        this.currentPlayerName = currentPlayerName;
+    }
+    public void setAllPlayerMissions(boolean standardRisk){
+
+        MissionFactory factory = new MissionFactory(worldManagerFriend.getContinents(), worldManagerFriend.getCountryMap());
+
+        Random random = new Random();
+        for(Player player : playerOrder){
+            if(standardRisk){
+                player.setPlayerMission(factory.createMission(6)); //6 = mission for everyone => conquer the world
+            } else {
+                List<String> opponentNames = new ArrayList<>(getPlayerMap().keySet());
+                opponentNames.remove(player.getPlayerName());
+                factory.setOpponents(opponentNames);
+                int bound = (playerOrder.size() > 2) ?  5 : 4;
+                player.setPlayerMission(factory.createMission(random.nextInt(bound) + 1));
+            }
+        }
+    }
+
+    @Override
+    public String isAnyMissionCompleted(){
+
+        for(Player player : playerOrder){
+            if(player.getPlayerMission().getMissionNumber() != 5){
+                if(player.getPlayerMission().isMissionCompleted(player.getConqueredCountryNames())){
+                    return player.getPlayerName();
+                }
+            } else {
+                MissionDefeatOpponent missionDefeatOpponent = (MissionDefeatOpponent) player.getPlayerMission();
+                String opponentName = missionDefeatOpponent.getOpponentName();
+                if(player.getPlayerMission().isMissionCompleted(playerMap.get(opponentName).getConqueredCountryNames())){
+                    return player.getPlayerName();
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isPlayerDefeated(String playerName){ return playerMap.get(playerName).getConqueredCountryNames().isEmpty(); }
+
     public boolean save(int gameStep) throws IOException {
 
         persistence.saveGameRoundAndStep(round, playerTurns, gameStep);
@@ -66,6 +147,29 @@ public class PlayerManager implements IPlayerManager{
         playerOrder.clear();
         allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
         initializeGameContinuation();
+    }
+
+    @Override
+    public void nextPlayersTurn(){
+
+        int currentIndex = playerOrder.indexOf(playerMap.get(currentPlayerName));
+        int nextIndex = (currentIndex + 1) % playerOrder.size();
+
+        this.currentPlayerName = playerOrder.get(nextIndex).getPlayerName();
+
+        Collections.rotate(playerOrder, -nextIndex);
+        playerTurns++;
+
+        if(playerTurns == playerOrder.size()){
+            round++;
+            playerTurns = 0;
+        }
+    }
+
+    public void changeCountryOwner(String newOwnerName, String previousOwnerName, String countryName){
+
+        playerMap.get(newOwnerName).addConqueredCountry(countryName);
+        playerMap.get(previousOwnerName).removeCountry(countryName);
     }
 
     @Override
@@ -109,107 +213,5 @@ public class PlayerManager implements IPlayerManager{
         allowedColors.add(playerMap.get(name).getPlayerColor());
         playerOrder.remove(playerMap.get(name));
         playerMap.remove(name);
-    }
-
-    @Override
-    public void nextPlayersTurn(){
-
-        int currentIndex = playerOrder.indexOf(playerMap.get(currentPlayer.getPlayerName()));
-        int nextIndex = (currentIndex + 1) % playerOrder.size();
-        this.currentPlayer = playerOrder.get(nextIndex);
-        Collections.rotate(playerOrder, -nextIndex);
-        playerTurns++;
-
-        if(playerTurns == playerOrder.size()){
-             round++;
-             playerTurns = 0;
-        }
-    }
-    @Override
-    public String isAnyMissionCompleted(){
-
-        for(Player player : playerOrder){
-            if(player.getPlayerMission().getMissionNumber() != 5){
-                if(player.getPlayerMission().isMissionCompleted(player.getConqueredCountryNames())){
-                    return player.getPlayerName();
-                }
-            } else {
-                MissionDefeatOpponent missionDefeatOpponent = (MissionDefeatOpponent) player.getPlayerMission();
-                String opponentName = missionDefeatOpponent.getOpponentName();
-                if(player.getPlayerMission().isMissionCompleted(playerMap.get(opponentName).getConqueredCountryNames())){
-                    return player.getPlayerName();
-                }
-            }
-        }
-        return null;
-    }
-    @Override
-    public List<String> getAllowedColors(){ return allowedColors; }
-    @Override
-    public String getPlayerColor(String playerName){ return playerMap.get(playerName).getPlayerColor(); }
-    public Map<String, Player> getPlayerMap(){ return playerMap; }
-    @Override
-    public String getPlayersInfo(){
-
-        StringBuilder playerInfo = new StringBuilder();
-        for(Player player : playerMap.values()){
-            playerInfo.append("| ").append(player.getPlayerName()).append(": ").append(player.getPlayerColor()).append(" |");
-        }
-        return playerInfo.toString();
-    }
-    @Override
-    public List<String> getPlayerNames(){ return new ArrayList<>(playerMap.keySet()); }
-    @Override
-    public List<String> getAllCountriesInfoPlayer(String playerName){
-
-        List<String> countryInfos = new ArrayList<>();
-        for(String country : playerMap.get(playerName).getConqueredCountryNames()){
-            countryInfos.add(country + ": " + worldManagerFriend.getUnitAmountOfCountry(country));
-        }
-        return countryInfos;
-    }
-    @Override
-    public boolean isPlayerDefeated(String playerName){ return playerMap.get(playerName).getConqueredCountryNames().isEmpty(); }
-    @Override
-    public boolean continuePreviousGame(){ return continuePreviousGame; }
-    public void setCurrentPlayer(String currentPlayerName){
-
-        this.currentPlayer = playerMap.get(currentPlayerName);
-        Collections.rotate(playerOrder, playerOrder.indexOf(currentPlayer));
-    }
-
-    @Override
-    public String getCurrentPlayerName() { return currentPlayer.getPlayerName(); }
-    @Override
-    public int getPlayerAmount() { return playerMap.size(); }
-    @Override
-    public int getRound(){ return round; }
-    public void setPlayerMission(boolean standardRisk){
-
-        MissionFactory factory = new MissionFactory(worldManagerFriend.getContinents(), worldManagerFriend.getCountryMap());
-
-        Random random = new Random();
-        for(Player player : playerOrder){
-            if(standardRisk){
-               player.setPlayerMission(factory.createMission(6)); //6 = mission for everyone => conquer the world
-            } else {
-                List<String> opponentNames = new ArrayList<>(getPlayerMap().keySet());
-                opponentNames.remove(player.getPlayerName());
-                factory.setOpponents(opponentNames);
-                int bound = (playerOrder.size() > 2) ?  5 : 4;
-                player.setPlayerMission(factory.createMission(random.nextInt(bound) + 1));
-            }
-        }
-    }
-
-    @Override
-    public String getPlayerMission(String playerName){ return playerMap.get(playerName).getPlayerMission().getMissionText(); }
-
-    public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayer.getPlayerName()).getConqueredCountryNames(); }
-
-    public void changeCountryOwner(String newOwnerName, String previousOwnerName, String countryName){
-
-        playerMap.get(newOwnerName).addConqueredCountry(countryName);
-        playerMap.get(previousOwnerName).removeCountry(countryName);
     }
 }

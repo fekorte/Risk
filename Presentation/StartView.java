@@ -43,7 +43,7 @@ public class StartView extends JFrame{
         continueSavedRiskGameButton.addActionListener(a -> {
 
             try {
-                if(playerManager.continuePreviousGame()){
+                if(playerManager.getContinuePreviousGame()){
                     RiskView rView = new RiskView(worldManager, playerManager, gameManager);
                     this.dispose();
                 } else {

@@ -22,7 +22,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
     private final IWorldManager worldManager;
     private final IGameManager gameManager;
     private CompletableFuture<String> countrySelectedFuture;
-    private final Map<String, RiskPlayerPanel> playerPanelMap;
+    private final Map<String, RiskPlayerPanel> playerPanelMap; //key is player name
     private final RiskMenu riskMenu;
     private int gameStep;
 
@@ -73,13 +73,15 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
     private void checkPreviousGameState() throws IOException {
 
-        gameStep = (playerManager.continuePreviousGame()) ? gameManager.getSavedGameStep() : 1;
+        gameStep = (playerManager.getContinuePreviousGame()) ? gameManager.getSavedGameStep() : 1;
         setActionButton();
 
         if(gameStep == 1){
             receiveUnits();
         }
     }
+
+    public void onCountrySelected(String countryName) { this.countrySelectedFuture.complete(countryName); }
 
     private void setActionButton(){
 
@@ -93,13 +95,25 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         }
     }
 
-    public void onCountrySelected(String countryName) { this.countrySelectedFuture.complete(countryName); }
+    private boolean checkForWinner(){
+
+        String winner = playerManager.isAnyMissionCompleted();
+        if(winner != null) {
+            JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + winner, "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Your mission was: " + playerManager.getPlayerMission(winner), "Mission accomplished", JOptionPane.INFORMATION_MESSAGE);
+
+            CountryTableView infoView = new CountryTableView(worldManager);
+            dispose();
+        }
+        return winner != null;
+    }
 
     private void receiveUnits(){
 
         int receivedUnits = 0;
         try{
-            receivedUnits = gameManager.receiveUnits();
+            gameManager.receiveUnits();
+            receivedUnits = gameManager.getReceivedUnits();
         } catch(ExceptionObjectDoesntExist e){
             e.printStackTrace();
         }
@@ -113,7 +127,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
         new Thread(() -> {
             try {
-                while(gameManager.allUnitsDistributed()){
+                while(gameManager.getReceivedUnits() != 0){
                     String selectedCountry = countrySelectedFuture.get();
                     countrySelectedFuture = new CompletableFuture<>();
                     String units = JOptionPane.showInputDialog(null, "Enter unit amount", "Select unit amount", JOptionPane.INFORMATION_MESSAGE);
@@ -278,19 +292,6 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 e.printStackTrace();
             }
         }).start();
-    }
-
-    private boolean checkForWinner(){
-
-        String winner = playerManager.isAnyMissionCompleted();
-        if(winner != null) {
-            JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + winner, "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
-            JOptionPane.showMessageDialog(null, "Your mission was: " + playerManager.getPlayerMission(winner), "Mission accomplished", JOptionPane.INFORMATION_MESSAGE);
-
-            CountryTableView infoView = new CountryTableView(worldManager);
-            dispose();
-        }
-        return winner != null;
     }
 
     class RiskMenuListener implements ActionListener {

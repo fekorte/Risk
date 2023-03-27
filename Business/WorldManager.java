@@ -1,5 +1,6 @@
 package Business;
 
+import Common.Army;
 import Common.Continent;
 import Common.Country;
 import Persistence.IPersistence;
@@ -83,9 +84,13 @@ public class WorldManager implements IWorldManager{
         }
         return pointsForConqueredContinent;
     }
-
     @Override
     public String getCountryOwner(String country){ return countryMap.get(country).getArmy().getPlayerName(); }
     @Override
     public String getCountryNameByColor(Color color){ return colorCountryNameMap.get(color); }
+    @Override
+    public void addUnitsToCountry(String countryName, int units) { countryMap.get(countryName).getArmy().addUnits(units); }
+    @Override
+    public void removeUnitsFromCountry(String countryName, int units) { countryMap.get(countryName).getArmy().removeUnits(units); }
+    public void setCountryArmy(String countryName, int units, String playerName){ countryMap.get(countryName).setArmy(new Army(units, playerName)); }
 }

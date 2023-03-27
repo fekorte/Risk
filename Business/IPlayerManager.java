@@ -5,19 +5,19 @@ import Common.Exceptions.*;
 import java.util.List;
 
 public interface IPlayerManager {
+    boolean getContinuePreviousGame();
     void addPlayer(String name, String color) throws ExceptionPlayerAlreadyExists, ExceptionTooManyPlayers, ExceptionColorAlreadyExists, ExceptionEmptyInput;
     void removePlayer(String name) throws ExceptionObjectDoesntExist, ExceptionEmptyInput;
-    List<String> getAllowedColors();
     String getPlayerColor(String playerName);
-    String getPlayersInfo();
-    List<String> getPlayerNames();
-    List<String> getAllCountriesInfoPlayer(String playerName);
-    boolean isPlayerDefeated(String playerName);
-    void nextPlayersTurn();
-    String isAnyMissionCompleted();
-    boolean continuePreviousGame();
+    List<String> getAllowedColors();
     String getCurrentPlayerName();
+    List<String> getPlayerNames();
     String getPlayerMission(String playerName);
     int getPlayerAmount();
     int getRound();
+    List<String> getAllCountriesInfoPlayer(String playerName);
+    String getPlayersInfo();
+    String isAnyMissionCompleted();
+    boolean isPlayerDefeated(String playerName);
+    void nextPlayersTurn();
 }

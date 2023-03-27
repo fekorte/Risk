@@ -39,7 +39,7 @@ public class RiskBoardPanel extends JPanel {
                 int y = e.getY();
 
                 Color pixelColor = new Color(paintedMap.getRGB(x, y));
-                String selectedCountry = worldManager.getCountryNameByColor(pixelColor);
+                String selectedCountry = worldManager.getCountryNameByColor(pixelColor.getRGB());
                 if (listener != null) {
                     listener.onCountrySelected(selectedCountry);
                 }

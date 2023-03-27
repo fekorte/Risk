@@ -85,9 +85,9 @@ public class WorldManager implements IWorldManager{
         return pointsForConqueredContinent;
     }
     @Override
-    public String getCountryOwner(String country){ return countryMap.get(country).getArmy().getPlayerName(); }
+    public String getCountryOwner(String countryName){ return countryMap.get(countryName).getArmy().getPlayerName(); }
     @Override
-    public String getCountryNameByColor(Color color){ return colorCountryNameMap.get(color); }
+    public String getCountryNameByColor(int colorRGB){ return colorCountryNameMap.get(new Color(colorRGB)); }
     public void addUnitsToCountry(String countryName, int units) { countryMap.get(countryName).getArmy().addUnits(units); }
     public void removeUnitsFromCountry(String countryName, int units) { countryMap.get(countryName).getArmy().removeUnits(units); }
     public void setCountryArmy(String countryName, int units, String playerName){ countryMap.get(countryName).setArmy(new Army(units, playerName)); }

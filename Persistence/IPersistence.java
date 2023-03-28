@@ -16,10 +16,10 @@ public interface IPersistence {
     Map<String, Country> fetchCountries() throws IOException;
     boolean saveGameStatePlayers(List<Player> playerOrder) throws IOException;
     List<Player> fetchGameStatePlayers() throws IOException;
-    Map<String, Country> fetchGameStateArmies() throws IOException;
-    List<String> fetchGameStateInvolvedCountries() throws IOException;
-    void saveInvolvedCountries(List<String> involvedCountries) throws IOException;
     boolean saveGameStateArmies(Map<String, Country> countryMap) throws IOException;
+    Map<String, Country> fetchGameStateArmies() throws IOException;
+    void saveInvolvedCountries(List<String> involvedCountryNames) throws IOException;
+    List<String> fetchGameStateInvolvedCountries() throws IOException;
     void saveGameRoundAndStep(int round, int playerTurns, int step) throws IOException;
     int[] fetchGameRoundAndStep() throws IOException;
     void resetGameState() throws IOException;

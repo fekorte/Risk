@@ -117,7 +117,7 @@ public class FilePersistence implements IPersistence{
                     MissionConquerContinents missionConquerContinents = (MissionConquerContinents) player.getPlayerMission();
                     printLine(missionConquerContinents.getFirstContinentName());
                     printLine(missionConquerContinents.getSecondContinentName());
-                    printLine(String.valueOf(missionConquerContinents.getOneMore()));
+                    printLine(String.valueOf(missionConquerContinents.getOneMoreContinent()));
                 }
                 case(3), (4) -> {
                     MissionConquerCountries missionConquerCountries = (MissionConquerCountries) player.getPlayerMission();
@@ -192,36 +192,6 @@ public class FilePersistence implements IPersistence{
         close();
         return playerOrder;
     }
-    @Override
-    public List<String> fetchGameStateInvolvedCountries() throws IOException {
-
-        List<String> involvedCountries = new ArrayList<>();
-
-        openForReading("Data/GameStateInvolvedCountries.txt");
-        while(reader != null && reader.ready()){
-            String involvedCountry = readLine();
-            involvedCountries.add(involvedCountry);
-        }
-        close();
-
-        return involvedCountries;
-    }
-    @Override
-    public void saveInvolvedCountries(List<String> involvedCountries) throws IOException {
-
-        //delete previous data
-        File fileInvolvedCountries = new File("Data/GameStateInvolvedCountries.txt");
-        RandomAccessFile rafInvolvedCountries = new RandomAccessFile(fileInvolvedCountries , "rw");
-        rafInvolvedCountries.setLength(0);
-        rafInvolvedCountries.close();
-
-        openForWriting("Data/GameStateInvolvedCountries.txt");
-        for(String involvedCountry : involvedCountries){
-            printLine(involvedCountry);
-        }
-        close();
-    }
-
 
     @Override
     public boolean saveGameStateArmies(Map<String, Country> countryMap) throws IOException {
@@ -254,6 +224,35 @@ public class FilePersistence implements IPersistence{
             countryMap.get(countryName).setArmy(new Army(armySize, owner));
         }
         return countryMap;
+    }
+    @Override
+    public void saveInvolvedCountries(List<String> involvedCountryNames) throws IOException {
+
+        //delete previous data
+        File fileInvolvedCountries = new File("Data/GameStateInvolvedCountries.txt");
+        RandomAccessFile rafInvolvedCountries = new RandomAccessFile(fileInvolvedCountries , "rw");
+        rafInvolvedCountries.setLength(0);
+        rafInvolvedCountries.close();
+
+        openForWriting("Data/GameStateInvolvedCountries.txt");
+        for(String involvedCountry : involvedCountryNames){
+            printLine(involvedCountry);
+        }
+        close();
+    }
+    @Override
+    public List<String> fetchGameStateInvolvedCountries() throws IOException {
+
+        List<String> involvedCountries = new ArrayList<>();
+
+        openForReading("Data/GameStateInvolvedCountries.txt");
+        while(reader != null && reader.ready()){
+            String involvedCountry = readLine();
+            involvedCountries.add(involvedCountry);
+        }
+        close();
+
+        return involvedCountries;
     }
 
     @Override

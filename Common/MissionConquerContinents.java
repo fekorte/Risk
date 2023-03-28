@@ -14,7 +14,7 @@ public class MissionConquerContinents extends Mission{
     public MissionConquerContinents(Map<String, Continent> continentMap, String firstContinentName, String secondContinentName, boolean oneMoreContinent){
 
         this.missionNumber = (!oneMoreContinent) ? 1 : 2;
-        this.missionText = (!oneMoreContinent) ? "Conquer " + firstContinentName + " and " + secondContinentName + "." : "Conquer " + firstContinentName + ", " + secondContinentName + " and one other continent.";
+        this.missionDescription = (!oneMoreContinent) ? "Conquer " + firstContinentName + " and " + secondContinentName + "." : "Conquer " + firstContinentName + ", " + secondContinentName + " and one other continent.";
         this.continentMap = continentMap;
         this.firstContinentName = firstContinentName;
         this.secondContinentName = secondContinentName;
@@ -22,7 +22,7 @@ public class MissionConquerContinents extends Mission{
     }
     public String getFirstContinentName(){ return firstContinentName; }
     public String getSecondContinentName(){ return secondContinentName; }
-    public boolean getOneMore(){ return oneMoreContinent; }
+    public boolean getOneMoreContinent(){ return oneMoreContinent; }
     @Override
     public boolean isMissionCompleted(List<String> playersCountries) {
 

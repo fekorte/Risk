@@ -5,10 +5,10 @@ import java.util.List;
 public class MissionDefeatOpponent extends Mission{
 
     private final String opponentName;
-    public MissionDefeatOpponent(String opponentColor){
+    public MissionDefeatOpponent(String opponentName){
 
-        this.opponentName = opponentColor;
-        this.missionText = "Destroy all troops from " + opponentColor + ".";
+        this.opponentName = opponentName;
+        this.missionDescription = "Destroy all troops from " + opponentName + ".";
         this.missionNumber = 5;
     }
     public String getOpponentName(){ return opponentName; }

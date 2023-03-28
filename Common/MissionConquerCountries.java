@@ -12,7 +12,7 @@ public class MissionConquerCountries extends Mission{
 
         this.twoArmies = twoArmies;
         this.missionNumber = (twoArmies) ? 4 : 3;
-        this.missionText = (twoArmies) ? "Conquer 18 territories of your choice and occupy each with at least 2 armies." : "Conquer 24 territories of your choice.";
+        this.missionDescription = (twoArmies) ? "Conquer 18 territories of your choice and occupy each with at least 2 armies." : "Conquer 24 territories of your choice.";
     }
 
     public void setCountryMap(Map<String, Country> countryMap){ this.countryMap = countryMap; }

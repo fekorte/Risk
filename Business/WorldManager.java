@@ -14,14 +14,14 @@ public class WorldManager implements IWorldManager{
 
     private final IPersistence persistence;
     private Map<String, Country> countryMap; //Key is the country name
-    private final Map<String, Continent> continents; //Key is continent name
+    private final Map<String, Continent> continentMap; //Key is continent name
     private final Map<Color, String> colorCountryNameMap;
 
     public WorldManager(IPersistence persistence) throws IOException {
 
         this.persistence = persistence;
-        continents = persistence.fetchContinents();
-        initialize();
+        continentMap = persistence.fetchContinents();
+        initializeCountryMap();
 
         colorCountryNameMap = new HashMap<>();
         for(Country country : countryMap.values()){
@@ -29,15 +29,14 @@ public class WorldManager implements IWorldManager{
         }
     }
 
-    private void initialize() throws IOException {
+    private void initializeCountryMap() throws IOException {
 
         countryMap = (persistence.fetchGameStateArmies().isEmpty()) ? persistence.fetchCountries() : persistence.fetchGameStateArmies();
     }
-
     public void clearWorld() throws IOException {
 
         countryMap.clear();
-        initialize();
+        initializeCountryMap();
     }
     @Override
     public String getAllCountryInfos() {
@@ -63,13 +62,13 @@ public class WorldManager implements IWorldManager{
     public int getUnitAmountOfCountry(String countryName) { return getCountryMap().get(countryName).getArmy().getUnits(); }
     @Override
     public Map<String, Country> getCountryMap(){ return countryMap; }
-    public Map<String, Continent> getContinents(){ return continents; }
+    public Map<String, Continent> getContinentMap(){ return continentMap; }
 
-    private List<String> getConqueredContinents(List<String> playersCountries){
+    private List<String> getConqueredContinents(List<String> playerCountries){
 
         List<String> conqueredContinents = new ArrayList<>();
-        for(Continent continent : continents.values()){
-            if(continent.isContinentConquered(playersCountries)){
+        for(Continent continent : continentMap.values()){
+            if(continent.isContinentConquered(playerCountries)){
                 conqueredContinents.add(continent.getContinentName());
             }
         }
@@ -80,7 +79,7 @@ public class WorldManager implements IWorldManager{
         int pointsForConqueredContinent = 0;
         List<String> conqueredContinents = getConqueredContinents(playerCountries);
         for(String conqueredContinent : conqueredContinents){
-            pointsForConqueredContinent += continents.get(conqueredContinent).getPointsForConquering();
+            pointsForConqueredContinent += continentMap.get(conqueredContinent).getPointsForConquering();
         }
         return pointsForConqueredContinent;
     }

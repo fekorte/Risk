@@ -70,7 +70,7 @@ public class PlayerManager implements IPlayerManager{
     @Override
     public int getRound(){ return round; }
     @Override
-    public String getPlayerMission(String playerName){ return playerMap.get(playerName).getPlayerMission().getMissionText(); }
+    public String getPlayerMission(String playerName){ return playerMap.get(playerName).getPlayerMission().getMissionDescription(); }
     public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayerName).getConqueredCountryNames(); }
     @Override
     public List<String> getAllCountriesInfoPlayer(String playerName){
@@ -97,7 +97,7 @@ public class PlayerManager implements IPlayerManager{
     }
     public void setAllPlayerMissions(boolean standardRisk){
 
-        MissionFactory factory = new MissionFactory(worldManagerFriend.getContinents(), worldManagerFriend.getCountryMap());
+        MissionFactory factory = new MissionFactory(worldManagerFriend.getContinentMap(), worldManagerFriend.getCountryMap());
 
         Random random = new Random();
         for(Player player : playerOrder){

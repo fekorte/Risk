@@ -16,12 +16,11 @@ public class Player {
         this.playerColor = color;
         conqueredCountryNames = new ArrayList<>();
     }
-
     public String getPlayerName(){ return playerName; }
     public String getPlayerColor(){ return playerColor; }
     public Mission getPlayerMission(){ return playerMission;}
     public void setPlayerMission(Mission playerMission){ this.playerMission = playerMission; }
-    public void addConqueredCountry(String conqueredCountry){ conqueredCountryNames.add(conqueredCountry); }
-    public void removeCountry(String countryName){ conqueredCountryNames.remove(countryName); }
     public List<String> getConqueredCountryNames(){ return conqueredCountryNames; }
+    public void addConqueredCountry(String conqueredCountryName){ conqueredCountryNames.add(conqueredCountryName); }
+    public void removeCountry(String countryName){ conqueredCountryNames.remove(countryName); }
 }

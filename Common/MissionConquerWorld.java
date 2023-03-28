@@ -10,7 +10,7 @@ public class MissionConquerWorld extends Mission{
 
         this.world = world;
         this.missionNumber = 6;
-        this.missionText = "Conquer the world.";
+        this.missionDescription = "Conquer the world.";
     }
     @Override
     public boolean isMissionCompleted(List<String> playersCountries) {

@@ -13,8 +13,8 @@ public class MissionConquerWorld extends Mission{
         this.missionDescription = "Conquer the world.";
     }
     @Override
-    public boolean isMissionCompleted(List<String> playersCountries) {
+    public boolean isMissionCompleted(List<String> playersTerritories) {
 
-        return (new HashSet<>(playersCountries).containsAll(world));
+        return (new HashSet<>(playersTerritories).containsAll(world));
     }
 }

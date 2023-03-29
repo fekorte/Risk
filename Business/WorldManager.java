@@ -2,7 +2,7 @@ package Business;
 
 import Common.Army;
 import Common.Continent;
-import Common.Country;
+import Common.Territory;
 import Persistence.IPersistence;
 
 import java.awt.*;
@@ -13,9 +13,9 @@ import java.util.List;
 public class WorldManager implements IWorldManager{
 
     private final IPersistence persistence;
-    private Map<String, Country> countryMap; //Key is the country name
+    private Map<String, Territory> territoryMap; //Key is the country name
     private final Map<String, Continent> continentMap; //Key is continent name
-    private final Map<Color, String> colorCountryNameMap;
+    private final Map<Color, String> colorTerritoryNameMap;
 
     public WorldManager(IPersistence persistence) throws IOException {
 
@@ -23,71 +23,71 @@ public class WorldManager implements IWorldManager{
         continentMap = persistence.fetchContinents();
         initializeCountryMap();
 
-        colorCountryNameMap = new HashMap<>();
-        for(Country country : countryMap.values()){
-            colorCountryNameMap.put(country.getCountryColor(), country.getCountryName());
+        colorTerritoryNameMap = new HashMap<>();
+        for(Territory territory : territoryMap.values()){
+            colorTerritoryNameMap.put(territory.getTerritoryColor(), territory.getTerritoryName());
         }
     }
 
     private void initializeCountryMap() throws IOException {
 
-        countryMap = (persistence.fetchGameStateArmies().isEmpty()) ? persistence.fetchCountries() : persistence.fetchGameStateArmies();
+        territoryMap = (persistence.fetchGameStateArmies().isEmpty()) ? persistence.fetchTerritories() : persistence.fetchGameStateArmies();
     }
     public void clearWorld() throws IOException {
 
-        countryMap.clear();
+        territoryMap.clear();
         initializeCountryMap();
     }
     @Override
-    public String getAllCountryInfos() {
+    public String getWorldInfos() {
 
-        StringBuilder countryInfos = new StringBuilder();
-        for(Country country : countryMap.values()){
-            countryInfos.append(country.getCountryInfo());
+        StringBuilder territoryInfos = new StringBuilder();
+        for(Territory territory : territoryMap.values()){
+            territoryInfos.append(territory.getCountryInfo());
         }
-        return countryInfos.toString();
+        return territoryInfos.toString();
     }
 
     @Override
-    public String getCountryNeighbours(String country){
+    public String getTerritoryNeighbours(String territoryName){
 
         StringBuilder neighbourInfo = new StringBuilder();
-        for(String neighbourName : countryMap.get(country).getNeighbours()){
+        for(String neighbourName : territoryMap.get(territoryName).getNeighbours()){
             neighbourInfo.append("| ").append(neighbourName).append(" |");
         }
         return neighbourInfo.toString();
     }
 
     @Override
-    public int getUnitAmountOfCountry(String countryName) { return getCountryMap().get(countryName).getArmy().getUnits(); }
+    public int getUnitAmountOfTerritory(String territoryName) { return getTerritoryMap().get(territoryName).getArmy().getUnits(); }
     @Override
-    public Map<String, Country> getCountryMap(){ return countryMap; }
+    public Map<String, Territory> getTerritoryMap(){ return territoryMap; }
     public Map<String, Continent> getContinentMap(){ return continentMap; }
 
-    private List<String> getConqueredContinents(List<String> playerCountries){
+    private List<String> getConqueredContinents(List<String> playerTerritories){
 
-        List<String> conqueredContinents = new ArrayList<>();
+        List<String> conqueredTerritories = new ArrayList<>();
         for(Continent continent : continentMap.values()){
-            if(continent.isContinentConquered(playerCountries)){
-                conqueredContinents.add(continent.getContinentName());
+            if(continent.isContinentConquered(playerTerritories)){
+                conqueredTerritories.add(continent.getContinentName());
             }
         }
-        return conqueredContinents;
+        return conqueredTerritories;
     }
-    public int getPointsForConqueredContinents(List<String> playerCountries){
+    public int getPointsForConqueredContinents(List<String> playerTerritories){
 
         int pointsForConqueredContinent = 0;
-        List<String> conqueredContinents = getConqueredContinents(playerCountries);
+        List<String> conqueredContinents = getConqueredContinents(playerTerritories);
         for(String conqueredContinent : conqueredContinents){
             pointsForConqueredContinent += continentMap.get(conqueredContinent).getPointsForConquering();
         }
         return pointsForConqueredContinent;
     }
     @Override
-    public String getCountryOwner(String countryName){ return countryMap.get(countryName).getArmy().getPlayerName(); }
+    public String getTerritoryOwner(String territoryName){ return territoryMap.get(territoryName).getArmy().getPlayerName(); }
     @Override
-    public String getCountryNameByColor(int colorRGB){ return colorCountryNameMap.get(new Color(colorRGB)); }
-    public void addUnitsToCountry(String countryName, int units) { countryMap.get(countryName).getArmy().addUnits(units); }
-    public void removeUnitsFromCountry(String countryName, int units) { countryMap.get(countryName).getArmy().removeUnits(units); }
-    public void setCountryArmy(String countryName, int units, String playerName){ countryMap.get(countryName).setArmy(new Army(units, playerName)); }
+    public String getTerritoryNameByColor(int colorRGB){ return colorTerritoryNameMap.get(new Color(colorRGB)); }
+    public void addUnitsToCountry(String territoryName, int units) { territoryMap.get(territoryName).getArmy().addUnits(units); }
+    public void removeUnitsFromCountry(String territoryName, int units) { territoryMap.get(territoryName).getArmy().removeUnits(units); }
+    public void setCountryArmy(String territoryName, int units, String playerName){ territoryMap.get(territoryName).setArmy(new Army(units, playerName)); }
 }

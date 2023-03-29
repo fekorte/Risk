@@ -15,7 +15,7 @@ public interface IPlayerManager {
     String getPlayerMission(String playerName);
     int getPlayerAmount();
     int getRound();
-    List<String> getAllCountriesInfoPlayer(String playerName);
+    List<String> getAllTerritoryInfosPlayer(String playerName);
     String getPlayersInfo();
     String isAnyMissionCompleted();
     boolean isPlayerDefeated(String playerName);

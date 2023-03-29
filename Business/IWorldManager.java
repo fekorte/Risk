@@ -1,15 +1,14 @@
 package Business;
 
-import Common.Country;
+import Common.Territory;
 
-import java.awt.*;
 import java.util.Map;
 
 public interface IWorldManager {
-    Map<String, Country> getCountryMap();
-    String getAllCountryInfos();
-    String getCountryNeighbours(String countryName);
-    int getUnitAmountOfCountry(String countryName);
-    String getCountryOwner(String countryName);
-    String getCountryNameByColor(int colorRGB);
+    Map<String, Territory> getTerritoryMap();
+    String getWorldInfos();
+    String getTerritoryNeighbours(String territoryName);
+    int getUnitAmountOfTerritory(String territoryName);
+    String getTerritoryOwner(String territoryName);
+    String getTerritoryNameByColor(int colorRGB);
 }

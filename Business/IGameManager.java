@@ -14,8 +14,8 @@ public interface IGameManager {
 
     void receiveUnits() throws ExceptionObjectDoesntExist;
     int getReceivedUnits();
-    void distributeUnits(String selectedCountry, int selectedUnits) throws ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput;
-    List<Integer> attack(String attackingCountry, String attackedCountry, int units) throws ExceptionCountryNotOwned, ExceptionCountryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionCountryNotRecognized, ExceptionEmptyInput, ExceptionOwnCountryAttacked;
-    List<Integer> defend(String countryToDefend, String attackingCountry, List<Integer> attackerDiceResult, int attackerUnits);
-    void moveUnits(String sourceCountry, String destinationCountry, int units, boolean afterConquering) throws ExceptionInvolvedCountrySelected, ExceptionCountryNotOwned, ExceptionTooManyUnits, ExceptionCountryIsNoNeighbour, ExceptionCountryNotRecognized, ExceptionEmptyInput;
+    void distributeUnits(String selectedTerritory, int selectedUnits) throws ExceptionTerritorySelectedNotOwned, ExceptionTooManyUnits, ExceptionTerritoryNotRecognized, ExceptionEmptyInput;
+    List<Integer> attack(String attackingTerritory, String attackedTerritory, int units) throws ExceptionTerritorySelectedNotOwned, ExceptionTerritoryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionTerritoryNotRecognized, ExceptionEmptyInput, ExceptionOwnTerritoryAttacked;
+    List<Integer> defend(String territoryToDefend, String territoryCountry, List<Integer> attackerDiceResult, int attackerUnits);
+    void moveUnits(String sourceTerritory, String destinationTerritory, int units, boolean afterConquering) throws ExceptionInvolvedTerritorySelected, ExceptionTerritorySelectedNotOwned, ExceptionTooManyUnits, ExceptionTerritoryIsNoNeighbour, ExceptionTerritoryNotRecognized, ExceptionEmptyInput;
 }

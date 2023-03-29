@@ -7,18 +7,18 @@ import java.util.List;
 public class Continent {
     private final String continentName;
     private final int pointsForConquering;
-    private final List<String> countryNames;
+    private final List<String> territoryNames;
     public Continent(String continentName, int pointsForConquering){
 
         this.continentName = continentName;
         this.pointsForConquering = pointsForConquering;
-        countryNames = new ArrayList<>();
+        this.territoryNames = new ArrayList<>();
     }
     public String getContinentName(){ return continentName; }
     public int getPointsForConquering(){ return pointsForConquering; }
-    public void addCountry(String countryName){ countryNames.add(countryName); }
-    public boolean isContinentConquered(List<String> playersCountries){
+    public void addTerritory(String territoryName){ territoryNames.add(territoryName); }
+    public boolean isContinentConquered(List<String> playersTerritories){
 
-        return new HashSet<>(playersCountries).containsAll(countryNames);
+        return new HashSet<>(playersTerritories).containsAll(territoryNames);
     }
 }

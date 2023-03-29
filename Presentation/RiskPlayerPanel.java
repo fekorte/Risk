@@ -42,10 +42,10 @@ public class RiskPlayerPanel extends JPanel {
     public void addPlayerCountryList(String playerName) {
 
         DefaultListModel<String> model = new DefaultListModel<>();
-        List<String> countryInfos = playerManager.getAllCountriesInfoPlayer(playerName);
-        Collections.sort(countryInfos);
-        for (String countryInfo : countryInfos) {
-            model.addElement(countryInfo);
+        List<String> territoryInfos = playerManager.getAllTerritoryInfosPlayer(playerName);
+        Collections.sort(territoryInfos);
+        for (String territoryInfo : territoryInfos) {
+            model.addElement(territoryInfo);
         }
         JList<String> list = new JList<>(model);
         list.setPreferredSize(new Dimension(150, 600));
@@ -67,10 +67,10 @@ public class RiskPlayerPanel extends JPanel {
         DefaultListModel<String> model = playerListModels.get(playerName);
 
         model.clear();
-        List<String> countryInfos = playerManager.getAllCountriesInfoPlayer(playerName);
-        Collections.sort(countryInfos);
-        for (String countryInfo : countryInfos) {
-            model.addElement(countryInfo);
+        List<String> territoryInfos = playerManager.getAllTerritoryInfosPlayer(playerName);
+        Collections.sort(territoryInfos);
+        for (String territoryInfo : territoryInfos) {
+            model.addElement(territoryInfo);
         }
     }
 }

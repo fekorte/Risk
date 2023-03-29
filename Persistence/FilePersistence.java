@@ -43,8 +43,8 @@ public class FilePersistence implements IPersistence{
 
             int numCountries = Integer.parseInt(readLine());
             while(numCountries != 0){
-                String countryName = readLine();
-                continent.addCountry(countryName);
+                String territoryName = readLine();
+                continent.addTerritory(territoryName);
                 numCountries--;
             }
             continents.put(continentName, continent);
@@ -53,17 +53,17 @@ public class FilePersistence implements IPersistence{
         return continents;
     }
     @Override
-    public Map<String, Country> fetchCountries() throws IOException {
+    public Map<String, Territory> fetchTerritories() throws IOException {
 
         Map<String, Continent> continents = fetchContinents();
         Map<String, List<String>> neighbours = new HashMap<>();
-        Map<String, Country> countryMap = new HashMap<>();
+        Map<String, Territory> territoryMap = new HashMap<>();
 
         //read country infos of each continent
         for(String continentName : continents.keySet()){
             openForReading("Data/" + continentName + ".txt");
             while(reader != null && reader.ready()){
-                String countryName = readLine();
+                String territoryName = readLine();
                 String abbreviation = readLine();
 
                 String colorString = readLine();
@@ -80,24 +80,24 @@ public class FilePersistence implements IPersistence{
                     neighbourList.add(neighbourName);
                     numberNeighbours--;
                 }
-                neighbours.put(countryName, neighbourList);
+                neighbours.put(territoryName, neighbourList);
 
                 String gap = readLine();
 
-                Country country = new Country(countryName, abbreviation, continentName, color);
-                countryMap.put(countryName, country);
+                Territory territory = new Territory(territoryName, abbreviation, continentName, color);
+                territoryMap.put(territoryName, territory);
             }
 
             close();
         }
 
-        for(String countryName : neighbours.keySet()){
-            for(String neighbourName : neighbours.get(countryName)){
-                countryMap.get(neighbourName).addNeighbour(countryName);
-                countryMap.get(countryName).addNeighbour(neighbourName);
+        for(String territoryName : neighbours.keySet()){
+            for(String neighbourName : neighbours.get(territoryName)){
+                territoryMap.get(neighbourName).addNeighbour(territoryName);
+                territoryMap.get(territoryName).addNeighbour(neighbourName);
             }
         }
-        return countryMap;
+        return territoryMap;
     }
 
 
@@ -120,8 +120,8 @@ public class FilePersistence implements IPersistence{
                     printLine(String.valueOf(missionConquerContinents.getOneMoreContinent()));
                 }
                 case(3), (4) -> {
-                    MissionConquerCountries missionConquerCountries = (MissionConquerCountries) player.getPlayerMission();
-                    printLine(String.valueOf(missionConquerCountries.getTwoArmies()));
+                    MissionConquerTerritories missionConquerTerritories = (MissionConquerTerritories) player.getPlayerMission();
+                    printLine(String.valueOf(missionConquerTerritories.getTwoArmies()));
                 }
                 case(5) -> {
                     MissionDefeatOpponent missionDefeatOpponent = (MissionDefeatOpponent) player.getPlayerMission();
@@ -131,9 +131,9 @@ public class FilePersistence implements IPersistence{
 
             printLine(" ");
 
-            printLine(String.valueOf(player.getConqueredCountryNames().size()));
-            for(String countryName : player.getConqueredCountryNames()){
-                printLine(countryName);
+            printLine(String.valueOf(player.getConqueredTerritoryNames().size()));
+            for(String territoryName : player.getConqueredTerritoryNames()){
+                printLine(territoryName);
             }
         }
         close();
@@ -145,7 +145,7 @@ public class FilePersistence implements IPersistence{
     public List<Player> fetchGameStatePlayers() throws IOException {
 
         List<Player> playerOrder = new ArrayList<>();
-        Map<String, Country> countries = fetchCountries();
+        Map<String, Territory> territoryMap = fetchTerritories();
         Map<String, Continent> continentMap = new LinkedHashMap<>(fetchContinents());
         openForReading("Data/GameStatePlayers.txt");
 
@@ -164,27 +164,27 @@ public class FilePersistence implements IPersistence{
                 }
                 case(3) -> {
                     boolean twoArmies = Boolean.parseBoolean(readLine());
-                    MissionConquerCountries missionConquerCountries = new MissionConquerCountries(twoArmies);
-                    missionConquerCountries.setCountryMap(countries);
-                    newPlayer.setPlayerMission(missionConquerCountries);
+                    MissionConquerTerritories missionConquerTerritories = new MissionConquerTerritories(twoArmies);
+                    missionConquerTerritories.setTerritoryMap(territoryMap);
+                    newPlayer.setPlayerMission(missionConquerTerritories);
                 }
                 case(4) -> {
                     boolean twoArmies = Boolean.parseBoolean(readLine());
-                    newPlayer.setPlayerMission(new MissionConquerCountries(twoArmies));
+                    newPlayer.setPlayerMission(new MissionConquerTerritories(twoArmies));
                 }
                 case(5) -> {
                     String opponentColor = readLine();
                     newPlayer.setPlayerMission(new MissionDefeatOpponent(opponentColor));
                 }
-                case(6) -> newPlayer.setPlayerMission(new MissionConquerWorld(new ArrayList<>(countries.keySet())));
+                case(6) -> newPlayer.setPlayerMission(new MissionConquerWorld(new ArrayList<>(territoryMap.keySet())));
             }
 
             String gap = readLine();
 
             int numberOfCountries = Integer.parseInt(readLine());
             while(numberOfCountries != 0){
-                String countryName = readLine();
-                newPlayer.addConqueredCountry(countryName);
+                String territoryName = readLine();
+                newPlayer.addConqueredTerritory(territoryName);
                 numberOfCountries--;
             }
             playerOrder.add(newPlayer);
@@ -194,65 +194,65 @@ public class FilePersistence implements IPersistence{
     }
 
     @Override
-    public boolean saveGameStateArmies(Map<String, Country> countryMap) throws IOException {
+    public boolean saveGameStateArmies(Map<String, Territory> territoryMap) throws IOException {
 
         openForWriting("Data/GameStateArmies.txt");
-        for(Country country : countryMap.values()){
-            printLine(country.getCountryName());
-            printLine(country.getArmy().getPlayerName());
-            printLine(String.valueOf(country.getArmy().getUnits()));
+        for(Territory territory : territoryMap.values()){
+            printLine(territory.getTerritoryName());
+            printLine(territory.getArmy().getPlayerName());
+            printLine(String.valueOf(territory.getArmy().getUnits()));
         }
         close();
 
-        return !countryMap.isEmpty();
+        return !territoryMap.isEmpty();
     }
     @Override
-    public Map<String, Country> fetchGameStateArmies() throws IOException {
+    public Map<String, Territory> fetchGameStateArmies() throws IOException {
 
-        Map<String, Country> countryMap = fetchCountries();
+        Map<String, Territory> territoryMap = fetchTerritories();
         openForReading("Data/GameStateArmies.txt");
 
         if(reader == null){
-            countryMap.clear();
+            territoryMap.clear();
         }
 
         while(reader != null && reader.ready()){
-            String countryName = readLine();
+            String territoryName = readLine();
             String owner = readLine();
             int armySize = Integer.parseInt(readLine());
 
-            countryMap.get(countryName).setArmy(new Army(armySize, owner));
+            territoryMap.get(territoryName).setArmy(new Army(armySize, owner));
         }
-        return countryMap;
+        return territoryMap;
     }
     @Override
-    public void saveInvolvedCountries(List<String> involvedCountryNames) throws IOException {
+    public void saveInvolvedTerritories(List<String> involvedTerritoryNames) throws IOException {
 
         //delete previous data
-        File fileInvolvedCountries = new File("Data/GameStateInvolvedCountries.txt");
-        RandomAccessFile rafInvolvedCountries = new RandomAccessFile(fileInvolvedCountries , "rw");
-        rafInvolvedCountries.setLength(0);
-        rafInvolvedCountries.close();
+        File fileInvolvedTerritories = new File("Data/GameStateInvolvedCountries.txt");
+        RandomAccessFile rafInvolvedTerritories = new RandomAccessFile(fileInvolvedTerritories , "rw");
+        rafInvolvedTerritories.setLength(0);
+        rafInvolvedTerritories.close();
 
         openForWriting("Data/GameStateInvolvedCountries.txt");
-        for(String involvedCountry : involvedCountryNames){
-            printLine(involvedCountry);
+        for(String involvedTerritory : involvedTerritoryNames){
+            printLine(involvedTerritory);
         }
         close();
     }
     @Override
-    public List<String> fetchGameStateInvolvedCountries() throws IOException {
+    public List<String> fetchGameStateInvolvedTerritories() throws IOException {
 
-        List<String> involvedCountries = new ArrayList<>();
+        List<String> involvedTerritories = new ArrayList<>();
 
         openForReading("Data/GameStateInvolvedCountries.txt");
         while(reader != null && reader.ready()){
-            String involvedCountry = readLine();
-            involvedCountries.add(involvedCountry);
+            String involvedTerritory = readLine();
+            involvedTerritories.add(involvedTerritory);
         }
         close();
 
-        return involvedCountries;
+        return involvedTerritories;
     }
 
     @Override
@@ -294,10 +294,10 @@ public class FilePersistence implements IPersistence{
         rafGameRound.setLength(0);
         rafGameRound.close();
 
-        File fileInvolvedCountries = new File("Data/GameStateInvolvedCountries.txt");
-        RandomAccessFile rafInvolvedCountries = new RandomAccessFile(fileInvolvedCountries , "rw");
-        rafInvolvedCountries.setLength(0);
-        rafInvolvedCountries.close();
+        File fileInvolvedTerritories = new File("Data/GameStateInvolvedCountries.txt");
+        RandomAccessFile rafInvolvedTerritories = new RandomAccessFile(fileInvolvedTerritories , "rw");
+        rafInvolvedTerritories.setLength(0);
+        rafInvolvedTerritories.close();
     }
 
 

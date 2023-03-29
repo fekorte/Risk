@@ -24,11 +24,11 @@ public class MissionConquerContinents extends Mission{
     public String getSecondContinentName(){ return secondContinentName; }
     public boolean getOneMoreContinent(){ return oneMoreContinent; }
     @Override
-    public boolean isMissionCompleted(List<String> playersCountries) {
+    public boolean isMissionCompleted(List<String> playersTerritories) {
 
         List<String> conqueredContinents =new ArrayList<>();
         for(Continent continent : continentMap.values()){
-            if(continent.isContinentConquered(playersCountries)) {
+            if(continent.isContinentConquered(playersTerritories)) {
                 conqueredContinents.add(continent.getContinentName());
             }
         }

@@ -1,7 +1,7 @@
 package Business;
 
 import Common.Exceptions.*;
-import Common.MissionConquerCountries;
+import Common.MissionConquerTerritories;
 import Common.MissionDefeatOpponent;
 import Common.Player;
 import Persistence.IPersistence;
@@ -38,8 +38,8 @@ public class PlayerManager implements IPlayerManager{
                 playerMap.put(player.getPlayerName(), player);
 
                 if(player.getPlayerMission().getMissionNumber() == 4){
-                    MissionConquerCountries missionConquerCountries = (MissionConquerCountries) player.getPlayerMission();
-                    missionConquerCountries.setCountryMap(worldManagerFriend.getCountryMap());
+                    MissionConquerTerritories missionConquerTerritories = (MissionConquerTerritories) player.getPlayerMission();
+                    missionConquerTerritories.setTerritoryMap(worldManagerFriend.getTerritoryMap());
                 }
             }
 
@@ -71,15 +71,15 @@ public class PlayerManager implements IPlayerManager{
     public int getRound(){ return round; }
     @Override
     public String getPlayerMission(String playerName){ return playerMap.get(playerName).getPlayerMission().getMissionDescription(); }
-    public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayerName).getConqueredCountryNames(); }
+    public List<String> getCurrentPlayersCountries(){ return playerMap.get(currentPlayerName).getConqueredTerritoryNames(); }
     @Override
-    public List<String> getAllCountriesInfoPlayer(String playerName){
+    public List<String> getAllTerritoryInfosPlayer(String playerName){
 
-        List<String> countryInfos = new ArrayList<>();
-        for(String country : playerMap.get(playerName).getConqueredCountryNames()){
-            countryInfos.add(country + ": " + worldManagerFriend.getUnitAmountOfCountry(country));
+        List<String> territoryInfos = new ArrayList<>();
+        for(String territory : playerMap.get(playerName).getConqueredTerritoryNames()){
+            territoryInfos.add(territory + ": " + worldManagerFriend.getUnitAmountOfTerritory(territory));
         }
-        return countryInfos;
+        return territoryInfos;
     }
     @Override
     public String getPlayersInfo(){
@@ -97,7 +97,7 @@ public class PlayerManager implements IPlayerManager{
     }
     public void setAllPlayerMissions(boolean standardRisk){
 
-        MissionFactory factory = new MissionFactory(worldManagerFriend.getContinentMap(), worldManagerFriend.getCountryMap());
+        MissionFactory factory = new MissionFactory(worldManagerFriend.getContinentMap(), worldManagerFriend.getTerritoryMap());
 
         Random random = new Random();
         for(Player player : playerOrder){
@@ -118,13 +118,13 @@ public class PlayerManager implements IPlayerManager{
 
         for(Player player : playerOrder){
             if(player.getPlayerMission().getMissionNumber() != 5){
-                if(player.getPlayerMission().isMissionCompleted(player.getConqueredCountryNames())){
+                if(player.getPlayerMission().isMissionCompleted(player.getConqueredTerritoryNames())){
                     return player.getPlayerName();
                 }
             } else {
                 MissionDefeatOpponent missionDefeatOpponent = (MissionDefeatOpponent) player.getPlayerMission();
                 String opponentName = missionDefeatOpponent.getOpponentName();
-                if(player.getPlayerMission().isMissionCompleted(playerMap.get(opponentName).getConqueredCountryNames())){
+                if(player.getPlayerMission().isMissionCompleted(playerMap.get(opponentName).getConqueredTerritoryNames())){
                     return player.getPlayerName();
                 }
             }
@@ -133,7 +133,7 @@ public class PlayerManager implements IPlayerManager{
     }
 
     @Override
-    public boolean isPlayerDefeated(String playerName){ return playerMap.get(playerName).getConqueredCountryNames().isEmpty(); }
+    public boolean isPlayerDefeated(String playerName){ return playerMap.get(playerName).getConqueredTerritoryNames().isEmpty(); }
 
     public boolean save(int gameStep) throws IOException {
 
@@ -166,10 +166,10 @@ public class PlayerManager implements IPlayerManager{
         }
     }
 
-    public void changeCountryOwner(String newOwnerName, String previousOwnerName, String countryName){
+    public void changeTerritoryOwner(String newOwnerName, String previousOwnerName, String territoryName){
 
-        playerMap.get(newOwnerName).addConqueredCountry(countryName);
-        playerMap.get(previousOwnerName).removeCountry(countryName);
+        playerMap.get(newOwnerName).addConqueredTerritory(territoryName);
+        playerMap.get(previousOwnerName).removeTerritory(territoryName);
     }
 
     @Override

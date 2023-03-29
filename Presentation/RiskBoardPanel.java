@@ -15,7 +15,7 @@ import javax.swing.*;
 public class RiskBoardPanel extends JPanel {
     private BufferedImage paintedMap;
     public interface RiskBoardListener {
-        void onCountrySelected(String countryName);
+        void onTerritorySelected(String territoryName);
     }
 
     public RiskBoardPanel(IWorldManager worldManager, RiskBoardListener listener){
@@ -39,9 +39,9 @@ public class RiskBoardPanel extends JPanel {
                 int y = e.getY();
 
                 Color pixelColor = new Color(paintedMap.getRGB(x, y));
-                String selectedCountry = worldManager.getCountryNameByColor(pixelColor.getRGB());
+                String selectedTerritory = worldManager.getTerritoryNameByColor(pixelColor.getRGB());
                 if (listener != null) {
-                    listener.onCountrySelected(selectedCountry);
+                    listener.onTerritorySelected(selectedTerritory);
                 }
             }
         });

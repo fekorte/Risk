@@ -12,5 +12,5 @@ public abstract class Mission {
     }
     public String getMissionDescription(){ return missionDescription; }
     public int getMissionNumber(){ return missionNumber; }
-    public abstract boolean isMissionCompleted(List<String> playersCountries);
+    public abstract boolean isMissionCompleted(List<String> playersTerritories);
 }

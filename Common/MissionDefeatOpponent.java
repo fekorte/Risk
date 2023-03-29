@@ -13,8 +13,8 @@ public class MissionDefeatOpponent extends Mission{
     }
     public String getOpponentName(){ return opponentName; }
     @Override
-    public boolean isMissionCompleted(List<String> opponentsCountries) {
+    public boolean isMissionCompleted(List<String> playersTerritories) {
 
-        return opponentsCountries.isEmpty();
+        return playersTerritories.isEmpty();
     }
 }

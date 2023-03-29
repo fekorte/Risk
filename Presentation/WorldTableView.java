@@ -5,12 +5,12 @@ import Business.IWorldManager;
 import javax.swing.*;
 import java.util.ArrayList;
 
-public class CountryTableView extends JFrame {
+public class WorldTableView extends JFrame {
 
-    public CountryTableView(IWorldManager worldManager){
+    public WorldTableView(IWorldManager worldManager){
 
-        super("Country information");
-        CountryTable countryTable = new CountryTable(new ArrayList<>(worldManager.getCountryMap().values()));
+        super("World information");
+        WorldTable countryTable = new WorldTable(new ArrayList<>(worldManager.getTerritoryMap().values()));
         setSize(600, 400);
         JTable table = new JTable(countryTable);
         JScrollPane scrollPane = new JScrollPane(table);

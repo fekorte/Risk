@@ -104,7 +104,7 @@ public class FilePersistence implements IPersistence{
     @Override
     public boolean saveGameStatePlayers(List<Player> playerOrder) throws IOException {
 
-        openForWriting("Data/GameStatePlayers.txt");
+        openForWriting("GameStateData/GameStatePlayers.txt");
         for(Player player : playerOrder){
             printLine(player.getPlayerName());
             printLine(player.getPlayerColor());
@@ -147,7 +147,7 @@ public class FilePersistence implements IPersistence{
         List<Player> playerOrder = new ArrayList<>();
         Map<String, Territory> territoryMap = fetchTerritories();
         Map<String, Continent> continentMap = new LinkedHashMap<>(fetchContinents());
-        openForReading("Data/GameStatePlayers.txt");
+        openForReading("GameStateData/GameStatePlayers.txt");
 
         while(reader != null && reader.ready()){
             String playerName = readLine();
@@ -196,7 +196,7 @@ public class FilePersistence implements IPersistence{
     @Override
     public boolean saveGameStateArmies(Map<String, Territory> territoryMap) throws IOException {
 
-        openForWriting("Data/GameStateArmies.txt");
+        openForWriting("GameStateData/GameStateArmies.txt");
         for(Territory territory : territoryMap.values()){
             printLine(territory.getTerritoryName());
             printLine(territory.getArmy().getPlayerName());
@@ -210,7 +210,7 @@ public class FilePersistence implements IPersistence{
     public Map<String, Territory> fetchGameStateArmies() throws IOException {
 
         Map<String, Territory> territoryMap = fetchTerritories();
-        openForReading("Data/GameStateArmies.txt");
+        openForReading("GameStateData/GameStateArmies.txt");
 
         if(reader == null){
             territoryMap.clear();
@@ -229,12 +229,12 @@ public class FilePersistence implements IPersistence{
     public void saveInvolvedTerritories(List<String> involvedTerritoryNames) throws IOException {
 
         //delete previous data
-        File fileInvolvedTerritories = new File("Data/GameStateInvolvedCountries.txt");
+        File fileInvolvedTerritories = new File("GameStateData/GameStateInvolvedCountries.txt");
         RandomAccessFile rafInvolvedTerritories = new RandomAccessFile(fileInvolvedTerritories , "rw");
         rafInvolvedTerritories.setLength(0);
         rafInvolvedTerritories.close();
 
-        openForWriting("Data/GameStateInvolvedCountries.txt");
+        openForWriting("GameStateData/GameStateInvolvedCountries.txt");
         for(String involvedTerritory : involvedTerritoryNames){
             printLine(involvedTerritory);
         }
@@ -245,7 +245,7 @@ public class FilePersistence implements IPersistence{
 
         List<String> involvedTerritories = new ArrayList<>();
 
-        openForReading("Data/GameStateInvolvedCountries.txt");
+        openForReading("GameStateData/GameStateInvolvedCountries.txt");
         while(reader != null && reader.ready()){
             String involvedTerritory = readLine();
             involvedTerritories.add(involvedTerritory);
@@ -258,7 +258,7 @@ public class FilePersistence implements IPersistence{
     @Override
     public void saveGameRoundAndStep(int round, int playerTurns, int step) throws IOException {
 
-        openForWriting("Data/GameRoundAndStep.txt");
+        openForWriting("GameStateData/GameRoundAndStep.txt");
         printLine(String.valueOf(round));
         printLine(String.valueOf(playerTurns));
         printLine(String.valueOf(step));
@@ -268,7 +268,7 @@ public class FilePersistence implements IPersistence{
     @Override
     public int[] fetchGameRoundAndStep() throws IOException {
 
-        openForReading("Data/GameRoundAndStep.txt");
+        openForReading("GameStateData/GameRoundAndStep.txt");
         int[] roundAndStep = new int[3];
         roundAndStep[0] = Integer.parseInt(readLine()); //int round
         roundAndStep[1] = Integer.parseInt(readLine()); //int playerTurns (more specific, several turns inside one round)
@@ -279,22 +279,22 @@ public class FilePersistence implements IPersistence{
     @Override
     public void resetGameState() throws IOException {
 
-        File filePlayers = new File("Data/GameStatePlayers.txt");
+        File filePlayers = new File("GameStateData/GameStatePlayers.txt");
         RandomAccessFile rafPlayers = new RandomAccessFile(filePlayers, "rw");
         rafPlayers.setLength(0);
         rafPlayers.close();
 
-        File fileArmies = new File("Data/GameStateArmies.txt");
+        File fileArmies = new File("GameStateData/GameStateArmies.txt");
         RandomAccessFile rafArmies = new RandomAccessFile(fileArmies, "rw");
         rafArmies.setLength(0);
         rafArmies.close();
 
-        File fileGameRound = new File("Data/GameRoundAndStep.txt");
+        File fileGameRound = new File("GameStateData/GameRoundAndStep.txt");
         RandomAccessFile rafGameRound = new RandomAccessFile(fileGameRound, "rw");
         rafGameRound.setLength(0);
         rafGameRound.close();
 
-        File fileInvolvedTerritories = new File("Data/GameStateInvolvedCountries.txt");
+        File fileInvolvedTerritories = new File("GameStateData/GameStateInvolvedCountries.txt");
         RandomAccessFile rafInvolvedTerritories = new RandomAccessFile(fileInvolvedTerritories , "rw");
         rafInvolvedTerritories.setLength(0);
         rafInvolvedTerritories.close();

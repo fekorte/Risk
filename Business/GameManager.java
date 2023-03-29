@@ -46,6 +46,7 @@ public class GameManager implements IGameManager {
         persistence.resetGameState();
         quitGame();
     }
+
     @Override
     public int getSavedGameStep() throws IOException {
 

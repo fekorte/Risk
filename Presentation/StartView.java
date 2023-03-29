@@ -1,54 +1,51 @@
 package Presentation;
 
-import Business.IGameManager;
-import Business.IPlayerManager;
-import Business.IWorldManager;
+import Business.*;
+import Persistence.FilePersistence;
+import Persistence.IPersistence;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
 public class StartView extends JFrame{
-    public StartView(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager){
+    public StartView() throws IOException {
 
-        JPanel startPanel = new JPanel(new GridLayout(3, 1));
+        IPersistence persistence = new FilePersistence();
+        IWorldManager worldManager = new WorldManager(persistence);
 
-        JButton playStandardRiskButton = new JButton("Play standard risk");
-        JButton playMissionRiskButton = new JButton("Play mission risk");
-        JButton continueSavedRiskGameButton = new JButton("Continue saved risk game");
+        JPanel startPanel = new JPanel(new GridLayout(2, 1));
+
+        JButton playStandardRiskButton = new JButton("Standard risk");
+        JButton playLOTRRiskButton = new JButton("Lord of the Rings risk");
         startPanel.add(playStandardRiskButton);
-        startPanel.add(playMissionRiskButton);
-        startPanel.add(continueSavedRiskGameButton);
+        startPanel.add(playLOTRRiskButton);
 
         this.add(startPanel);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.pack();
-        this.setSize(400, 300);
+        this.setSize(600, 300);
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
         playStandardRiskButton.addActionListener(a -> {
 
-            GameSetUpView gView = new GameSetUpView(worldManager, playerManager, gameManager, true);
-            this.dispose();
+            try {
+                worldManager.setWorldVersion("Standard Risk");
+                GameModeView mView = new GameModeView(persistence, worldManager);
+                this.dispose();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
 
-        playMissionRiskButton.addActionListener(a -> {
-
-            GameSetUpView gView = new GameSetUpView(worldManager, playerManager, gameManager, false);
-            this.dispose();
-        });
-
-        continueSavedRiskGameButton.addActionListener(a -> {
+        playLOTRRiskButton.addActionListener(a -> {
 
             try {
-                if(playerManager.getContinuePreviousGame()){
-                    RiskView rView = new RiskView(worldManager, playerManager, gameManager);
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No previous game state available.", "Error", JOptionPane.INFORMATION_MESSAGE);
-                }
+                worldManager.setWorldVersion("LOTR risk");
+                GameModeView mView = new GameModeView(persistence, worldManager);
+                this.dispose();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

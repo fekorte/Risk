@@ -349,7 +349,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                         try {
                             gameManager.newGame();
                             dispose();
-                            StartView sView = new StartView(worldManager, playerManager, gameManager);
+                            StartView sView = new StartView();
                         } catch (IOException ex) {
                             throw new RuntimeException(ex);
                         }

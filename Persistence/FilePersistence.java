@@ -10,6 +10,7 @@ import java.util.List;
 public class FilePersistence implements IPersistence{
     private BufferedReader reader = null;
     private PrintWriter writer = null;
+    private String folderName;
 
     @Override
     public void openForReading(String file) throws IOException { reader = new BufferedReader(new FileReader(file)); }
@@ -31,10 +32,12 @@ public class FilePersistence implements IPersistence{
         }
     }
 
+    public void setGameVersion(String folderName){ this.folderName = folderName; }
+
     @Override
     public Map<String, Continent> fetchContinents() throws IOException {
 
-        openForReading("Data/Continents.txt");
+        openForReading(folderName + "/Continents.txt");
         Map<String, Continent> continents = new LinkedHashMap<>();
         while(reader != null && reader.ready()){
             String continentName = readLine();
@@ -61,7 +64,7 @@ public class FilePersistence implements IPersistence{
 
         //read country infos of each continent
         for(String continentName : continents.keySet()){
-            openForReading("Data/" + continentName + ".txt");
+            openForReading(folderName + "/" + continentName + ".txt");
             while(reader != null && reader.ready()){
                 String territoryName = readLine();
                 String abbreviation = readLine();

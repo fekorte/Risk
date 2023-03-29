@@ -14,14 +14,22 @@ public class WorldManager implements IWorldManager{
 
     private final IPersistence persistence;
     private Map<String, Territory> territoryMap; //Key is the country name
-    private final Map<String, Continent> continentMap; //Key is continent name
-    private final Map<Color, String> colorTerritoryNameMap;
+    private Map<String, Continent> continentMap; //Key is continent name
+    private Map<Color, String> colorTerritoryNameMap;
 
-    public WorldManager(IPersistence persistence) throws IOException {
+    public WorldManager(IPersistence persistence){ this.persistence = persistence; }
 
-        this.persistence = persistence;
-        continentMap = persistence.fetchContinents();
+    @Override
+    public void setWorldVersion(String selectedVersion) throws IOException {
+
+        persistence.setGameVersion((selectedVersion.equals("Standard Risk") ? "Data" : "LOTRData"));
+        initializeWorldManager();
+    }
+
+    public void initializeWorldManager() throws IOException {
+
         initializeCountryMap();
+        continentMap = persistence.fetchContinents();
 
         colorTerritoryNameMap = new HashMap<>();
         for(Territory territory : territoryMap.values()){
@@ -30,9 +38,9 @@ public class WorldManager implements IWorldManager{
     }
 
     private void initializeCountryMap() throws IOException {
-
         territoryMap = (persistence.fetchGameStateArmies().isEmpty()) ? persistence.fetchTerritories() : persistence.fetchGameStateArmies();
     }
+
     public void clearWorld() throws IOException {
 
         territoryMap.clear();

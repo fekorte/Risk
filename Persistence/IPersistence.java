@@ -12,6 +12,7 @@ public interface IPersistence {
     void openForReading(String dataSource) throws IOException;
     void openForWriting(String dataSource) throws IOException;
     void close();
+    void setGameVersion(String folderName);
     Map<String, Continent> fetchContinents() throws IOException;
     Map<String, Territory> fetchTerritories() throws IOException;
     boolean saveGameStatePlayers(List<Player> playerOrder) throws IOException;

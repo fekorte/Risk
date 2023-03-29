@@ -4,6 +4,7 @@ import Business.IGameManager;
 import Business.IPlayerManager;
 import Business.IWorldManager;
 import Common.Exceptions.*;
+import Persistence.IPersistence;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.util.Iterator;
 
 public class GameSetUpView extends JFrame{
 
-    public GameSetUpView(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager, boolean standardRisk){
+    public GameSetUpView(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager, IPersistence persistence, boolean standardRisk){
 
         try {
             gameManager.newGame();
@@ -121,7 +122,7 @@ public class GameSetUpView extends JFrame{
 
             try {
                 gameManager.newGame();
-                StartView sView = new StartView(worldManager, playerManager, gameManager);
+                GameModeView gmView = new GameModeView(persistence, worldManager);
                 this.dispose();
             } catch (IOException e) {
                 throw new RuntimeException(e);

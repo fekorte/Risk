@@ -198,15 +198,15 @@ public class PlayerManager implements IPlayerManager{
     @Override
     public void removePlayer(String name) throws ExceptionObjectDoesntExist, ExceptionEmptyInput {
 
-        if(name == null || name.isEmpty()){
+        if (name == null || name.isEmpty()) {
             throw new ExceptionEmptyInput();
         }
 
-        if (!playerMap.containsKey(name)){
+        if (!playerMap.containsKey(name)) {
             throw new ExceptionObjectDoesntExist(name);
         }
 
-        if(playerTurns != 0){
+        if (playerTurns != 0) {
             playerTurns--;
         }
 

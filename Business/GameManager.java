@@ -17,12 +17,12 @@ public class GameManager implements IGameManager {
     private int receivedUnits;
 
 
-    public GameManager(IPlayerManager playerManager, IWorldManager worldManager, IPersistence persistence) throws IOException {
+    public GameManager(IPlayerManager playerManager, IWorldManager worldManager) throws IOException {
 
-        this.persistence = persistence;
-        playerManagerFriend = (PlayerManager) playerManager;
-        worldManagerFriend = (WorldManager) worldManager;
-        involvedTerritories = persistence.fetchGameStateInvolvedTerritories();
+        this.playerManagerFriend = (PlayerManager) playerManager;
+        this.worldManagerFriend = (WorldManager) worldManager;
+        this.persistence = worldManagerFriend.getPersistence();
+        this.involvedTerritories = persistence.fetchGameStateInvolvedTerritories();
     }
     @Override
     public boolean saveGame(int gameStep) throws IOException {

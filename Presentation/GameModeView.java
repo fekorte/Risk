@@ -1,7 +1,6 @@
 package Presentation;
 
 import Business.*;
-import Persistence.IPersistence;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,7 +8,7 @@ import java.io.IOException;
 
 public class GameModeView extends JFrame {
 
-    public GameModeView(IPersistence persistence, IWorldManager worldManager) throws IOException {
+    public GameModeView(IWorldManager worldManager) throws IOException {
 
         JPanel startPanel = new JPanel(new GridLayout(4, 1));
 
@@ -30,18 +29,18 @@ public class GameModeView extends JFrame {
         this.setLocationRelativeTo(null);
         this.setVisible(true);
 
-        IPlayerManager playerManager = new PlayerManager(worldManager, persistence);
-        IGameManager gameManager = new GameManager(playerManager, worldManager, persistence);
+        IPlayerManager playerManager = new PlayerManager(worldManager);
+        IGameManager gameManager = new GameManager(playerManager, worldManager);
 
         playStandardRiskButton.addActionListener(a -> {
 
-            GameSetUpView gView = new GameSetUpView(worldManager, playerManager, gameManager, persistence, true);
+            GameSetUpView gView = new GameSetUpView(worldManager, playerManager, gameManager, true);
             this.dispose();
         });
 
         playMissionRiskButton.addActionListener(a -> {
 
-            GameSetUpView gView = new GameSetUpView(worldManager, playerManager, gameManager, persistence, false);
+            GameSetUpView gView = new GameSetUpView(worldManager, playerManager, gameManager, false);
             this.dispose();
         });
 

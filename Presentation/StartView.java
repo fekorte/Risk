@@ -1,8 +1,6 @@
 package Presentation;
 
 import Business.*;
-import Persistence.FilePersistence;
-import Persistence.IPersistence;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,8 +9,7 @@ import java.io.IOException;
 public class StartView extends JFrame{
     public StartView() throws IOException {
 
-        IPersistence persistence = new FilePersistence();
-        IWorldManager worldManager = new WorldManager(persistence);
+        IWorldManager worldManager = new WorldManager();
 
         JPanel startPanel = new JPanel(new GridLayout(2, 1));
 
@@ -33,7 +30,7 @@ public class StartView extends JFrame{
 
             try {
                 worldManager.setWorldVersion("Standard Risk");
-                GameModeView mView = new GameModeView(persistence, worldManager);
+                GameModeView mView = new GameModeView(worldManager);
                 this.dispose();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -44,7 +41,7 @@ public class StartView extends JFrame{
 
             try {
                 worldManager.setWorldVersion("LOTR risk");
-                GameModeView mView = new GameModeView(persistence, worldManager);
+                GameModeView mView = new GameModeView(worldManager);
                 this.dispose();
             } catch (IOException e) {
                 throw new RuntimeException(e);

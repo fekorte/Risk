@@ -17,6 +17,7 @@ public class WorldManager implements IWorldManager{
     private Map<String, Territory> territoryMap; //Key is the territory name
     private Map<String, Continent> continentMap; //Key is continent name
     private Map<Color, String> colorTerritoryNameMap;
+    private String selectedWorldVersion;
 
     public WorldManager(){
 
@@ -26,7 +27,8 @@ public class WorldManager implements IWorldManager{
     @Override
     public void setWorldVersion(String selectedVersion) throws IOException {
 
-        persistence.setGameVersion((selectedVersion.equals("Standard Risk") ? "Data" : "LOTRData"));
+        selectedWorldVersion = (selectedVersion.equals("Standard Risk") ? "StandardRisk" : "LOTRRisk");
+        persistence.setGameVersion(selectedWorldVersion);
         initializeWorldManager();
     }
 
@@ -51,6 +53,8 @@ public class WorldManager implements IWorldManager{
         initializeCountryMap();
     }
     public IPersistence getPersistence(){ return persistence; }
+    @Override
+    public String getSelectedWorldVersion(){ return selectedWorldVersion; }
     @Override
     public String getWorldInfos() {
 

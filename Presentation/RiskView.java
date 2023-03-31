@@ -25,7 +25,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
     private final Map<String, RiskPlayerPanel> playerPanelMap; //key is player name
     private final RiskMenu riskMenu;
     private int gameStep;
-    private JLabel riskLabel;
+    private final JLabel riskLabel;
 
     public RiskView(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager) throws IOException {
 

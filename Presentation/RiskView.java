@@ -198,7 +198,6 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 } catch(ExceptionEmptyInput | ExceptionTerritorySelectedNotOwned |
                         ExceptionOwnTerritoryAttacked | ExceptionTerritoryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits | IOException e){
                     riskLabel.setText("Error: " + e.getMessage());
-                    attack();
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();

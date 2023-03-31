@@ -81,7 +81,14 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         }
     }
 
-    public void onTerritorySelected(String territoryName) { this.territorySelectedFuture.complete(territoryName); }
+    public void onTerritorySelected(String territoryName) {
+
+        if(territoryName == null){
+            JOptionPane.showMessageDialog(null, "Selected territory not found." , "Error", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            this.territorySelectedFuture.complete(territoryName);
+        }
+    }
 
     private void setActionButton(){
 
@@ -138,7 +145,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                         playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
                     } catch (NumberFormatException f) {
                         JOptionPane.showMessageDialog(null, "Invalid unit amount selected.", "Error", JOptionPane.INFORMATION_MESSAGE);
-                    } catch (ExceptionEmptyInput | ExceptionTerritoryNotRecognized | ExceptionTerritorySelectedNotOwned | ExceptionTooManyUnits e) {
+                    } catch (ExceptionEmptyInput | ExceptionTerritorySelectedNotOwned | ExceptionTooManyUnits e) {
                         JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
@@ -176,7 +183,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                     defend(attackingTerritory, attackedTerritory, Integer.parseInt(units), attackerDiceResult);
                 } catch (NumberFormatException f) {
                     JOptionPane.showMessageDialog(null, "Invalid unit amount selected.", "Error", JOptionPane.INFORMATION_MESSAGE);
-                } catch(ExceptionTerritoryNotRecognized | ExceptionEmptyInput | ExceptionTerritorySelectedNotOwned |
+                } catch(ExceptionEmptyInput | ExceptionTerritorySelectedNotOwned |
                         ExceptionOwnTerritoryAttacked | ExceptionTerritoryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits | IOException e){
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
                     attack();
@@ -219,7 +226,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
             try {
                 gameManager.moveUnits(attackingTerritory, attackedTerritory, Integer.parseInt(units), true);
                 playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
-            } catch (ExceptionTerritoryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedTerritorySelected |
+            } catch (ExceptionEmptyInput | ExceptionInvolvedTerritorySelected |
                      ExceptionTerritorySelectedNotOwned |
                      ExceptionTooManyUnits | ExceptionTerritoryIsNoNeighbour e) {
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
@@ -286,7 +293,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                     playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
                     JOptionPane.showMessageDialog(null, Integer.parseInt(units) + " have been moved from " + sourceTerritory + " to " + destinationTerritory + ".\n You can continue to move units or finish your turn by clicking 'done, continue'.", "Select units", JOptionPane.INFORMATION_MESSAGE);
                     checkForWinner();
-                } catch(ExceptionTerritoryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedTerritorySelected |
+                } catch(ExceptionEmptyInput | ExceptionInvolvedTerritorySelected |
                         ExceptionTerritorySelectedNotOwned | ExceptionTooManyUnits |
                         ExceptionTerritoryIsNoNeighbour e) {
                     JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);

@@ -103,11 +103,8 @@ public class GameManager implements IGameManager {
     @Override
     public int getReceivedUnits(){ return receivedUnits; }
     @Override
-    public void distributeUnits(String selectedTerritory, int selectedUnits) throws ExceptionTerritorySelectedNotOwned, ExceptionTooManyUnits, ExceptionTerritoryNotRecognized, ExceptionEmptyInput {
+    public void distributeUnits(String selectedTerritory, int selectedUnits) throws ExceptionTerritorySelectedNotOwned, ExceptionTooManyUnits, ExceptionEmptyInput {
 
-        if(selectedTerritory == null){
-            throw new ExceptionTerritoryNotRecognized();
-        }
 
         if(selectedTerritory.isEmpty()){
             throw new ExceptionEmptyInput();
@@ -125,11 +122,7 @@ public class GameManager implements IGameManager {
         worldManagerFriend.addUnitsToCountry(selectedTerritory, selectedUnits);
     }
     @Override
-    public List<Integer> attack(String attackingTerritory, String attackedTerritory, int units) throws ExceptionTerritorySelectedNotOwned, ExceptionTerritoryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionTerritoryNotRecognized, ExceptionEmptyInput, ExceptionOwnTerritoryAttacked {
-
-        if(attackingTerritory == null || attackedTerritory == null){
-            throw new ExceptionTerritoryNotRecognized();
-        }
+    public List<Integer> attack(String attackingTerritory, String attackedTerritory, int units) throws ExceptionTerritorySelectedNotOwned, ExceptionTerritoryIsNoNeighbour, ExceptionTooLessUnits, ExceptionTooManyUnits, ExceptionEmptyInput, ExceptionOwnTerritoryAttacked {
 
         if(attackingTerritory.isEmpty() || attackedTerritory.isEmpty()){
             throw new ExceptionEmptyInput();
@@ -212,11 +205,7 @@ public class GameManager implements IGameManager {
      }
 
     @Override
-    public void moveUnits(String sourceTerritory, String destinationTerritory, int units, boolean afterConquering) throws ExceptionInvolvedTerritorySelected, ExceptionTerritorySelectedNotOwned, ExceptionTooManyUnits, ExceptionTerritoryIsNoNeighbour, ExceptionTerritoryNotRecognized, ExceptionEmptyInput {
-
-        if(sourceTerritory == null || destinationTerritory == null){
-            throw new ExceptionTerritoryNotRecognized();
-        }
+    public void moveUnits(String sourceTerritory, String destinationTerritory, int units, boolean afterConquering) throws ExceptionInvolvedTerritorySelected, ExceptionTerritorySelectedNotOwned, ExceptionTooManyUnits, ExceptionTerritoryIsNoNeighbour, ExceptionEmptyInput {
 
         if(sourceTerritory.isEmpty() || destinationTerritory.isEmpty()){
             throw new ExceptionEmptyInput();

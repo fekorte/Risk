@@ -271,7 +271,7 @@ public class RiskCUI {
             try {
                 gameManager.distributeUnits(selectedTerritory, selectedUnits);
                 System.out.println(selectedUnits + " have been moved to " + selectedTerritory + ". You have " + gameManager.getReceivedUnits()  + " left.");
-            } catch (ExceptionEmptyInput | ExceptionTerritoryNotRecognized | ExceptionTerritorySelectedNotOwned | ExceptionTooManyUnits e) {
+            } catch (ExceptionEmptyInput | ExceptionTerritorySelectedNotOwned | ExceptionTooManyUnits e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -297,7 +297,7 @@ public class RiskCUI {
             List<Integer> attackerDiceResult = gameManager.attack(attackingTerritory, attackedTerritory, units);
             System.out.println(attackingTerritory + " has attacked " + attackedTerritory + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult);
             defend(attackingTerritory, attackedTerritory, units, attackerDiceResult);
-        } catch(ExceptionTerritoryNotRecognized | ExceptionEmptyInput | ExceptionTerritorySelectedNotOwned |
+        } catch(ExceptionEmptyInput | ExceptionTerritorySelectedNotOwned |
                 ExceptionOwnTerritoryAttacked | ExceptionTerritoryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits e){
             System.out.println(e.getMessage());
         }
@@ -329,7 +329,7 @@ public class RiskCUI {
             int unitsToMove = Integer.parseInt(readInput());
             try{
                 gameManager.moveUnits(attackingTerritory, attackedTerritory, unitsToMove, true);
-            } catch(ExceptionTerritoryNotRecognized | ExceptionEmptyInput | ExceptionInvolvedTerritorySelected |
+            } catch(ExceptionEmptyInput | ExceptionInvolvedTerritorySelected |
                     ExceptionTerritorySelectedNotOwned | ExceptionTooManyUnits |
                     ExceptionTerritoryIsNoNeighbour e){
                 System.out.println(e.getMessage());
@@ -379,7 +379,7 @@ public class RiskCUI {
         try{
             gameManager.moveUnits(sourceCountry, destinationCountry, units, false);
             checkForWinner();
-        } catch(ExceptionEmptyInput | ExceptionTerritoryNotRecognized | ExceptionInvolvedTerritorySelected |
+        } catch(ExceptionEmptyInput | ExceptionInvolvedTerritorySelected |
                 ExceptionTerritorySelectedNotOwned | ExceptionTooManyUnits | ExceptionTerritoryIsNoNeighbour e) {
             System.out.println(e.getMessage());
         }

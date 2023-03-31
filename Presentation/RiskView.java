@@ -35,7 +35,10 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         this.playerPanelMap = new HashMap<>();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1200, 1000);
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(screenSize.width, screenSize.height);
+
         setLayout(new BorderLayout());
 
         RiskBoardPanel boardPanel = new RiskBoardPanel(worldManager, this);
@@ -52,8 +55,8 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
     private void initializeRiskPlayerPanel(){
 
-        RiskPlayerPanel leftPanel = new RiskPlayerPanel(playerManager);
-        RiskPlayerPanel rightPanel = new RiskPlayerPanel(playerManager);
+        RiskPlayerPanel leftPanel = new RiskPlayerPanel(playerManager, playerManager.getPlayerAmount());
+        RiskPlayerPanel rightPanel = new RiskPlayerPanel(playerManager, playerManager.getPlayerAmount());
 
         List<String> playerNames = playerManager.getPlayerNames();
         for (int i = 0; i < playerManager.getPlayerAmount(); i++) {

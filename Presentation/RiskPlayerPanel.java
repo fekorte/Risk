@@ -15,9 +15,13 @@ public class RiskPlayerPanel extends JPanel {
     private final Map<String, DefaultListModel<String>> playerListModels; //key is player name
     private final JPanel playerListPanel;
     private final Map<String, Color> playerColorMap;
-    public RiskPlayerPanel(IPlayerManager playerManager){
+    private int playerNumber;
+
+    public RiskPlayerPanel(IPlayerManager playerManager, int playerNumber){
 
         this.playerManager = playerManager;
+        this.playerNumber = playerNumber;
+
         playerListModels = new HashMap<>();
 
         playerColorMap = new HashMap<>();
@@ -48,19 +52,25 @@ public class RiskPlayerPanel extends JPanel {
             model.addElement(territoryInfo);
         }
         JList<String> list = new JList<>(model);
-        list.setPreferredSize(new Dimension(150, 600));
-
+        list.setFont(new Font("Arial", Font.PLAIN, 20)); // set font size for list items
         Color color = playerColorMap.get(playerManager.getPlayerColor(playerName));
         JLabel label = new JLabel(playerName);
+        label.setFont(list.getFont()); // set font size for player name
         label.setOpaque(true);
         label.setBackground(color);
 
         JScrollPane scrollPane = new JScrollPane(list);
+
+        switch(playerNumber){
+            case(2) -> scrollPane.getViewport().setPreferredSize(new Dimension(320, 600));
+            case(3),(4) -> scrollPane.getViewport().setPreferredSize(new Dimension(320, 340));
+            case(5),(6) -> scrollPane.getViewport().setPreferredSize(new Dimension(320, 200));
+        }
+
         playerListPanel.add(label);
         playerListPanel.add(scrollPane);
         playerListModels.put(playerName, model);
     }
-
 
     public void updateList(String playerName) {
 

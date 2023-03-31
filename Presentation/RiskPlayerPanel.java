@@ -62,9 +62,9 @@ public class RiskPlayerPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(list);
 
         switch(playerNumber){
-            case(2) -> scrollPane.getViewport().setPreferredSize(new Dimension(320, 600));
-            case(3),(4) -> scrollPane.getViewport().setPreferredSize(new Dimension(320, 340));
-            case(5),(6) -> scrollPane.getViewport().setPreferredSize(new Dimension(320, 200));
+            case(2) -> scrollPane.getViewport().setPreferredSize(new Dimension(320, 570));
+            case(3),(4) -> scrollPane.getViewport().setPreferredSize(new Dimension(320, 310));
+            case(5),(6) -> scrollPane.getViewport().setPreferredSize(new Dimension(320, 170));
         }
 
         playerListPanel.add(label);

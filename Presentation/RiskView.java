@@ -25,6 +25,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
     private final Map<String, RiskPlayerPanel> playerPanelMap; //key is player name
     private final RiskMenu riskMenu;
     private int gameStep;
+    private JLabel riskLabel;
 
     public RiskView(IWorldManager worldManager, IPlayerManager playerManager, IGameManager gameManager) throws IOException {
 
@@ -45,6 +46,17 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         add(boardPanel, BorderLayout.CENTER);
         riskMenu = new RiskMenu(playerManager, new RiskMenuListener());
         add(riskMenu, BorderLayout.NORTH);
+
+
+        JPanel southPanel = new JPanel();
+        southPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        southPanel.setBackground(Color.WHITE);
+        riskLabel = new JLabel("");
+        riskLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        southPanel.add(riskLabel);
+
+        southPanel.setPreferredSize(new Dimension(200, 50));
+        add(southPanel, BorderLayout.SOUTH);
 
         initializeRiskPlayerPanel();
         setVisible(true);
@@ -87,7 +99,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
     public void onTerritorySelected(String territoryName) {
 
         if(territoryName == null){
-            JOptionPane.showMessageDialog(null, "Selected territory not found." , "Error", JOptionPane.INFORMATION_MESSAGE);
+            riskLabel.setText("Error: Selected territory not found.");
         } else {
             this.territorySelectedFuture.complete(territoryName);
         }
@@ -109,9 +121,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
         String winner = playerManager.isAnyMissionCompleted();
         if(winner != null) {
-            JOptionPane.showMessageDialog(null, "Congratulations!! You've won " + winner, "We have a winner!", JOptionPane.INFORMATION_MESSAGE);
-            JOptionPane.showMessageDialog(null, "Your mission was: " + playerManager.getPlayerMission(winner), "Mission accomplished", JOptionPane.INFORMATION_MESSAGE);
-
+            riskLabel.setText("Congratulations!! You've won " + winner + "Your mission was: " + playerManager.getPlayerMission(winner));
             WorldTableView infoView = new WorldTableView(worldManager);
             dispose();
         }
@@ -127,12 +137,11 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
         } catch(ExceptionObjectDoesntExist e){
             e.printStackTrace();
         }
-
-        JOptionPane.showMessageDialog(null, "It's your turn " + playerManager.getCurrentPlayerName() + ". \n You receive " + receivedUnits + " units. \n Click 'Distribute units' in the menu to distribute your received units to your territories.", playerManager.getCurrentPlayerName() + "'s turn", JOptionPane.INFORMATION_MESSAGE);
+        riskLabel.setText("It's your turn " + playerManager.getCurrentPlayerName() + ". You receive " + receivedUnits + " units. Click 'Distribute units' in the menu to distribute your received units to your territories.");
     }
 
     private void distributeUnits() {
-        JOptionPane.showMessageDialog(null, "You received " + gameManager.getReceivedUnits() + ". \n Please click on the territory on which you want to distribute your units. ", "Distribute units", JOptionPane.INFORMATION_MESSAGE);
+        riskLabel.setText("You received " + gameManager.getReceivedUnits() + ". Please click on the territory on which you want to distribute your units.");
         territorySelectedFuture = new CompletableFuture<>();
 
         new Thread(() -> {
@@ -144,18 +153,18 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
                     try {
                         gameManager.distributeUnits(selectedTerritory, Integer.parseInt(units));
-                        JOptionPane.showMessageDialog(null,  Integer.parseInt(units) + " have been moved to " + selectedTerritory + ". You have " + gameManager.getReceivedUnits()  + " left.", "Distribute units", JOptionPane.INFORMATION_MESSAGE);
+                        riskLabel.setText(Integer.parseInt(units) + " have been moved to " + selectedTerritory + ". You have " + gameManager.getReceivedUnits()  + " left.");
                         playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
                     } catch (NumberFormatException f) {
-                        JOptionPane.showMessageDialog(null, "Invalid unit amount selected.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                        riskLabel.setText("Error: Invalid unit amount selected.");
                     } catch (ExceptionEmptyInput | ExceptionTerritorySelectedNotOwned | ExceptionTooManyUnits e) {
-                        JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                        riskLabel.setText("Error: " + e.getMessage());
                     }
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
             }
-            JOptionPane.showMessageDialog(null, "All units have been distributed. \nClick on 'attack' to attack or 'done, continue' to continue.", "Error", JOptionPane.INFORMATION_MESSAGE);
+            riskLabel.setText("All units have been distributed. Click on 'attack' to attack or 'done, continue' to continue.");
             checkForWinner();
             gameStep++;
             setActionButton();
@@ -167,11 +176,11 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
         new Thread(() -> {
             try {
-                JOptionPane.showMessageDialog(null, "Please click on the territory to attack from.", "Select territory", JOptionPane.INFORMATION_MESSAGE);
+                riskLabel.setText("Please click on the territory to attack from.");
                 String attackingTerritory = territorySelectedFuture.get();
                 territorySelectedFuture = new CompletableFuture<>();
 
-                JOptionPane.showMessageDialog(null, "Please click on the territory you want to attack.", "Select territory", JOptionPane.INFORMATION_MESSAGE);
+                riskLabel.setText("Please click on the territory you want to attack.");
                 String attackedTerritory = territorySelectedFuture.get();
                 territorySelectedFuture = new CompletableFuture<>();
 
@@ -181,14 +190,14 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                     List<Integer> attackerDiceResult = gameManager.attack(attackingTerritory, attackedTerritory, Integer.parseInt(units));
 
                     displayDiceResult(attackerDiceResult, true);
-                    JOptionPane.showMessageDialog(null, attackingTerritory + " has attacked " + attackedTerritory + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult, "Dice result", JOptionPane.INFORMATION_MESSAGE);
+                    riskLabel.setText(attackingTerritory + " has attacked " + attackedTerritory + ". " + playerManager.getCurrentPlayerName() + " you've rolled " + attackerDiceResult);
 
                     defend(attackingTerritory, attackedTerritory, Integer.parseInt(units), attackerDiceResult);
                 } catch (NumberFormatException f) {
-                    JOptionPane.showMessageDialog(null, "Invalid unit amount selected.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                    riskLabel.setText("Error: Invalid unit amount selected.");
                 } catch(ExceptionEmptyInput | ExceptionTerritorySelectedNotOwned |
                         ExceptionOwnTerritoryAttacked | ExceptionTerritoryIsNoNeighbour | ExceptionTooLessUnits | ExceptionTooManyUnits | IOException e){
-                    JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                    riskLabel.setText("Error: " + e.getMessage());
                     attack();
                 }
             } catch (InterruptedException | ExecutionException e) {
@@ -200,51 +209,54 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
     private void defend(String attackingTerritory, String attackedTerritory, int unitsFromAttacker, List<Integer> attackerDiceResult) throws IOException, InterruptedException {
 
         String defenderName = worldManager.getTerritoryOwner(attackedTerritory);
-        JOptionPane.showMessageDialog(null, "Your territory has been attacked " + defenderName + "! You have to defend it!", "Defend territory", JOptionPane.INFORMATION_MESSAGE);
+        riskLabel.setText("Your territory has been attacked " + defenderName + "! You have to defend it!");
 
         List<Integer> defenderDiceResult = gameManager.defend(attackedTerritory, attackingTerritory, attackerDiceResult, unitsFromAttacker);
         displayDiceResult(defenderDiceResult, false);
-        JOptionPane.showMessageDialog(null, defenderName + " rolled " + defenderDiceResult + " and " + playerManager.getCurrentPlayerName() + " rolled " + attackerDiceResult + ". ", "Dice results", JOptionPane.INFORMATION_MESSAGE);
-
+        riskLabel.setText(defenderName + " rolled " + defenderDiceResult + " and " + playerManager.getCurrentPlayerName() + " rolled " + attackerDiceResult + ". ");
 
         playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
         playerPanelMap.get(defenderName).updateList(defenderName);
 
         if (!worldManager.getTerritoryOwner(attackedTerritory).equals(playerManager.getCurrentPlayerName())) {
 
-            JOptionPane.showMessageDialog(null, defenderName + " was able to defend " + attackedTerritory + ".\n" + worldManager.getUnitAmountOfTerritory(attackedTerritory) + " units remain in " + attackedTerritory + " and "
-                    + worldManager.getUnitAmountOfTerritory(attackingTerritory) + " units remain in " + attackingTerritory, attackedTerritory + " defended", JOptionPane.INFORMATION_MESSAGE);
+            riskLabel.setText(defenderName + " was able to defend " + attackedTerritory + ". " + worldManager.getUnitAmountOfTerritory(attackedTerritory) + " units remain in " + attackedTerritory + " and "
+                    + worldManager.getUnitAmountOfTerritory(attackingTerritory) + " units remain in " + attackingTerritory);
             checkForWinner();
             return;
         }
 
-        int moveUnitsDecision = JOptionPane.showOptionDialog(null,
-                playerManager.getCurrentPlayerName() + " was able to conquer " + attackedTerritory + ".\n" + attackingTerritory + " unit amount: " + worldManager.getUnitAmountOfTerritory(attackingTerritory) +
-                        ". Current unit amount in " + attackedTerritory + ": " + worldManager.getUnitAmountOfTerritory(attackedTerritory) + ". \n" + playerManager.getCurrentPlayerName() + " do you want to move additional units to " + attackedTerritory + "?",
-                attackedTerritory + " conquered", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, JOptionPane.YES_OPTION);
+
+        if(worldManager.getUnitAmountOfTerritory(attackingTerritory) > 1){ //if more units can be shifted to the conquered country
+
+            int moveUnitsDecision = JOptionPane.showOptionDialog(null,
+                    playerManager.getCurrentPlayerName() + " was able to conquer " + attackedTerritory + ".\n" + attackingTerritory + " unit amount: " + worldManager.getUnitAmountOfTerritory(attackingTerritory) +
+                            ". Current unit amount in " + attackedTerritory + ": " + worldManager.getUnitAmountOfTerritory(attackedTerritory) + ". \n" + playerManager.getCurrentPlayerName() + " do you want to move additional units to " + attackedTerritory + "?",
+                    attackedTerritory + " conquered", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, new Object[]{"Yes", "No"}, JOptionPane.YES_OPTION);
 
 
-        if (moveUnitsDecision == JOptionPane.YES_OPTION){
-            String units = JOptionPane.showInputDialog(null, "Please note that at least one unit has to remain in " + attackingTerritory, "Select units", JOptionPane.INFORMATION_MESSAGE);
-            try {
-                gameManager.moveUnits(attackingTerritory, attackedTerritory, Integer.parseInt(units), true);
-                playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
-            } catch (ExceptionEmptyInput | ExceptionInvolvedTerritorySelected |
-                     ExceptionTerritorySelectedNotOwned |
-                     ExceptionTooManyUnits | ExceptionTerritoryIsNoNeighbour e) {
-                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+            if (moveUnitsDecision == JOptionPane.YES_OPTION){
+                String units = JOptionPane.showInputDialog(null, "Please note that at least one unit has to remain in " + attackingTerritory, "Select units", JOptionPane.INFORMATION_MESSAGE);
+
+                try {
+                    gameManager.moveUnits(attackingTerritory, attackedTerritory, Integer.parseInt(units), true);
+                    playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
+                } catch (ExceptionEmptyInput | ExceptionInvolvedTerritorySelected |
+                         ExceptionTerritorySelectedNotOwned |
+                         ExceptionTooManyUnits | ExceptionTerritoryIsNoNeighbour e) {
+                    riskLabel.setText("Error: " + e.getMessage());
+                }
             }
         }
 
-        JOptionPane.showMessageDialog(null, worldManager.getUnitAmountOfTerritory(attackedTerritory) + " units remain in " + attackedTerritory + " and "
-                + worldManager.getUnitAmountOfTerritory(attackingTerritory) + " units remain in " + attackingTerritory, "Result of fight", JOptionPane.INFORMATION_MESSAGE);
+        riskLabel.setText(worldManager.getUnitAmountOfTerritory(attackedTerritory) + " units remain in " + attackedTerritory + " and " + worldManager.getUnitAmountOfTerritory(attackingTerritory) + " units remain in " + attackingTerritory);
 
         if(checkForWinner()){
             return;
         }
 
         if (playerManager.isPlayerDefeated(defenderName)){
-            JOptionPane.showMessageDialog(null, defenderName + " your last territory has been conquered, the game has to continue without you. ", defenderName + " lost", JOptionPane.INFORMATION_MESSAGE);
+            riskLabel.setText(defenderName + " your last territory has been conquered, the game has to continue without you. ");
             try {
                 playerManager.removePlayer(defenderName);
             } catch (ExceptionEmptyInput | ExceptionObjectDoesntExist e) {
@@ -281,11 +293,11 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
 
         new Thread(() -> {
             try {
-                JOptionPane.showMessageDialog(null, "Please click on the source territory. \nKeep in mind that you cannot move units from a territory which has already been involved in this round.", "Select territory", JOptionPane.INFORMATION_MESSAGE);
+                riskLabel.setText("Please click on the source territory. Keep in mind that you cannot move units from a territory which has already been involved in this round.");
                 String sourceTerritory = territorySelectedFuture.get();
                 territorySelectedFuture = new CompletableFuture<>();
 
-                JOptionPane.showMessageDialog(null, "Please click on the destination territory.\n Keep in mind that you cannot move units to a territory which has already been involved in this round.", "Select territory", JOptionPane.INFORMATION_MESSAGE);
+                riskLabel.setText("Please click on the destination territory. Keep in mind that you cannot move units to a territory which has already been involved in this round.");
                 String destinationTerritory = territorySelectedFuture.get();
                 territorySelectedFuture = new CompletableFuture<>();
 
@@ -294,12 +306,12 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 try{
                     gameManager.moveUnits(sourceTerritory, destinationTerritory, Integer.parseInt(units), false);
                     playerPanelMap.get(playerManager.getCurrentPlayerName()).updateList(playerManager.getCurrentPlayerName());
-                    JOptionPane.showMessageDialog(null, Integer.parseInt(units) + " have been moved from " + sourceTerritory + " to " + destinationTerritory + ".\n You can continue to move units or finish your turn by clicking 'done, continue'.", "Select units", JOptionPane.INFORMATION_MESSAGE);
+                    riskLabel.setText(Integer.parseInt(units) + " have been moved from " + sourceTerritory + " to " + destinationTerritory + ". You can continue to move units or finish your turn by clicking 'done, continue'.");
                     checkForWinner();
                 } catch(ExceptionEmptyInput | ExceptionInvolvedTerritorySelected |
                         ExceptionTerritorySelectedNotOwned | ExceptionTooManyUnits |
                         ExceptionTerritoryIsNoNeighbour e) {
-                    JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.INFORMATION_MESSAGE);
+                    riskLabel.setText("Error: " +  e.getMessage());
                 }
             } catch (InterruptedException | ExecutionException e) {
                 e.printStackTrace();
@@ -337,7 +349,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 case "Done, continue" -> {
 
                     switch (gameStep){
-                        case(1) -> JOptionPane.showMessageDialog(null, "Please distribute all units before you continue.", "Error", JOptionPane.INFORMATION_MESSAGE);
+                        case(1) -> riskLabel.setText("Error: Please distribute all units before you continue.");
                         case(2) -> gameStep++;
                         case(3) -> {
                             if(checkForWinner()){
@@ -368,7 +380,7 @@ public class RiskView extends JFrame implements RiskBoardPanel.RiskBoardListener
                 case "Save game" -> {
                     try {
                         if (gameManager.saveGame(gameStep)) {
-                            JOptionPane.showMessageDialog(null, "Game saved successfully!", "Game saved", JOptionPane.INFORMATION_MESSAGE);
+                            riskLabel.setText("Game saved successfully!");
                         }
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);

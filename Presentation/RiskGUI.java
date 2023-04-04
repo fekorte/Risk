@@ -9,11 +9,9 @@ import java.io.IOException;
 public class RiskGUI {
     public static void main(String[] args) throws IOException {
 
-        IPersistence persistence = new FilePersistence();
-
-        IWorldManager worldManager = new WorldManager(persistence);
-        IPlayerManager playerManager = new PlayerManager(worldManager, persistence);
-        IGameManager gameManager = new GameManager(playerManager, worldManager, persistence);
+        IWorldManager worldManager = new WorldManager();
+        IPlayerManager playerManager = new PlayerManager(worldManager);
+        IGameManager gameManager = new GameManager(playerManager, worldManager);
 
         StartView sView = new StartView(worldManager, playerManager, gameManager);
     }

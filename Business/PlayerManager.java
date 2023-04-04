@@ -20,13 +20,13 @@ public class PlayerManager implements IPlayerManager{
     private int playerTurns;
     private int round;
 
-    public PlayerManager(IWorldManager worldManager, IPersistence persistence) throws IOException {
+    public PlayerManager(IWorldManager worldManager) throws IOException {
 
-        this.persistence = persistence;
-        worldManagerFriend = (WorldManager) worldManager;
-        playerOrder = persistence.fetchGameStatePlayers();
-        playerMap = new HashMap<>();
-        allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
+        this.worldManagerFriend = (WorldManager) worldManager;
+        this.persistence = worldManagerFriend.getPersistence();
+        this.playerOrder = persistence.fetchGameStatePlayers();
+        this.playerMap = new HashMap<>();
+        this.allowedColors  = new ArrayList<>(Arrays.asList("Red", "Blue", "Green", "White", "Yellow", "Pink"));
 
         initializeGameContinuation();
     }

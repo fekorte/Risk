@@ -3,6 +3,7 @@ package Business;
 import Common.Army;
 import Common.Continent;
 import Common.Territory;
+import Persistence.FilePersistence;
 import Persistence.IPersistence;
 
 import java.awt.*;
@@ -17,9 +18,9 @@ public class WorldManager implements IWorldManager{
     private final Map<String, Continent> continentMap; //Key is continent name
     private final Map<Color, String> colorTerritoryNameMap;
 
-    public WorldManager(IPersistence persistence) throws IOException {
+    public WorldManager() throws IOException {
 
-        this.persistence = persistence;
+        this.persistence = new FilePersistence();
         continentMap = persistence.fetchContinents();
         initializeCountryMap();
 
@@ -38,6 +39,7 @@ public class WorldManager implements IWorldManager{
         territoryMap.clear();
         initializeCountryMap();
     }
+    public IPersistence getPersistence(){ return persistence; }
     @Override
     public String getWorldInfos() {
 
